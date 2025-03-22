@@ -1,19 +1,17 @@
 {
-  "name": "bookhive-y3-s2-we-204",
+  "name": "backend",
   "version": "1.0.0",
-  "description": "For ITPM",
-  "main": "index.js",
-  "type": "module",
+  "description": "",
+  "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon app.js"
   },
   "author": "",
   "license": "ISC",
-  "keywords": [],
   "dependencies": {
     "express": "^4.21.2",
+    "mongoose": "^8.12.2",
     "nodemon": "^3.1.9"
   }
-  
 }
