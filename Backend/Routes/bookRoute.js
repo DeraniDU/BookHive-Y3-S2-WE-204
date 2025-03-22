@@ -1,6 +1,9 @@
-import express from 'express';
+import express, { application } from 'express';
 import { Book } from '../Models/bookModel.js';
 const router = express.Router();
+
+//Middleware for parsing request body
+application.use(express.json());
 
 // Route for saving a new book
 router.post('/', async (request, response) => {
