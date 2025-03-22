@@ -1,16 +1,15 @@
-console.log("hi");
-const e = require("express");
-//QVV5WiKkkXimH6a6
-
-const express = require("express");
-const mongoose = require("mongoose");
+import express from 'express';  
+import mongoose from 'mongoose'; 
+import booksRoute from './Routes/booksRoute.js'; 
 
 const app = express();
 
-//Middlwere
+// Middleware
 app.use("/", (req, res, next) => {
-  res.send("it is working");
+  res.send("It is working");
 });
+
+app.use('/books', booksRoute);  
 
 mongoose
   .connect(

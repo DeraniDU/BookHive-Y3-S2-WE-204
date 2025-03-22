@@ -1,9 +1,7 @@
-import express, { application } from 'express';
+import express from 'express';
 import { Book } from '../Models/bookModel.js';
-const router = express.Router();
 
-//Middleware for parsing request body
-application.use(express.json());
+const router = express.Router();
 
 // Route for saving a new book
 router.post('/', async (request, response) => {
@@ -36,7 +34,7 @@ router.post('/', async (request, response) => {
     }
 });
 
-// Route for get all books from the database
+// Route for getting all books from the database
 router.get('/', async (request, response) => {
     try {
         const books = await Book.find({});
@@ -84,7 +82,7 @@ router.put('/:id', async (request, response) => {
             });
         }
 
-        const updatedBook = await Book.findByIdAndUpdate(id, request.body);
+        const updatedBook = await Book.findByIdAndUpdate(id, request.body, { new: true });
 
         if (!updatedBook) {
             return response.status(404).json({ message: 'Book not found' });
