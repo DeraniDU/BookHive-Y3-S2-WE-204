@@ -1,6 +1,7 @@
 {
   "name": "backend",
   "version": "1.0.0",
+<<<<<<< HEAD
   "description": "Backend for the application",
   "main": "app.js",
   "scripts": {
@@ -9,15 +10,30 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
+=======
+  "description": "",
+  "type": "module",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+  },
+>>>>>>> 082cafcd9ac46803df470bb0781c62b30777ab9a
   "author": "",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
+<<<<<<< HEAD
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "mongoose": "^8.12.2"
   },
   "devDependencies": {
     "nodemon": "^3.0.3"
+=======
+    "express": "^4.21.2",
+    "mongoose": "^8.12.2",
+    "nodemon": "^3.1.9"
+>>>>>>> 082cafcd9ac46803df470bb0781c62b30777ab9a
   }
 }
