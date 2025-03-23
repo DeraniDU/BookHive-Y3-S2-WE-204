@@ -1,0 +1,143 @@
+/* General Styles */
+.home-container {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+  }
+  
+  .navbar {
+    background-color: #1c3d5a; /* Navbar background color */
+    color: white;
+    padding: 20px 0;
+  }
+  
+  .navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  .navbar-title {
+    font-size: 2rem;
+    font-weight: bold;
+  }
+  
+  .navbar-links {
+    display: flex;
+  }
+  
+  .navbar-link {
+    color: white;
+    margin: 0 15px;
+    text-decoration: none;
+    font-size: 1rem;
+  }
+  
+  .navbar-link:hover {
+    text-decoration: underline;
+  }
+  
+  .hero {
+    background-color: #1c3d5a; /* Hero background color */
+    color: white;
+    text-align: center;
+    padding: 80px 20px;
+  }
+  
+  .hero-title {
+    font-size: 3rem;
+    margin-bottom: 20px;
+  }
+  
+  .hero-description {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+  }
+  
+  .hero-button {
+    background-color: #ff0404; /* Button color */
+    color: white;
+    padding: 10px 30px;
+    font-size: 1.2rem;
+    border-radius: 30px;
+    text-decoration: none;
+  }
+  
+  .hero-button:hover {
+    background-color: #cc0303;
+  }
+  
+  .featured-services {
+    padding: 40px 20px;
+    text-align: center;
+  }
+  
+  .featured-services-title {
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+  }
+  
+  .service-list {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .service-item {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 300px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .service-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+  
+  .service-title {
+    font-size: 1.5rem;
+    margin: 10px 0;
+  }
+  
+  .service-info {
+    color: #666;
+    margin-bottom: 10px;
+  }
+  
+  .service-price {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #1c3d5a;
+  }
+  
+  .service-button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+  }
+  
+  .service-button:hover {
+    background-color: #45a049;
+  }
+  
+  .footer {
+    background-color: #1c3d5a; /* Footer background color */
+    color: white;
+    text-align: center;
+    padding: 20px;
+  }
+  
