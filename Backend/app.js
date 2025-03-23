@@ -1,24 +1,14 @@
 import express from 'express';  
 import mongoose from 'mongoose'; 
-import booksRoute from './Routes/booksRoute.js'; 
 import cors from 'cors';
 
 const app = express();
 
 // Enable CORS with specific settings
-app.use(
-  cors({
-    origin: 'http://localhost:3001', // Change this to match your frontend port
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], 
-    allowedHeaders: ['Content-Type'], 
-  })
-);
 
 // Middleware to parse JSON body
 app.use(express.json());  
 
-// Route for books
-app.use('/books', booksRoute);  
 
 // Default route
 app.get("/", (req, res) => {
@@ -30,7 +20,6 @@ mongoose
     "mongodb+srv://bookHive:QVV5WiKkkXimH6a6@cluster0.oep85.mongodb.net/bookDB" // Add a database name
   )
   .then(() => {
-    console.log("Connected to MongoDB");
-    app.listen(5000, () => console.log("Server running on port 5000")); // Change the port
+    app.listen(5000);
   })
   .catch((err) => console.log(err));
