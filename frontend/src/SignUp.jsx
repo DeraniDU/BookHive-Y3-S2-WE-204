@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { auth } from "./firebase";
+import { auth } from "./firebase";  
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import "./SignUp.css"; // Import CSS file
+import "./SignUp.css"; // Import the updated CSS
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -14,7 +14,7 @@ const SignUp = () => {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
       alert("User created successfully!");
-      navigate("/signin");
+      navigate("/signin"); // Redirect to Sign In page after successful signup
     } catch (error) {
       alert(error.message);
     }
@@ -44,11 +44,11 @@ const SignUp = () => {
             required
           />
         </div>
-        <button className="signup-button" type="submit">Sign Up</button>
-        <p className="alt-option">
-          Already have an account? <a href="/signin">Sign In</a>
-        </p>
+        <button type="submit" className="signup-button">Sign Up</button>
       </form>
+      <p className="alt-option">
+        Already have an account? <a href="/signin">Sign In</a>
+      </p>
     </div>
   );
 };

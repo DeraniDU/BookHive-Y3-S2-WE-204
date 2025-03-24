@@ -1,7 +1,35 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { auth } from './firebase';
+import { signOut, onAuthStateChanged } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 import './Home.css';
 
 const Home = () => {
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (!currentUser) {
+        navigate('/signin'); // Redirect if not logged in
+      } else {
+        setUser(currentUser);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [navigate]);
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      alert("Logged out successfully!");
+      navigate('/signin');
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
   return (
     <div className="home-container">
       {/* Navbar */}
@@ -12,6 +40,11 @@ const Home = () => {
             <a href="#home" className="navbar-link">Home</a>
             <a href="#services" className="navbar-link">Services</a>
             <a href="#contact" className="navbar-link">Contact</a>
+            {user && (
+              <button className="logout-button" onClick={handleLogout}>
+                Logout
+              </button>
+            )}
           </div>
         </div>
       </nav>
