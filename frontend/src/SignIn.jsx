@@ -1,57 +1,53 @@
-import React, { useState } from 'react';
-import './SignIn.css';
+import React, { useState } from "react";
+import { auth } from "./firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
+import "./SignIn.css"; // Import CSS file
 
 const SignIn = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSignIn = async (e) => {
     e.preventDefault();
-<<<<<<< HEAD
     try {
       await signInWithEmailAndPassword(auth, email, password);
       alert("Signed in successfully!");
       navigate("/home"); // Navigate to Home page after successful sign-in
     } catch (error) {
       alert(error.message);
-=======
-    // Simulate authentication logic here
-    if (email === 'user@example.com' && password === 'password123') {
-      alert('Sign in successful');
-      // Redirect to homepage or dashboard
-    } else {
-      setErrorMessage('Invalid credentials');
->>>>>>> parent of 7cb8d0d (Created SignUp & SignIn)
     }
   };
 
   return (
     <div className="signin-container">
       <h2>Sign In</h2>
-      <form onSubmit={handleSubmit} className="signin-form">
-        <div className="form-group">
-          <label htmlFor="email">Email:</label>
+      <form onSubmit={handleSignIn}>
+        <div className="input-group">
+          <label>Email</label>
           <input
             type="email"
-            id="email"
+            placeholder="Enter your email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
         </div>
-        <div className="form-group">
-          <label htmlFor="password">Password:</label>
+        <div className="input-group">
+          <label>Password</label>
           <input
             type="password"
-            id="password"
+            placeholder="Enter your password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
         </div>
-        {errorMessage && <p className="error">{errorMessage}</p>}
-        <button type="submit" className="signin-button">Sign In</button>
+        <button className="signin-button" type="submit">Sign In</button>
+        <p className="alt-option">
+          Don't have an account? <a href="/signup">Sign Up</a>
+        </p>
       </form>
     </div>
   );
