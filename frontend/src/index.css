@@ -1,4 +1,183 @@
-/* src/index.css */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* General Styles */
+.home-container {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+  }
+  
+  /* Navbar */
+  .navbar {
+    background-color: #1c3d5a;
+    color: white;
+    padding: 20px 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  .navbar-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+  }
+  
+  .navbar-links {
+    display: flex;
+    gap: 30px;
+  }
+  
+  .navbar-link {
+    color: white;
+    text-decoration: none;
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+  }
+  
+  .navbar-link:hover {
+    color: #ff0404;
+  }
+  
+  /* Hero Section */
+  .hero {
+    background: linear-gradient(135deg, rgba(28, 61, 90, 0.8), rgba(28, 61, 90, 1)), #1c3d5a;
+    color: white;
+    text-align: center;
+    padding: 80px 20px;
+    box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.2);
+  }
+  
+  .hero-title {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    font-weight: 700;
+    letter-spacing: 2px;
+  }
+  
+  .hero-description {
+    font-size: 1.3rem;
+    margin-bottom: 30px;
+    line-height: 1.6;
+  }
+  
+  .hero-button {
+    background-color: #ff0404;
+    color: white;
+    padding: 15px 40px;
+    font-size: 1.2rem;
+    border-radius: 30px;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+  }
+  
+  .hero-button:hover {
+    background-color: #cc0303;
+    transform: scale(1.05);
+  }
+  
+  /* Form Container */
+  .form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f4f4f4;
+  }
+  
+  .form-box {
+    background-color: white;
+    padding: 40px 60px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  .form-box h2 {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .input-group {
+    margin-bottom: 20px;
+  }
+  
+  .input-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+  
+  .input-group input:focus {
+    border-color: #1c3d5a;
+    outline: none;
+  }
+  
+  .btn-submit {
+    width: 425px;
+    padding: 12px;
+    background-color: #1c3d5a;
+    color: white;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 5px;
+
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn-submit:hover {
+    background-color: #ff0404;
+  }
+  
+  .register-link,
+  .login-link {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 1rem;
+  }
+  
+  .register-link a,
+  .login-link a {
+    color: #1c3d5a;
+    text-decoration: none;
+  }
+  
+  .register-link a:hover,
+  .login-link a:hover {
+    color: #ff0404;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .form-box {
+      padding: 20px;
+      width: 90%;
+    }
+  
+    .form-box h2 {
+      font-size: 2rem;
+    }
+  
+    .input-group input {
+      font-size: 1rem;
+    }
+  
+    .btn-submit {
+      font-size: 1rem;
+    }
+  }
+  
