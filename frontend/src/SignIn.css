@@ -1,0 +1,93 @@
+/* SignIn.css */
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #1c3d5a, #a6bcff);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.signin-container {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(15px);
+  width: 380px;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.signin-container h2 {
+  color: #fff;
+  margin-bottom: 25px;
+  font-size: 24px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 18px;
+  text-align: left;
+}
+
+.input-group label {
+  font-size: 14px;
+  margin-bottom: 6px;
+  color: #e0e0e0;
+}
+
+.input-group input {
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  outline: none;
+  background: rgba(255, 255, 255, 0.25);
+  color: #fff;
+  transition: 0.3s;
+}
+
+.input-group input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.input-group input:focus {
+  background: rgba(255, 255, 255, 0.35);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+}
+
+.signin-button {
+  background: linear-gradient(90deg, #ff4a4a, #c90000);
+  border: none;
+  padding: 14px;
+  width: 100%;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 10px;
+  font-size: 16px;
+  transition: 0.3s;
+}
+
+.signin-button:hover {
+  background: linear-gradient(90deg, #ff1e1e, #a80000);
+  transform: scale(1.05);
+}
+
+.alt-option {
+  margin-top: 12px;
+  color: #fff;
+  font-size: 14px;
+}
+
+.alt-option a {
+  color: #ff4a4a;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.alt-option a:hover {
+  text-decoration: underline;
+}
