@@ -1,59 +1,53 @@
-import React, { useState } from 'react';
-import './SignUp.css';
+import React, { useState } from "react";
+import { auth } from "./firebase";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
+import "./SignUp.css"; // Import CSS file
 
 const SignUp = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSignUp = async (e) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
-      setErrorMessage("Passwords don't match");
-      return;
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      alert("User created successfully!");
+      navigate("/signin");
+    } catch (error) {
+      alert(error.message);
     }
-    // Simulate account creation logic here
-    alert('Account created successfully');
-    // Redirect to sign-in page or home
   };
 
   return (
     <div className="signup-container">
       <h2>Sign Up</h2>
-      <form onSubmit={handleSubmit} className="signup-form">
-        <div className="form-group">
-          <label htmlFor="email">Email:</label>
+      <form onSubmit={handleSignUp}>
+        <div className="input-group">
+          <label>Email</label>
           <input
             type="email"
-            id="email"
+            placeholder="Enter your email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
         </div>
-        <div className="form-group">
-          <label htmlFor="password">Password:</label>
+        <div className="input-group">
+          <label>Password</label>
           <input
             type="password"
-            id="password"
+            placeholder="Enter your password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
         </div>
-        <div className="form-group">
-          <label htmlFor="confirmPassword">Confirm Password:</label>
-          <input
-            type="password"
-            id="confirmPassword"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-          />
-        </div>
-        {errorMessage && <p className="error">{errorMessage}</p>}
-        <button type="submit" className="signup-button">Sign Up</button>
+        <button className="signup-button" type="submit">Sign Up</button>
+        <p className="alt-option">
+          Already have an account? <a href="/signin">Sign In</a>
+        </p>
       </form>
     </div>
   );

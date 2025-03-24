@@ -1,50 +1,82 @@
+/* SignUp.css */
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #1c3d5a, #a6bcff);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
 .signup-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    background-color: #f5f5f5;
-  }
-  
-  .signup-form {
-    width: 300px;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .form-group {
-    margin-bottom: 15px;
-  }
-  
-  label {
-    font-size: 14px;
-    margin-bottom: 5px;
-  }
-  
-  input {
-    padding: 10px;
-    font-size: 16px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-  }
-  
-  button {
-    padding: 12px;
-    background-color: #1c3d5a;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #ff0404;
-  }
-  
-  .error {
-    color: red;
-    font-size: 14px;
-  }
-  
+  background: rgba(255, 255, 255, 0.2);
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  width: 350px;
+  text-align: center;
+}
+
+.signup-container h2 {
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.input-group label {
+  font-size: 14px;
+  margin-bottom: 5px;
+  color: #fff;
+  text-align: left;
+}
+
+.input-group input {
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  outline: none;
+  background: rgba(255, 255, 255, 0.3);
+  color: #fff;
+}
+
+.input-group input::placeholder {
+  color: #e0e0e0;
+}
+
+.signup-button {
+  background: #00a86b;
+  border: none;
+  padding: 12px;
+  width: 100%;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: 0.3s;
+}
+
+.signup-button:hover {
+  background: #008f5d;
+}
+
+.alt-option {
+  margin-top: 10px;
+  color: #fff;
+  font-size: 14px;
+}
+
+.alt-option a {
+  color: #00a86b;
+  text-decoration: none;
+}
+
+.alt-option a:hover {
+  text-decoration: underline;
+}
