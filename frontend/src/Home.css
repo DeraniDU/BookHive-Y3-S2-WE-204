@@ -1,18 +1,12 @@
-/* General Styles */
-.home-container {
-  font-family: 'Arial', sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f4f4f4;
-  color: #333;
-}
-
 /* Navbar */
 .navbar {
-  background-color: #1c3d5a;
-  color: white;
-  padding: 20px 0;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  
+  left: 10px;
+  right: 10px;
+  width: 100%;
+  background-color: #087add;
+  padding: 15px 0;
+  z-index: 1000; /* Ensure it's above other content */
 }
 
 .navbar-container {
@@ -21,195 +15,186 @@
   align-items: center;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 10px 20px;
 }
 
 .navbar-title {
-  font-size: 2.5rem;
-  font-weight: bold;
-  letter-spacing: 1px;
+  color: white;
+  font-size: 24px;
+  margin: 0;
 }
 
 .navbar-links {
   display: flex;
-  gap: 30px;
+  gap: 20px;
 }
 
 .navbar-link {
+  margin: auto;
   color: white;
   text-decoration: none;
-  font-size: 1.1rem;
-  transition: color 0.3s ease;
+  font-size: 16px;
 }
 
 .navbar-link:hover {
-  color: #ff0404;
+  color: #A6BCFF;
+}
+
+/* Logout Button */
+.logout-button {
+  border: none;
+  background-color: #f83f3f;
+  color: white;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.logout-button:hover {
+  background-color: #000000;
 }
 
 /* Hero Section */
 .hero {
-  background-color: #1c3d5a;
-  color: white;
+  padding-top: 100px; /* Adjust for navbar height */
   text-align: center;
-  padding: 80px 20px;
-  box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.2);
+  background-color: #a11919;
+  padding: fit-content;
 }
 
 .hero-title {
-  font-size: 4rem;
-  margin-bottom: 20px;
-  font-weight: 700;
-  letter-spacing: 2px;
+  font-size: 32px;
+  font-weight: bold;
 }
 
 .hero-description {
-  font-size: 1.3rem;
-  margin-bottom: 30px;
-  line-height: 1.6;
+  font-size: 18px;
+  margin: 20px 0;
 }
 
 .hero-button {
-  background-color: #ff0404;
+  background-color: #1C3D5A;
   color: white;
-  padding: 15px 40px;
-  font-size: 1.2rem;
-  border-radius: 30px;
+  padding: 10px 20px;
   text-decoration: none;
-  display: inline-block;
-  transition: background-color 0.3s ease;
+  border-radius: 5px;
 }
 
 .hero-button:hover {
-  background-color: #cc0303;
-  transform: scale(1.05);
+  background-color: #A6BCFF;
 }
 
-/* Featured Services */
+/* Featured Services (Cards) */
 .featured-services {
-  padding: 60px 20px;
+  margin-top: 100px; /* Adjust for navbar */
   text-align: center;
-  background-color: #f9f9f9;
-}
-
-.featured-services-title {
-  font-size: 2.5rem;
-  margin-bottom: 30px;
-  color: #1c3d5a;
-  font-weight: bold;
 }
 
 .service-list {
   display: flex;
-  justify-content: space-around;
   flex-wrap: wrap;
-  gap: 30px;
+  gap: 20px;
+  justify-content: center;
 }
 
 .service-item {
-  background-color: white;
-  padding: 25px;
-  border-radius: 10px;
-  width: 300px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid #253c7f;
+  border-radius: 8px;
+  padding: 20px;
+  width: 250px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
 }
 
 .service-item:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+  transform: translateY(-5px);
 }
 
 .service-image {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  border-radius: 10px;
-}
-
-.service-title {
-  font-size: 1.7rem;
-  margin: 15px 0;
-  font-weight: 600;
-}
-
-.service-info {
-  color: #666;
-  margin-bottom: 15px;
-  font-size: 1rem;
-}
-
-.service-price {
-  font-size: 1.3rem;
-  font-weight: bold;
-  color: #1c3d5a;
+  max-width: 100%;
+  height: auto;
   margin-bottom: 10px;
 }
 
 .service-button {
-  background-color: #4caf50;
+  background-color: #1C3D5A;
   color: white;
-  padding: 12px 0;
-  font-size: 1.1rem;
+  padding: 10px 20px;
   border: none;
-  border-radius: 4px;
   cursor: pointer;
-  width: 100%;
-  transition: background-color 0.3s ease, transform 0.3s ease;
+  border-radius: 5px;
 }
 
 .service-button:hover {
-  background-color: #45a049;
-  transform: scale(1.05);
+  background-color: #A6BCFF;
+}
+
+/* Featured Books Section */
+.featured-books {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.book-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.book-item {
+  width: 250px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(149, 84, 84, 0.1);
+}
+
+.book-image {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+/* Search Section */
+.search-section {
+  margin-top: 50px;
+  text-align: center;
+}
+
+.search-title {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.search-input {
+  padding: 10px;
+  width: 300px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin: 10px 0;
+}
+
+.search-button {
+  background-color: #1C3D5A;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.search-button:hover {
+  background-color: #A6BCFF;
 }
 
 /* Footer */
 .footer {
-  background-color: #1c3d5a;
-  color: white;
   text-align: center;
   padding: 20px;
-  font-size: 1rem;
-  box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.footer a {
-  color: #a6bcff;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.footer a:hover {
-  color: #ff0404;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .navbar-container {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .navbar-links {
-    flex-direction: column;
-    gap: 15px;
-    margin-top: 15px;
-  }
-
-  .service-list {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .service-item {
-    width: 90%;
-    margin-bottom: 20px;
-  }
-
-  .hero-title {
-    font-size: 2.5rem;
-  }
-
-  .hero-description {
-    font-size: 1.1rem;
-  }
+  background-color: #1C3D5A;
+  color: white;
+  margin-top: 50px;
 }
