@@ -6,7 +6,11 @@ const BookSearch = () => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(false);
 
+<<<<<<< HEAD
   const API_KEY = "AIzaSyAb0O_MywOx0cvRbMHRPs9MvqQvvjSvL6A"; // 🔴 WARNING: API Key is exposed
+=======
+  const API_KEY = "AIzaSyXXXXX-YOUR-KEY-HERE"; // 🔴 WARNING: API Key is exposed
+>>>>>>> b802650f769afd032ef7c94e617070f8c448a732
 
   const searchBooks = async () => {
     if (!query) return;
