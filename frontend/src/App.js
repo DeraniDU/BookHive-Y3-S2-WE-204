@@ -1,18 +1,15 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import SignUp from "./SignUp";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import SignIn from "./SignIn";
-import Home from "./Home"; // Ensure you have this page
-import "./App.css"; // Your global styles
+import SignUp from "./SignUp";
+import Home from "./Home";
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/signup" element={<SignUp />} />
         <Route path="/signin" element={<SignIn />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/" element={<Home />} /> {/* Default route */}
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/" element={<Home />} />
       </Routes>
     </Router>
   );

@@ -1,55 +1,76 @@
 import React, { useState } from "react";
-import { auth } from "./firebase";
-import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import "./SignIn.css"; // Import CSS file
+import Swal from "sweetalert2";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "./firebase"; // Importing Firebase auth
+import "./index.css";  // Ensure the index.css file is imported
 
 const SignIn = () => {
+  const navigate = useNavigate(); // Initialize the navigate function
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
+  
 
-  const handleSignIn = async (e) => {
-    e.preventDefault();
+  const handleLogin = async () => {
+    if (!email) {
+      Swal.fire({ icon: "error", title: "Oops...", text: "Please enter email" });
+      return;
+    }
+
+    if (!password) {
+      Swal.fire({ icon: "error", title: "Oops...", text: "Please enter password." });
+      return;
+    }
+
     try {
+      // Firebase Sign In
       await signInWithEmailAndPassword(auth, email, password);
-      alert("Signed in successfully!");
-      navigate("/home"); // Navigate to Home page after successful sign-in
+
+      Swal.fire({ icon: "success", title: "Login Success", text: "You have successfully logged in" });
+
+      // Store the user login status in localStorage (optional)
+      localStorage.setItem("isLogged", true);
+
+      // Redirect to Home page after successful login
+      navigate("/"); // Redirect to home page after successful login
     } catch (error) {
-      alert(error.message);
+      Swal.fire({ icon: "error", title: "Oops...", text: error.message });
     }
   };
 
   return (
-    <div className="signin-container">
-      <h2>Sign In</h2>
-      <form onSubmit={handleSignIn}>
-        <div className="input-group">
-          <label>Email</label>
-          <input
-            type="email"
-            placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div className="input-group">
-          <label>Password</label>
-          <input
-            type="password"
-            placeholder="Enter your password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button className="signin-button" type="submit">Sign In</button>
-        <p className="alt-option">
-          Don't have an account? <a href="/signup">Sign Up</a>
-        </p>
-      </form>
-    </div>
+    <section className="form-container">
+      <div className="form-box">
+        <h2>Sign In</h2>
+        <form>
+          <div className="input-group">
+            <input
+              type="email"
+              placeholder="Enter a valid email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+
+          <div className="input-group">
+            <input
+              type="password"
+              placeholder="Enter password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+
+          <button type="button" className="btn-submit" onClick={handleLogin}>
+            Sign In
+          </button>
+
+          <p className="register-link">
+            Don't have an account? <a href="/signup">Sign Up</a>
+          </p>
+        </form>
+      </div>
+    </section>
   );
 };
 
