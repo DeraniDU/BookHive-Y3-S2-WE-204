@@ -1,4 +1,9 @@
 /* General Styles */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 .home-container {
     font-family: 'Arial', sans-serif;
     margin: 0;
