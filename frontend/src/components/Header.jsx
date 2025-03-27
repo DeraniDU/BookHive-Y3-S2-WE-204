@@ -6,6 +6,9 @@ import { signOut } from 'firebase/auth';
 import swal from 'sweetalert'; // Import SweetAlert
 import logo from '../assets/BH.png'; // Adjust the path if needed
 
+
+//this is the header
+
 const Header = () => {
   const navigate = useNavigate();
 

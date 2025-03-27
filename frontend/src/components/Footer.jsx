@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Segment, Container, Grid, Icon, Form, Button, Header } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 
+//this is the foooter
+
 const Footer = () => {
   const [email, setEmail] = useState('');
 

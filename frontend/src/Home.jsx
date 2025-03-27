@@ -7,7 +7,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import BookSearch from "./components/BookSearch";
 import "./Home.css";
-
+//home 
 const Home = () => {
   const [user, setUser] = useState(null);
   const [featuredBooks, setFeaturedBooks] = useState([]);
