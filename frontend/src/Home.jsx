@@ -3,7 +3,6 @@ import { auth } from './firebase';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import './Home.css';
-import { Link } from 'react-router-dom';
 
 const Home = () => {
   const [user, setUser] = useState(null);
@@ -127,13 +126,7 @@ const Home = () => {
             <h3 className="service-title">Book Lending</h3>
             <p className="service-info">Lend your books to others and borrow from the community.</p>
             <p className="service-price">Free</p>
-            <Link to="/lending" className="service-button">Start Lending</Link>
-           {/* <a href="" className="service-button">Start Lending</a> */}
-            {/* {user && (
-              <button className="" onClick={() => navigate('./lending')}>
-                Logout
-              </button>
-            )} */}
+            <a href="#book-lending" className="service-button">Start Lending</a>
           </div>
           {/* Book Bidding */}
           <div className="service-item">
