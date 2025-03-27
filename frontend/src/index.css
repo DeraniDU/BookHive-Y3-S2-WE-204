@@ -4,6 +4,58 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Hide scrollbar for all browsers */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, and Opera */
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+/* Form styles */
+.form-box {
+  @apply bg-white bg-opacity-90 p-12 rounded-lg shadow-lg w-11/12 md:w-3/4 lg:w-2/3 max-w-5xl;
+}
+
+.input-group {
+  @apply mb-8;
+}
+
+.input-group input,
+.input-group select {
+  @apply w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500;
+}
+
+.btn-submit {
+  @apply w-full bg-blue-600 text-white py-4 rounded-md hover:bg-blue-700 transition duration-300;
+}
+
+.login-link {
+  @apply text-center text-gray-600 mt-6;
+}
+
+.login-link a {
+  @apply text-blue-600 hover:underline;
+}
+
+/* Ensure radio and checkbox inputs are properly styled */
+input[type="radio"],
+input[type="checkbox"] {
+  @apply accent-blue-600;
+}
+
 .home-container {
     font-family: 'Arial', sans-serif;
     margin: 0;

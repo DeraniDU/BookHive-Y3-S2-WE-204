@@ -1,21 +1,69 @@
 // src/components/HomePage.js
-import React from 'react';
-import BookCard from '../components/LBookCart'; // Fixed import path (assuming BookCard is in the same directory)
-import bookBackground from '../photo/book1.jpg'; // Updated path to be consistent
+import React, { useRef, useEffect ,useState } from 'react';
+import BookCard from '../components/LBookCart';
+import bookBackground from '../photo//book1.jpg';
+import bookBackground1 from '../photo//book2.jpg';
+import { FaBars } from 'react-icons/fa';
+import Navbar from '../components/Navbar';
+
+
 
 const HomePage = () => {
-  // Sample popular books data
   const popularBooks = [
     { title: "The Great Gatsby", author: "F. Scott Fitzgerald", imageUrl: "https://via.placeholder.com/128x192" },
     { title: "To Kill a Mockingbird", author: "Harper Lee", imageUrl: "https://via.placeholder.com/128x192" },
     { title: "1984", author: "George Orwell", imageUrl: "https://via.placeholder.com/128x192" },
     { title: "Pride and Prejudice", author: "Jane Austen", imageUrl: "https://via.placeholder.com/128x192" },
+    { title: "The Catcher in the Rye", author: "J.D. Salinger", imageUrl: "https://via.placeholder.com/128x192" },
+    { title: "Brave New World", author: "Aldous Huxley", imageUrl: "https://via.placeholder.com/128x192" },
+    { title: "The Great Gatsby", author: "F. Scott Fitzgerald", imageUrl: "https://via.placeholder.com/128x192" },
+    { title: "To Kill a Mockingbird", author: "Harper Lee", imageUrl: "https://via.placeholder.com/128x192" },
+    { title: "1984", author: "George Orwell", imageUrl: "https://via.placeholder.com/128x192" },
+    { title: "Pride and Prejudice", author: "Jane Austen", imageUrl: "https://via.placeholder.com/128x192" },
+    { title: "The Catcher in the Rye", author: "J.D. Salinger", imageUrl: "https://via.placeholder.com/128x192" },
+    { title: "Brave New World", author: "Aldous Huxley", imageUrl: "https://via.placeholder.com/128x192" },
   ];
+
+  const scrollRef = useRef(null);
+  const [isNavbarOpen, setIsNavbarOpen] = useState(false);
+
+  // Handle keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (scrollRef.current) {
+        const scrollAmount = 300; // Adjust this value for scroll distance
+        if (event.key === 'ArrowRight') {
+          scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+        }
+        if (event.key === 'ArrowLeft') {
+          scrollRef.current.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+  const toggleNavbar = () => {
+    setIsNavbarOpen((prev) => !prev); // Toggle state between true and false
+  };
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
+      
+      {/* Menu Button */}
+      <button
+        className="fixed top-4 left-4 z-40 p-2 bg-gray-800 text-white rounded-md"
+        onClick={toggleNavbar}
+      >
+        <FaBars size={24} />
+      </button>
+
+      {/* Navbar */}
+      <Navbar isOpen={isNavbarOpen} toggleNavbar={toggleNavbar} />
+      
       {/* Scrolling Content */}
-      <main className="flex-grow pb-40"> {/* Added bottom padding to prevent content from hiding under footer */}
+      <main className="flex-grow pb-40">
         {/* Header Section */}
         <header 
           className="relative h-[60vh] bg-cover bg-center flex items-center justify-center"
@@ -32,20 +80,26 @@ const HomePage = () => {
           </div>
         </header>
 
-        {/* Popular Books Section */}
+        {/* Popular Books Section - Horizontal Scroll */}
         <section className="py-16 px-4 bg-gray-50">
           <div className="max-w-6xl mx-auto">
             <h2 className="text-3xl font-semibold text-center mb-12">
               Most Popular Books
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+            <div
+              ref={scrollRef}
+              className="flex overflow-x-auto space-x-8 pb-4 snap-x snap-mandatory
+                scrollbar-hide" // Custom class to hide scrollbar
+              style={{ scrollBehavior: 'smooth' }}
+            >
               {popularBooks.map((book, index) => (
-                <BookCard
-                  key={index}
-                  title={book.title}
-                  author={book.author}
-                  imageUrl={book.imageUrl}
-                />
+                <div key={index} className="flex-shrink-0 snap-start">
+                  <BookCard
+                    title={book.title}
+                    author={book.author}
+                    imageUrl={book.imageUrl}
+                  />
+                </div>
               ))}
             </div>
           </div>
@@ -92,7 +146,8 @@ const HomePage = () => {
       </main>
 
       {/* Fixed Footer Choice Section */}
-      <footer className="fixed bottom-0 left-0 right-0 z-20 bg-white shadow-md py-8 px-4">
+      <footer className="fixed bottom-0 left-0 right-0 z-20 bg-cover bg-center py-4 px-4"
+      style={{ backgroundImage: `url(${bookBackground1})` }}>
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl font-semibold mb-8">
             What Would You Like To Do?
