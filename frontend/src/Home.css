@@ -1,4 +1,5 @@
 
+
 /* General Styles */
 .home-container {
 
@@ -193,35 +194,72 @@
   text-align: center;
   background-color: #a11919;
   padding: fit-content;
+
+:root {
+  --primary-color: #3366ff;
+  --secondary-color: #5f27cd;
+  --text-primary: #2c3e50;
+  --text-secondary: #34495e;
+  --background-light: #f8f9fc;
+  --border-color: #e0e6ed;
+  --box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 
-.hero-title {
-  font-size: 32px;
-  font-weight: bold;
+/* General Layout */
+.home-container {
+font-family: 'Arial', sans-serif;
+margin: 0px;
+padding: 0px;
+background-color: #f4f7fb;
 }
 
-.hero-description {
-  font-size: 18px;
-  margin: 20px 0;
+.hero {
+background-color: #090080; /* Dark Blue background */
+color: rgb(255, 255, 255);
+padding: 100px 0px; /* Increased padding to make the section larger */
+text-align: center;
+opacity: 0; /* Initially hidden */
+animation: fadeIn 2s forwards; /* Add fade-in animation */
+
 }
 
-.hero-button {
-  background-color: #1C3D5A;
-  color: white;
-  padding: 10px 20px;
-  text-decoration: none;
-  border-radius: 5px;
+@keyframes fadeIn {
+0% {
+  opacity: 0;
+}
+100% {
+  opacity: 1;
+}
 }
 
-.hero-button:hover {
-  background-color: #A6BCFF;
+.hero h2 {
+font-size: 3rem;
+margin-bottom: 10px;
+font-weight: bold;
 }
 
-/* Featured Services (Cards) */
-.featured-services {
-  margin-top: 100px; /* Adjust for navbar */
-  text-align: center;
+.hero p {
+font-size: 1.5rem;
+margin-bottom: 40px;
 }
+
+.hero .hero-button {
+background-color: #1C3D5A; /* Dark blue background */
+color: white;
+padding: 15px 30px;
+border: none;
+font-size: 1.2rem;
+font-weight: bold;
+cursor: pointer;
+transition: background-color 0.3s ease;
+border-radius: 5px;
+box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.hero .hero-button:hover {
+background-color: #A6BCFF; /* Lighter blue on hover */
+}
+
 
 .service-list {
   display: flex;
@@ -320,51 +358,56 @@
 }
 
 /* Featured Books Section */
+
 .featured-books {
-  text-align: center;
-  margin-top: 50px;
+background-color: #ffffff;
+padding: 40px 20px;
+}
+
+.featured-books-title {
+font-size: 2rem;
+text-align: center;
+margin-bottom: 30px;
+font-weight: bold;
 }
 
 .book-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: center;
+display: flex;
+justify-content: space-between;
+flex-wrap: wrap;
+gap: 20px;
 }
 
 .book-item {
-  width: 250px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 20px;
-  text-align: center;
-  box-shadow: 0 4px 8px rgba(149, 84, 84, 0.1);
+background-color: #fff;
+border-radius: 8px;
+box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+width: 200px;
+text-align: center;
+padding: 15px;
+transition: transform 0.3s ease;
 }
 
-.book-image {
-  max-width: 100%;
-  height: auto;
-  margin-bottom: 10px;
+.book-item:hover {
+transform: scale(1.05);
 }
 
-/* Search Section */
-.search-section {
-  margin-top: 50px;
-  text-align: center;
+.book-item img {
+width: 100%;
+height: auto;
+border-radius: 8px;
 }
 
-.search-title {
-  font-size: 24px;
-  font-weight: bold;
+.book-title {
+font-size: 1.2rem;
+margin: 10px 0;
 }
 
-.search-input {
-  padding: 10px;
-  width: 300px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  margin: 10px 0;
+.book-author {
+color: #888;
+font-size: 1rem;
 }
+
 
 .search-button {
   background-color: #1C3D5A;
@@ -436,5 +479,9 @@
   background-color: #1C3D5A;
   color: white;
   margin-top: 50px;
-}
 
+.book-search {
+margin: 40px 0;
+text-align: center;
+
+}

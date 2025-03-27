@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { Button, Input, Segment, Card, Image, Loader, Grid } from "semantic-ui-react";
 
 const BookSearch = () => {
   const [query, setQuery] = useState("");
@@ -10,6 +11,9 @@ const BookSearch = () => {
   const API_KEY = "AIzaSyAb0O_MywOx0cvRbMHRPs9MvqQvvjSvL6A"; // 🔴 WARNING: API Key is exposed
 
   //const API_KEY = "AIzaSyXXXXX-YOUR-KEY-HERE"; // 🔴 WARNING: API Key is exposed
+
+
+  //const API_KEY = "AIzaSyAb0O_MywOx0cvRbMHRPs9MvqQvvjSvL6A"; // Use the API key from .env file
 
 
   const searchBooks = async () => {
@@ -30,37 +34,63 @@ const BookSearch = () => {
   };
 
   return (
-    <div className="book-search">
+    <Segment textAlign="center" className="book-search" style={{ padding: "50px 0" }}>
       <h2>Search Books</h2>
-      <input
-        type="text"
+      
+      {/* Input for book title */}
+      <Input
+        icon="search"
         placeholder="Enter book title..."
         value={query}
         onChange={(e) => setQuery(e.target.value)}
+        style={{ width: "300px" }}
       />
-      <button onClick={searchBooks}>Search</button>
+      <Button
+        color="blue"
+        onClick={searchBooks}
+        loading={loading}
+        style={{ marginLeft: "10px" }}
+      >
+        Search
+      </Button>
 
-      {loading && <p>Loading...</p>}
+      {/* Loading Spinner */}
+      {loading && <Loader active inline="centered" />}
 
-      <div className="book-results">
+      {/* Display Books */}
+      <Grid container style={{ marginTop: "20px" }}>
         {books.length > 0 ? (
           books.map((book) => (
-            <div key={book.id} className="book-card">
-              <h3>{book.volumeInfo.title}</h3>
-              <p>{book.volumeInfo.authors?.join(", ")}</p>
-              {book.volumeInfo.imageLinks?.thumbnail && (
-                <img src={book.volumeInfo.imageLinks.thumbnail} alt={book.volumeInfo.title} />
-              )}
-              <a href={book.volumeInfo.infoLink} target="_blank" rel="noopener noreferrer">
-                More Info
-              </a>
-            </div>
+            <Grid.Column key={book.id} mobile={16} tablet={8} computer={4}>
+              <Card>
+                {book.volumeInfo.imageLinks?.thumbnail && (
+                  <Image src={book.volumeInfo.imageLinks.thumbnail} wrapped ui={false} />
+                )}
+                <Card.Content>
+                  <Card.Header>{book.volumeInfo.title}</Card.Header>
+                  <Card.Description>
+                    {book.volumeInfo.authors?.join(", ")}
+                  </Card.Description>
+                </Card.Content>
+                <Card.Content extra>
+                  <Button
+                    primary
+                    as="a"
+                    href={book.volumeInfo.infoLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    More Info
+                  </Button>
+                </Card.Content>
+              </Card>
+            </Grid.Column>
           ))
         ) : (
           <p>No books found.</p>
         )}
-      </div>
-    </div>
+      </Grid>
+    </Segment>
   );
 };
 
