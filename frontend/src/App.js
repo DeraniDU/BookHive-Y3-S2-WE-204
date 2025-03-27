@@ -2,28 +2,31 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import SignIn from "./SignIn";
 import SignUp from "./SignUp";
 import Home from "./Home";
-<<<<<<< HEAD
-import Dashboard from "./Dashboard";
-import Profile from "./pages/Samadi/Profile";
+import ExchangeBook from "./ExchangeBook";
+import BookRequest from './BookRequest';
+import MyRequestsPage from "./MyRequestsPage";
+import ExchangeAddBook from "./ExchangeAddBook";
+import ExchangeDeleteBook from "./ExchangeDeleteBook";
+import ExchangeEditBook  from "./ExchangeEditBook "
 
-=======
->>>>>>> b802650f769afd032ef7c94e617070f8c448a732
 
 function App() {
   return (
     <Router>
       <Routes>
-<<<<<<< HEAD
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/exchangebook" element={<ExchangeBook />} />
+        <Route path="/bookrequest" element={<BookRequest />} />
+        <Route path="/request" element={< MyRequestsPage/>} />
+        <Route path="/exchangeadd" element={< ExchangeAddBook/>} />
+        <Route path ="/exchangedelete" element ={<ExchangeDeleteBook/>}/>
+        <Route path ="/exedit" element ={<ExchangeEditBook/>}/>
+       
+        
+        
+
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/" element={<Home />} />
-        <Route path="/profile" element={<Profile />} />
-=======
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/" element={<Home />} />
->>>>>>> b802650f769afd032ef7c94e617070f8c448a732
       </Routes>
     </Router>
   );

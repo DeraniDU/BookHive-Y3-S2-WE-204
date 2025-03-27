@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 /* General Styles */
 .home-container {
 
@@ -63,7 +63,7 @@
   color: white;
   padding: 20px 0;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-=======
+
 /* Navbar */
 .navbar {
   
@@ -73,7 +73,6 @@
   background-color: #087add;
   padding: 15px 0;
   z-index: 1000; /* Ensure it's above other content */
->>>>>>> b802650f769afd032ef7c94e617070f8c448a732
 }
 
 .navbar-container {
@@ -82,7 +81,6 @@
   align-items: center;
   max-width: 1200px;
   margin: 0 auto;
-<<<<<<< HEAD
   padding: 0 20px;
 }
 
@@ -90,7 +88,6 @@
   font-size: 2.5rem;
   font-weight: bold;
   letter-spacing: 1px;
-=======
   padding: 10px 20px;
 }
 
@@ -98,12 +95,10 @@
   color: white;
   font-size: 24px;
   margin: 0;
->>>>>>> b802650f769afd032ef7c94e617070f8c448a732
 }
 
 .navbar-links {
   display: flex;
-<<<<<<< HEAD
   gap: 30px;
 }
 
@@ -116,7 +111,6 @@
 
 .navbar-link:hover {
   color: #ff0404;
-=======
   gap: 20px;
 }
 
@@ -143,12 +137,10 @@
 
 .logout-button:hover {
   background-color: #000000;
->>>>>>> b802650f769afd032ef7c94e617070f8c448a732
 }
 
 /* Hero Section */
 .hero {
-<<<<<<< HEAD
   background-color: #1c3d5a;
   color: white;
   text-align: center;
@@ -197,7 +189,6 @@
   margin-bottom: 30px;
   color: #1c3d5a;
   font-weight: bold;
-=======
   padding-top: 100px; /* Adjust for navbar height */
   text-align: center;
   background-color: #a11919;
@@ -230,12 +221,10 @@
 .featured-services {
   margin-top: 100px; /* Adjust for navbar */
   text-align: center;
->>>>>>> b802650f769afd032ef7c94e617070f8c448a732
 }
 
 .service-list {
   display: flex;
-<<<<<<< HEAD
   justify-content: space-around;
   flex-wrap: wrap;
   gap: 30px;
@@ -278,7 +267,6 @@
   font-size: 1.3rem;
   font-weight: bold;
   color: #1c3d5a;
-=======
   flex-wrap: wrap;
   gap: 20px;
   justify-content: center;
@@ -301,12 +289,10 @@
 .service-image {
   max-width: 100%;
   height: auto;
->>>>>>> b802650f769afd032ef7c94e617070f8c448a732
   margin-bottom: 10px;
 }
 
 .service-button {
-<<<<<<< HEAD
   background-color: #4caf50;
   color: white;
   padding: 12px 0;
@@ -321,7 +307,6 @@
 .service-button:hover {
   background-color: #45a049;
   transform: scale(1.05);
-=======
   background-color: #1C3D5A;
   color: white;
   padding: 10px 20px;
@@ -392,12 +377,10 @@
 
 .search-button:hover {
   background-color: #A6BCFF;
->>>>>>> b802650f769afd032ef7c94e617070f8c448a732
 }
 
 /* Footer */
 .footer {
-<<<<<<< HEAD
   background-color: #1c3d5a;
   color: white;
   text-align: center;
@@ -447,11 +430,11 @@
     font-size: 1.1rem;
   }
 }
-=======
+
   text-align: center;
   padding: 20px;
   background-color: #1C3D5A;
   color: white;
   margin-top: 50px;
 }
->>>>>>> b802650f769afd032ef7c94e617070f8c448a732
+

@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@tailwindcss/vite": "^4.0.16",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.2.0",
@@ -13,16 +12,9 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^7.4.0",
-<<<<<<< HEAD
     "react-scripts": "^5.0.1",
-    "sweetalert2": "^11.17.2",
-    "tailwindcss": "^4.0.16",
-=======
-    "react-scripts": "5.0.1",
     "sweetalert": "^2.1.2",
     "sweetalert2": "^11.17.2",
-    "tailwindcss": "^4.0.15",
->>>>>>> b802650f769afd032ef7c94e617070f8c448a732
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -48,5 +40,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.17"
   }
 }

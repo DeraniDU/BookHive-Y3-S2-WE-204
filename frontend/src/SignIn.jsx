@@ -3,14 +3,12 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "./firebase"; // Importing Firebase auth
-import "./index.css";  // Ensure the index.css file is imported
+import "./index.css"; // Ensure the index.css file is imported
 
 const SignIn = () => {
   const navigate = useNavigate(); // Initialize the navigate function
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-<<<<<<< HEAD
-  
 
   const handleLogin = async () => {
     if (!email) {
@@ -23,20 +21,6 @@ const SignIn = () => {
       return;
     }
 
-=======
-
-  const handleLogin = async () => {
-    if (!email) {
-      Swal.fire({ icon: "error", title: "Oops...", text: "Please enter email" });
-      return;
-    }
-
-    if (!password) {
-      Swal.fire({ icon: "error", title: "Oops...", text: "Please enter password." });
-      return;
-    }
-
->>>>>>> b802650f769afd032ef7c94e617070f8c448a732
     try {
       // Firebase Sign In
       await signInWithEmailAndPassword(auth, email, password);
@@ -44,7 +28,7 @@ const SignIn = () => {
       Swal.fire({ icon: "success", title: "Login Success", text: "You have successfully logged in" });
 
       // Store the user login status in localStorage (optional)
-      localStorage.setItem("isLogged", true);
+      localStorage.setItem("isLogged", "true");
 
       // Redirect to Home page after successful login
       navigate("/"); // Redirect to home page after successful login
