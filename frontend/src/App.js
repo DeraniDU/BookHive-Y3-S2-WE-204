@@ -9,7 +9,7 @@ import ExchangeAddBook from "./pages/samadi/ExchangeAddBook";
 import ExchangeDeleteBook from "./pages/samadi/ExchangeDeleteBook";
 import ExchangeEditBook  from "./pages/samadi/ExchangeEditBook"
 import ExchangeHome from "./pages/samadi/ExchangeHome"
-
+import UserAddBook from "./pages/samadi/UserAddBook"
 function App() {
   return (
     <Router>
@@ -22,6 +22,7 @@ function App() {
         <Route path ="/exchangedelete" element ={<ExchangeDeleteBook/>}/>
         <Route path ="/exedit" element ={<ExchangeEditBook/>}/>
         <Route path ="/exhome" element = {<ExchangeHome/>}/>
+        <Route path ="/useradd" element = {<UserAddBook/>}/>
        
         
         

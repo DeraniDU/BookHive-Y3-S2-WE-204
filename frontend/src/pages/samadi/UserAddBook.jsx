@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 
-const ExchangeAddBook = () => {
+const BookExchangeForm = () => {
   const [formData, setFormData] = useState({
     bookTitle: '',
     bookGenre: '',
@@ -117,13 +117,13 @@ const ExchangeAddBook = () => {
     <div>
       <Header />
       <div style={styles.container}>
-        <h1 style={styles.heading}>Admin Panel: Book Exchange Store</h1>
-        <p style={styles.subtitle}>Add new books to the Exchange Store easily. Fill out the details below and contribute to the marketplace!</p>
+        <h1 style={styles.heading}>📚 Add Your Book for Exchange</h1>
+        <p style={styles.subtitle}>Share your book with the community and exchange for one that suits you!</p>
 
         {showPopup && (
           <div style={styles.popup}>
             <div style={styles.popupContent}>
-              <p style={styles.popupMessage}>✅ Success! Your book has been successfully listed for exchange!</p>
+              <p style={styles.popupMessage}>✅ Your Book has been successfully added to the Exchange Marketplace!</p>
               <button style={styles.popupButton} onClick={handleClosePopup}>OK</button>
             </div>
           </div>
@@ -347,4 +347,4 @@ const styles = {
   },
 };
 
-export default ExchangeAddBook;
+export default BookExchangeForm;

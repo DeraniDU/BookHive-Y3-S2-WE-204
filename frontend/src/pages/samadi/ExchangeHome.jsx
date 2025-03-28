@@ -85,7 +85,7 @@ const ExchangeHome = () => {
                   </td>
                   <td style={{ textAlign: "center", padding: "12px" }}>
                     <div style={{ display: "flex", justifyContent: "center", gap: "16px" }}>
-                      <Link to={`/books/details`} style={{ color: "green" }}>
+                      <Link to={`/exchangebook`} style={{ color: "green" }}>
                         <BsInfoCircle style={{ fontSize: "20px", cursor: "pointer" }} />
                       </Link>
                       <Link to={`/exedit`} style={{ color: "orange" }}>

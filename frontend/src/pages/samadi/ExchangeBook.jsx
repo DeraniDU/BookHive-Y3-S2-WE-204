@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { FaPlus } from "react-icons/fa";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import atomicHabitsImage from '../../images/exchange/atomichabits.jpeg';
@@ -26,21 +27,21 @@ import four from "../../images/exchange/four.jpeg"
 import silent from "../../images/exchange/silent.jpeg"
 
 const booksData = [
-  { id: 1, title: "Atomic Habits", author: "James Clear", genre: "Self-help", status: "Available", image: atomicHabitsImage  },
+  { id: 1, title: "Atomic Habits", author: "James Clear", genre: "Self-help", status: "Available", image: atomicHabitsImage },
   { id: 2, title: "The Alchemist", author: "Paulo Coelho", genre: "Fiction", status: "Unavailable", image: image48 },
   { id: 3, title: "Clean Code", author: "Robert C. Martin", genre: "Programming", status: "Available", image: cleancode },
   { id: 4, title: "Rich Dad Poor Dad", author: "Robert Kiyosaki", genre: "Finance", status: "Available", image: richdad },
   { id: 5, title: "The Lean Startup", author: "Eric Ries", genre: "Business", status: "Available", image: startup },
   { id: 6, title: "Becoming", author: "Michelle Obama", genre: "Biography", status: "Unavailable", image: Becoming },
   { id: 7, title: "The Catcher in the Rye", author: "J.D. Salinger", genre: "Fiction", status: "Available", image: rye },
-  { id: 8, title: "Sapiens", author: "Yuval Noah Harari", genre: "History", status: "Available", image:sapiens },
+  { id: 8, title: "Sapiens", author: "Yuval Noah Harari", genre: "History", status: "Available", image: sapiens },
   { id: 9, title: "The Power of Habit", author: "Charles Duhigg", genre: "Self-help", status: "Unavailable", image: habit },
-  { id: 10, title: "The Art of War", author: "Sun Tzu", genre: "Strategy", status: "Available", image:sun },
+  { id: 10, title: "The Art of War", author: "Sun Tzu", genre: "Strategy", status: "Available", image: sun },
   { id: 11, title: "The Subtle Art of Not Giving a F*ck", author: "Mark Manson", genre: "Self-help", status: "Available", image: art },
   { id: 12, title: "To Kill a Mockingbird", author: "Harper Lee", genre: "Fiction", status: "Available", image: bird },
   { id: 13, title: 'The 4-Hour Workweek', author: 'Tim Ferriss', genre: 'Business', status: 'Available', image: week },
   { id: 14, title: 'Principles', author: 'Ray Dalio', genre: 'Business', status: 'Available', image: PP },
-  { id: 15, title: 'The Art of War', author: 'Sun Tzu', genre: 'Strategy', status: 'Available', image:  sun },
+  { id: 15, title: 'The Art of War', author: 'Sun Tzu', genre: 'Strategy', status: 'Available', image: sun },
   { id: 16, title: 'The Catcher in the Rye', author: 'J.D. Salinger', genre: 'Fiction', status: 'Available', image: rye },
   { id: 17, title: 'To Kill a Mockingbird', author: 'Harper Lee', genre: 'Fiction', status: 'Available', image: bird },
   { id: 18, title: '1984', author: 'George Orwell', genre: 'Fiction', status: 'Borrowed', image: image48 },
@@ -52,7 +53,7 @@ const booksData = [
   { id: 24, title: "The Hobbit", author: "J.R.R. Tolkien", genre: "Fantasy", status: "Available", image: hobbit },
   { id: 25, title: "The 7 Habits of Highly Effective People", author: "Stephen R. Covey", genre: "Self-help", status: "Unavailable", image: seven },
   { id: 26, title: "Educated", author: "Tara Westover", genre: "Biography", status: "Available", image: edu },
-  { id: 27, title: "The 48 Laws of Power", author: "Robert Greene", genre: "Self-help", status: "Available", image:power },
+  { id: 27, title: "The 48 Laws of Power", author: "Robert Greene", genre: "Self-help", status: "Available", image: power },
   { id: 28, title: "The Four Agreements", author: "Don Miguel Ruiz", genre: "Self-help", status: "Unavailable", image: four },
   { id: 29, title: "The Subtle Art of Not Giving a F*ck", author: "Mark Manson", genre: "Self-help", status: "Available", image: art },
   { id: 30, title: "The Silent Patient", author: "Alex Michaelides", genre: "Thriller", status: "Unavailable", image: silent }
@@ -72,6 +73,11 @@ const ExchangeBook = () => {
     setSearchQuery(query);
     filterBooks(query, selectedGenre, sortOrder);
   };
+
+  const handleAddBook = () => {
+    navigate("/useradd"); // Navigate to AddBook page
+  };
+
 
   // Filter books based on search query, genre, and sort order
   const filterBooks = (query, genre, sort) => {
@@ -115,8 +121,29 @@ const ExchangeBook = () => {
 
   return (
     <div style={{ padding: '24px', backgroundColor: '#f3f4f6', minHeight: '100vh' }}>
-       <Header />
-       
+      <Header />
+      {/* Add Book Button */}
+      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "16px" }}>
+        <button
+          onClick={handleAddBook}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            padding: "12px 16px",
+            borderRadius: "8px",
+            backgroundColor: "#4F46E5",
+            color: "#fff",
+            border: "none",
+            cursor: "pointer",
+            fontSize: "16px",
+            fontWeight: "600",
+          }}
+        >
+          <FaPlus /> Add Book
+        </button>
+      </div>
+
       <h1 style={{ textAlign: 'center', fontSize: '36px', fontWeight: '800', color: '#1D4ED8', marginBottom: '24px' }}>
         📚 Book Exchange Platform
       </h1>
@@ -339,7 +366,7 @@ const ExchangeBook = () => {
           </div>
         </div>
       )}
-        <Footer />
+      <Footer />
     </div>
   );
 };
