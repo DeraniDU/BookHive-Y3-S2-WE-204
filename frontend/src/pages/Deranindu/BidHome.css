@@ -1,0 +1,153 @@
+/* General Container */
+.bid-home-container {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    background-color: #f9f9f9;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Heading */
+h2 {
+    color: #1C3D5A;
+    font-size: 32px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Book Details Section */
+.book-details {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+/* Book Detail Fields */
+.book-detail {
+    margin-bottom: 15px;
+}
+
+.book-detail label {
+    font-weight: bold;
+    color: #1C3D5A;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.book-detail p,
+.book-detail input,
+.book-detail textarea {
+    font-size: 16px;
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.book-detail input[type="text"],
+.book-detail input[type="number"],
+.book-detail input[type="date"],
+.book-detail textarea {
+    background-color: #f1f1f1;
+}
+
+.book-detail input[type="file"] {
+    background-color: #f1f1f1;
+    padding: 10px;
+}
+
+/* Description and Photos */
+.book-detail textarea {
+    height: 150px;
+}
+
+/* Buttons Section */
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.buttons button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    background-color: #1C3D5A;
+    color: white;
+}
+
+.buttons button:hover {
+    background-color: #A6BCFF;
+}
+
+/* Bid Details Section */
+.bid-form {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Bid Detail Fields */
+.bid-detail {
+    margin-bottom: 15px;
+}
+
+.bid-detail label {
+    font-weight: bold;
+    color: #1C3D5A;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.bid-detail input {
+    font-size: 16px;
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    background-color: #f1f1f1;
+}
+
+/* Buttons in Bid Section */
+.bid-form .buttons button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    background-color: #FF0404;
+    color: white;
+}
+
+.bid-form .buttons button:hover {
+    background-color: #FF5656;
+}
+
+/* File input button */
+.book-detail input[type="file"]::file-selector-button {
+    background-color: #1C3D5A;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+/* File input hover state */
+.book-detail input[type="file"]::file-selector-button:hover {
+    background-color: #A6BCFF;
+    color: #1C3D5A;
+}
+
+/* Centered content */
+.book-details,
+.bid-form {
+    max-width: 800px;
+    margin: 0 auto;
+}

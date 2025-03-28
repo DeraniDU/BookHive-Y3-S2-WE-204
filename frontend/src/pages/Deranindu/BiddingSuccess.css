@@ -1,0 +1,97 @@
+.bidding-success-container {
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 30px;
+    background: #f9f9f9;
+    border-radius: 15px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+}
+
+.bidding-success-container h2 {
+    color: #1C3D5A;
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 25px;
+    text-transform: uppercase;
+}
+
+.bid-details {
+    text-align: left;
+    margin-bottom: 25px;
+    padding: 15px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.bid-detail {
+    margin: 15px 0;
+}
+
+.bid-detail label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+.bid-detail p {
+    margin: 5px 0;
+    padding: 12px;
+    background: #f4f4f4;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #444;
+    border: 1px solid #ddd;
+}
+
+input[type="date"] {
+    width: 100%;
+    padding: 12px;
+    margin-top: 8px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background: #fff;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 30px;
+}
+
+button {
+    padding: 10px 18px; /* Decreased padding for smaller buttons */
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+button.update {
+    background: #A6BCFF;
+    color: #1C3D5A;
+    width: 48%;
+}
+
+button.delete {
+    background: #FF0404;
+    color: #fff;
+    width: 48%;
+}
+
+button.view {
+    background: #1C3D5A;
+    color: #fff;
+    width: 48%;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+button:active {
+    transform: scale(0.98);
+}
