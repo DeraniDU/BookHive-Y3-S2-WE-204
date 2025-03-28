@@ -5,6 +5,7 @@ import bookBackground from '../photo//book1.jpg';
 import bookBackground1 from '../photo//book2.jpg';
 import { FaBars } from 'react-icons/fa';
 import Navbar from '../components/Navbar';
+import { Link } from 'react-router-dom';
 
 
 
@@ -154,10 +155,10 @@ const HomePage = () => {
           </h2>
           <div className="flex flex-col md:flex-row justify-center gap-6">
             <button className="bg-blue-600 text-white py-4 px-8 rounded-lg text-xl hover:bg-blue-700 transition duration-300">
-              Lend a Book
+             <Link to="/Lending2" className='button'>Lend a Book </Link>
             </button>
             <button className="bg-green-600 text-white py-4 px-8 rounded-lg text-xl hover:bg-green-700 transition duration-300">
-              Borrow a Book
+             <Link to ="/Borrowing" className='button' > Borrow a Book</Link>
             </button>
           </div>
         </div>
