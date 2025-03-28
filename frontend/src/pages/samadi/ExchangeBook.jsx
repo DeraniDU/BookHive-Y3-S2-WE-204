@@ -1,41 +1,64 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
+import atomicHabitsImage from '../../images/exchange/atomichabits.jpeg';
+import image48 from "../../images/exchange/1948.jpeg"
+import cleancode from "../../images/exchange/cleancode.jpeg"
+import richdad from "../../images/exchange/richdad.jpeg"
+import startup from "../../images/exchange/startup.jpeg"
+import Becoming from "../../images/exchange/becoming.jpeg"
+import rye from "../../images/exchange/rye.jpeg"
+import sapiens from "../../images/exchange/sapiens.jpeg"
+import habit from "../../images/exchange/habit.jpeg"
+import sun from "../../images/exchange/sun.jpeg"
+import art from "../../images/exchange/art.jpeg"
+import bird from "../../images/exchange/bird.jpeg"
+import week from "../../images/exchange/week.jpeg"
+import PP from "../../images/exchange/PP.jpeg"
+import brave from "../../images/exchange/brave.jpeg"
+import theguest from "../../images/exchange/theguest.jpeg"
+import hobbit from "../../images/exchange/hobbit.jpeg"
+import seven from "../../images/exchange/seven.jpeg"
+import edu from "../../images/exchange/edu.jpeg"
+import power from "../../images/exchange/power.jpeg"
+import four from "../../images/exchange/four.jpeg"
+import silent from "../../images/exchange/silent.jpeg"
 
 const booksData = [
-  { id: 1, title: "Atomic Habits", author: "James Clear", genre: "Self-help", status: "Available", image: "https://via.placeholder.com/150" },
-  { id: 2, title: "The Alchemist", author: "Paulo Coelho", genre: "Fiction", status: "Unavailable", image: "https://via.placeholder.com/150" },
-  { id: 3, title: "Clean Code", author: "Robert C. Martin", genre: "Programming", status: "Available", image: "https://via.placeholder.com/150" },
-  { id: 4, title: "Rich Dad Poor Dad", author: "Robert Kiyosaki", genre: "Finance", status: "Available", image: "https://via.placeholder.com/150" },
-  { id: 5, title: "The Lean Startup", author: "Eric Ries", genre: "Business", status: "Available", image: "https://via.placeholder.com/150" },
-  { id: 6, title: "Becoming", author: "Michelle Obama", genre: "Biography", status: "Unavailable", image: "https://via.placeholder.com/150" },
-  { id: 7, title: "The Catcher in the Rye", author: "J.D. Salinger", genre: "Fiction", status: "Available", image: "https://via.placeholder.com/150" },
-  { id: 8, title: "Sapiens", author: "Yuval Noah Harari", genre: "History", status: "Available", image: "https://via.placeholder.com/150" },
-  { id: 9, title: "The Power of Habit", author: "Charles Duhigg", genre: "Self-help", status: "Unavailable", image: "https://via.placeholder.com/150" },
-  { id: 10, title: "The Art of War", author: "Sun Tzu", genre: "Strategy", status: "Available", image: "https://via.placeholder.com/150" },
-  { id: 11, title: "The Subtle Art of Not Giving a F*ck", author: "Mark Manson", genre: "Self-help", status: "Available", image: "https://via.placeholder.com/150" },
-  { id: 12, title: "To Kill a Mockingbird", author: "Harper Lee", genre: "Fiction", status: "Available", image: "https://via.placeholder.com/150" },
-  { id: 13, title: 'The 4-Hour Workweek', author: 'Tim Ferriss', genre: 'Business', status: 'Available', image: 'https://images.unsplash.com/photo-1518828675897-798ed85a06a9' },
-  { id: 14, title: 'Principles', author: 'Ray Dalio', genre: 'Business', status: 'Available', image: 'https://images.unsplash.com/photo-1515440761180-03b7bc89e4eb' },
-  { id: 15, title: 'The Art of War', author: 'Sun Tzu', genre: 'Strategy', status: 'Available', image: 'https://images.unsplash.com/photo-1529156093063-2dcd25d37862' },
-  { id: 16, title: 'The Catcher in the Rye', author: 'J.D. Salinger', genre: 'Fiction', status: 'Available', image: 'https://images.unsplash.com/photo-1518680732560-c6e30ba12f71' },
-  { id: 17, title: 'To Kill a Mockingbird', author: 'Harper Lee', genre: 'Fiction', status: 'Available', image: 'https://images.unsplash.com/photo-1574713022773-3ca4fc5511ca' },
-  { id: 18, title: '1984', author: 'George Orwell', genre: 'Fiction', status: 'Borrowed', image: 'https://images.unsplash.com/photo-1587590770418-17c745c10887' },
-  { id: 19, title: 'Brave New World', author: 'Aldous Huxley', genre: 'Fiction', status: 'Available', image: 'https://images.unsplash.com/photo-1565725724-cd8722b8c29d' },
-  { id: 20, title: 'The Great Gatsby', author: 'F. Scott Fitzgerald', genre: 'Fiction', status: 'Available', image: 'https://images.unsplash.com/photo-1553838989-b0fd877c2e6b' },
-  { id: 21, title: "The Power of Habit", author: "Charles Duhigg", genre: "Self-help", status: "Available", image: "https://via.placeholder.com/150" },
-  { id: 22, title: "Sapiens", author: "Yuval Noah Harari", genre: "History", status: "Unavailable", image: "https://via.placeholder.com/150" },
-  { id: 23, title: "The Art of War", author: "Sun Tzu", genre: "Philosophy", status: "Available", image: "https://via.placeholder.com/150" },
-  { id: 24, title: "The Hobbit", author: "J.R.R. Tolkien", genre: "Fantasy", status: "Available", image: "https://via.placeholder.com/150" },
-  { id: 25, title: "The 7 Habits of Highly Effective People", author: "Stephen R. Covey", genre: "Self-help", status: "Unavailable", image: "https://via.placeholder.com/150" },
-  { id: 26, title: "Educated", author: "Tara Westover", genre: "Biography", status: "Available", image: "https://via.placeholder.com/150" },
-  { id: 27, title: "The 48 Laws of Power", author: "Robert Greene", genre: "Self-help", status: "Available", image: "https://via.placeholder.com/150" },
-  { id: 28, title: "The Four Agreements", author: "Don Miguel Ruiz", genre: "Self-help", status: "Unavailable", image: "https://via.placeholder.com/150" },
-  { id: 29, title: "The Subtle Art of Not Giving a F*ck", author: "Mark Manson", genre: "Self-help", status: "Available", image: "https://via.placeholder.com/150" },
-  { id: 30, title: "The Silent Patient", author: "Alex Michaelides", genre: "Thriller", status: "Unavailable", image: "https://via.placeholder.com/150" }
+  { id: 1, title: "Atomic Habits", author: "James Clear", genre: "Self-help", status: "Available", image: atomicHabitsImage  },
+  { id: 2, title: "The Alchemist", author: "Paulo Coelho", genre: "Fiction", status: "Unavailable", image: image48 },
+  { id: 3, title: "Clean Code", author: "Robert C. Martin", genre: "Programming", status: "Available", image: cleancode },
+  { id: 4, title: "Rich Dad Poor Dad", author: "Robert Kiyosaki", genre: "Finance", status: "Available", image: richdad },
+  { id: 5, title: "The Lean Startup", author: "Eric Ries", genre: "Business", status: "Available", image: startup },
+  { id: 6, title: "Becoming", author: "Michelle Obama", genre: "Biography", status: "Unavailable", image: Becoming },
+  { id: 7, title: "The Catcher in the Rye", author: "J.D. Salinger", genre: "Fiction", status: "Available", image: rye },
+  { id: 8, title: "Sapiens", author: "Yuval Noah Harari", genre: "History", status: "Available", image:sapiens },
+  { id: 9, title: "The Power of Habit", author: "Charles Duhigg", genre: "Self-help", status: "Unavailable", image: habit },
+  { id: 10, title: "The Art of War", author: "Sun Tzu", genre: "Strategy", status: "Available", image:sun },
+  { id: 11, title: "The Subtle Art of Not Giving a F*ck", author: "Mark Manson", genre: "Self-help", status: "Available", image: art },
+  { id: 12, title: "To Kill a Mockingbird", author: "Harper Lee", genre: "Fiction", status: "Available", image: bird },
+  { id: 13, title: 'The 4-Hour Workweek', author: 'Tim Ferriss', genre: 'Business', status: 'Available', image: week },
+  { id: 14, title: 'Principles', author: 'Ray Dalio', genre: 'Business', status: 'Available', image: PP },
+  { id: 15, title: 'The Art of War', author: 'Sun Tzu', genre: 'Strategy', status: 'Available', image:  sun },
+  { id: 16, title: 'The Catcher in the Rye', author: 'J.D. Salinger', genre: 'Fiction', status: 'Available', image: rye },
+  { id: 17, title: 'To Kill a Mockingbird', author: 'Harper Lee', genre: 'Fiction', status: 'Available', image: bird },
+  { id: 18, title: '1984', author: 'George Orwell', genre: 'Fiction', status: 'Borrowed', image: image48 },
+  { id: 19, title: 'Brave New World', author: 'Aldous Huxley', genre: 'Fiction', status: 'Available', image: brave },
+  { id: 20, title: 'The Great Gatsby', author: 'F. Scott Fitzgerald', genre: 'Fiction', status: 'Available', image: theguest },
+  { id: 21, title: "The Power of Habit", author: "Charles Duhigg", genre: "Self-help", status: "Available", image: habit },
+  { id: 22, title: "Sapiens", author: "Yuval Noah Harari", genre: "History", status: "Unavailable", image: sapiens },
+  { id: 23, title: "The Art of War", author: "Sun Tzu", genre: "Philosophy", status: "Available", image: sun },
+  { id: 24, title: "The Hobbit", author: "J.R.R. Tolkien", genre: "Fantasy", status: "Available", image: hobbit },
+  { id: 25, title: "The 7 Habits of Highly Effective People", author: "Stephen R. Covey", genre: "Self-help", status: "Unavailable", image: seven },
+  { id: 26, title: "Educated", author: "Tara Westover", genre: "Biography", status: "Available", image: edu },
+  { id: 27, title: "The 48 Laws of Power", author: "Robert Greene", genre: "Self-help", status: "Available", image:power },
+  { id: 28, title: "The Four Agreements", author: "Don Miguel Ruiz", genre: "Self-help", status: "Unavailable", image: four },
+  { id: 29, title: "The Subtle Art of Not Giving a F*ck", author: "Mark Manson", genre: "Self-help", status: "Available", image: art },
+  { id: 30, title: "The Silent Patient", author: "Alex Michaelides", genre: "Thriller", status: "Unavailable", image: silent }
 ];
 
-const BookExchange = () => {
+const ExchangeBook = () => {
   const navigate = useNavigate();
   // State for search, filtered books, and selected genre
   const [searchQuery, setSearchQuery] = useState("");
@@ -92,7 +115,8 @@ const BookExchange = () => {
 
   return (
     <div style={{ padding: '24px', backgroundColor: '#f3f4f6', minHeight: '100vh' }}>
-      {/* Header */}
+       <Header />
+       
       <h1 style={{ textAlign: 'center', fontSize: '36px', fontWeight: '800', color: '#1D4ED8', marginBottom: '24px' }}>
         📚 Book Exchange Platform
       </h1>
@@ -315,8 +339,9 @@ const BookExchange = () => {
           </div>
         </div>
       )}
+        <Footer />
     </div>
   );
 };
 
-export default BookExchange;
+export default ExchangeBook;

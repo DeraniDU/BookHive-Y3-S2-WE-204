@@ -64,6 +64,7 @@
   color: white;
   padding: 20px 0;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
 
 /* Navbar */
 .navbar {
@@ -194,6 +195,8 @@
   text-align: center;
   background-color: #a11919;
   padding: fit-content;
+  
+}
 
 :root {
   --primary-color: #3366ff;
@@ -473,12 +476,6 @@ font-size: 1rem;
     font-size: 1.1rem;
   }
 }
-
-  text-align: center;
-  padding: 20px;
-  background-color: #1C3D5A;
-  color: white;
-  margin-top: 50px;
 
 .book-search {
 margin: 40px 0;
