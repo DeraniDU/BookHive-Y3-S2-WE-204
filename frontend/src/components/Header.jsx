@@ -36,7 +36,7 @@ const Header = () => {
 
         {/* Navigation Links */}
         <div style={{ display: 'flex', justifyContent: 'center', flex: 1 }}>
-          <Link to="/book-exchange" style={{ padding: '10px 30px', color: '#fff', textDecoration: 'none' }}>Book Exchange</Link>
+          <Link to="/exchangebook" style={{ padding: '10px 30px', color: '#fff', textDecoration: 'none' }}>Book Exchange</Link>
           <Link to="/book-lending" style={{ padding: '10px 30px', color: '#fff', textDecoration: 'none' }}>Book Lending</Link>
           <Link to="/book-bidding" style={{ padding: '10px 30px', color: '#fff', textDecoration: 'none' }}>Book Bidding</Link>
           <Link to="/book-suggest" style={{ padding: '10px 30px', color: '#fff', textDecoration: 'none' }}>Book Suggest</Link>
