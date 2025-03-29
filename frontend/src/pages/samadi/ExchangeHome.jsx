@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { MdOutlineAddBox, MdOutlineDelete } from "react-icons/md";
-import { BsInfoCircle } from "react-icons/bs";
+//import { BsInfoCircle } from "react-icons/bs";
 import { AiOutlineEdit } from "react-icons/ai";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
@@ -85,9 +85,7 @@ const ExchangeHome = () => {
                   </td>
                   <td style={{ textAlign: "center", padding: "12px" }}>
                     <div style={{ display: "flex", justifyContent: "center", gap: "16px" }}>
-                      <Link to={`/exchangebook`} style={{ color: "green" }}>
-                        <BsInfoCircle style={{ fontSize: "20px", cursor: "pointer" }} />
-                      </Link>
+                      
                       <Link to={`/exedit`} style={{ color: "orange" }}>
                         <AiOutlineEdit style={{ fontSize: "20px", cursor: "pointer" }} />
                       </Link>
