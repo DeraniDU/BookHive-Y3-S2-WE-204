@@ -3,16 +3,15 @@ import { Segment, Image, Button, Container } from 'semantic-ui-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { auth } from '../firebase';
 import { signOut } from 'firebase/auth';
-import swal from 'sweetalert'; // Import SweetAlert
-import logo from '../assets/BH.png'; // Adjust the path if needed
+import swal from 'sweetalert'; 
+import logo from '../assets/BH.png';
 
 
-//this is the header
 
 const Header = () => {
   const navigate = useNavigate();
 
-  // Handle Logout
+
   const handleLogout = async () => {
     try {
       await signOut(auth); // Ensure sign-out completes

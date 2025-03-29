@@ -30,7 +30,7 @@ const MyRequestsPage = () => {
 
     // Show popup message
     setPopupMessage('Request canceled successfully!');
-    setTimeout(() => setPopupMessage(''), 3000); // Hide after 3 seconds
+    setTimeout(() => setPopupMessage(''), 3000); 
   };
 
   const getStatusBadgeColor = (status) => {

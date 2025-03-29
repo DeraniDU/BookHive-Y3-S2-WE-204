@@ -30,6 +30,7 @@ const BookExchangeForm = () => {
     });
   };
 
+  
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     setFormData({
