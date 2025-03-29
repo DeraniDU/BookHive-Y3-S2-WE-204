@@ -6,8 +6,11 @@ import { signOut } from 'firebase/auth';
 import swal from 'sweetalert'; 
 import logo from '../assets/BH.png';
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 0f906d588a1b3e85b3a4ed2b28e896148a8ff8f5
 const Header = () => {
   const navigate = useNavigate();
 
@@ -37,7 +40,7 @@ const Header = () => {
         <div style={{ display: 'flex', justifyContent: 'center', flex: 1 }}>
           <Link to="/exchangebook" style={{ padding: '10px 30px', color: '#fff', textDecoration: 'none' }}>Book Exchange</Link>
           <Link to="/book-lending" style={{ padding: '10px 30px', color: '#fff', textDecoration: 'none' }}>Book Lending</Link>
-          <Link to="/book-bidding" style={{ padding: '10px 30px', color: '#fff', textDecoration: 'none' }}>Book Bidding</Link>
+          <Link to="/view-placebid" style={{ padding: '10px 30px', color: '#fff', textDecoration: 'none' }}>Book Bidding</Link> {/* Update to your desired path */}
           <Link to="/book-suggest" style={{ padding: '10px 30px', color: '#fff', textDecoration: 'none' }}>Book Suggest</Link>
         </div>
 

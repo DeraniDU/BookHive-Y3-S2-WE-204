@@ -1,0 +1,81 @@
+.book-form-container {
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.book-form-container h2 {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+form input,
+form select,
+form textarea {
+  margin: 10px 0;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+form textarea {
+  height: 100px;
+}
+
+form button {
+  padding: 10px;
+  font-size: 16px;
+  background-color: #1C3D5A;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+form button:hover {
+  background-color: #A6BCFF;
+}
+
+input[type="file"] {
+  padding: 5px;
+  background-color: #fff;
+}
+
+input[type="file"]:hover {
+  background-color: #f0f0f0;
+}
+
+select, input[type="text"], input[type="number"], textarea {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+select:focus,
+input[type="text"]:focus,
+input[type="number"]:focus,
+textarea:focus {
+  border-color: #1C3D5A;
+  outline: none;
+}
+
+.book-form-container label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: block;
+  font-size: 16px;
+}
+
+input[type="file"] {
+  font-size: 14px;
+}
