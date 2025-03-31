@@ -6,11 +6,7 @@ import { signOut } from 'firebase/auth';
 import swal from 'sweetalert'; 
 import logo from '../assets/BH.png';
 
-<<<<<<< HEAD
 
-
-=======
->>>>>>> 0f906d588a1b3e85b3a4ed2b28e896148a8ff8f5
 const Header = () => {
   const navigate = useNavigate();
 
