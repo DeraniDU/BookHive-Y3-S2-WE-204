@@ -1,262 +1,98 @@
-import React, { useState } from 'react';
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
-const ExchangeBookEdit = () => {
-  const [formData, setFormData] = useState({
-    bookTitle: 'Atomic Habits',
-    bookGenre: 'Fiction',
-    condition: 'New',
-    availableDate: '2025-04-01', // Hardcoded value for available date
-    bookImage: null,
-    comments: '',
-  });
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showPopup, setShowPopup] = useState(false);
-  const [formErrors, setFormErrors] = useState({
-    availableDate: '',
-    bookImage: '',
-    bookTitle: '',
-    bookGenre: '',
-    condition: '',
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
-  };
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    setFormData({
-      ...formData,
-      bookImage: file
-    });
-  };
-
-  const validateForm = () => {
-    let errors = {};
-    let isValid = true;
-
-    if (!formData.bookTitle) {
-      errors.bookTitle = 'Please enter the book title.';
-      isValid = false;
-    }
-
-    if (!formData.bookGenre) {
-      errors.bookGenre = 'Please select a book genre.';
-      isValid = false;
-    }
-
-    if (!formData.condition) {
-      errors.condition = 'Please select the book condition.';
-      isValid = false;
-    }
-
-    const selectedDate = new Date(formData.availableDate);
-    const today = new Date();
-    if (!formData.availableDate) {
-      errors.availableDate = 'Please select an available date.';
-      isValid = false;
-    } else if (selectedDate <= today) {
-      errors.availableDate = 'Please select a future date.';
-      isValid = false;
-    }
-
-    if (!formData.bookImage) {
-      errors.bookImage = 'Please upload a book image.';
-      isValid = false;
-    }
-
-    setFormErrors(errors);
-    return isValid;
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (!validateForm()) return;
-
-    setIsSubmitting(true);
-
-    setTimeout(() => {
-      setShowPopup(true);
-      setIsSubmitting(false);
-
-      setFormData({
+const ExchangeEditBook = () => {
+    const { id } = useParams();
+    const navigate = useNavigate();
+    const [book, setBook] = useState({
         bookTitle: '',
         bookGenre: '',
         condition: '',
         availableDate: '',
-        bookImage: null,
-        comments: '',
-      });
+        comments: ''
+    });
+    const [errors, setErrors] = useState({});
 
-      document.getElementById("bookImageInput").value = "";
-    }, 1000);
-  };
+    useEffect(() => {
+        axios.get(`http://localhost:3000/books/${id}`)
+            .then(response => {
+                const fetchedBook = response.data;
+    
+                // Convert ISO date to "yyyy-MM-dd"
+                if (fetchedBook.availableDate) {
+                    fetchedBook.availableDate = fetchedBook.availableDate.split("T")[0];
+                }
+    
+                setBook(fetchedBook);
+            })
+            .catch(error => console.error("Error fetching book details:", error));
+    }, [id]);
+    
 
-  const handleClosePopup = () => {
-    setShowPopup(false);
-  };
+    const validateForm = () => {
+        let tempErrors = {};
+        if (!book.bookTitle.trim()) tempErrors.bookTitle = "Book title is required";
+        if (!book.bookGenre.trim()) tempErrors.bookGenre = "Book genre is required";
+        if (!book.condition.trim()) tempErrors.condition = "Condition is required";
+        if (!book.availableDate.trim()) tempErrors.availableDate = "Available date is required";
+        setErrors(tempErrors);
+        return Object.keys(tempErrors).length === 0;
+    };
 
-  return (
-    <div>
-      <Header />
-      <div style={{ padding: '20px', backgroundColor: '#f4f4f9', minHeight: '100vh', fontFamily: 'Arial, sans-serif' }}>
-        <h1 style={{ textAlign: 'center', fontSize: '30px', color: '#3f51b5', marginBottom: '10px' }}>Admin Panel: Update Book Information</h1>
-        <p style={{ textAlign: 'center', fontSize: '16px', color: '#333', marginBottom: '20px' }}> Update the details for the selected book below!</p>
+    const handleChange = (e) => {
+        setBook({ ...book, [e.target.name]: e.target.value });
+    };
 
-        {showPopup && (
-          <div style={{
-            position: 'fixed',
-            top: '0',
-            left: '0',
-            right: '0',
-            bottom: '0',
-            backgroundColor: 'rgba(0, 0, 0, 0.7)',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            zIndex: 9999,
-            animation: 'fadeIn 0.3s ease',
-          }}>
-            <div style={{
-              backgroundColor: '#fff',
-              padding: '30px',
-              borderRadius: '10px',
-              textAlign: 'center',
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
-            }}>
-              <p style={{ fontSize: '20px', color: '#333', fontWeight: 'bold', marginBottom: '20px' }}>
-                ✅  Success! Your book has been successfully updated!
-              </p>
-              <button style={{
-                backgroundColor: '#4CAF50',
-                color: '#fff',
-                border: 'none',
-                borderRadius: '5px',
-                padding: '12px 25px',
-                cursor: 'pointer',
-                fontSize: '16px',
-                transition: 'background-color 0.3s',
-              }} onClick={handleClosePopup}>
-                OK
-              </button>
-            </div>
-          </div>
-        )}
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (!validateForm()) return;
 
-        <form onSubmit={handleSubmit} style={{
-          maxWidth: '600px',
-          margin: '0 auto',
-          backgroundColor: '#fff',
-          padding: '20px',
-          borderRadius: '8px',
-          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
-        }}>
-          <div style={{ marginBottom: '15px' }}>
-            <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', color: '#333', marginBottom: '5px' }}>Book Title</label>
-            <input 
-              type="text" 
-              name="bookTitle" 
-              value={formData.bookTitle} 
-              onChange={handleChange} 
-              style={{ width: '100%', padding: '12px', borderRadius: '5px', border: '1px solid #bbb', fontSize: '16px', color: '#333' }} 
-              placeholder="Enter the book title" 
-            />
-            {formErrors.bookTitle && <p style={{ color: 'red', fontSize: '12px', marginTop: '5px' }}>{formErrors.bookTitle}</p>}
-          </div>
+        axios.put(`http://localhost:3000/books/${id}`, book)
+            .then(() => {
+                alert("Book updated successfully!");
+                navigate("/books");
+            })
+            .catch(error => console.error("Error updating book:", error));
+    };
 
-          <div style={{ marginBottom: '15px' }}>
-            <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', color: '#333', marginBottom: '5px' }}>Book Genre</label>
-            <select 
-              name="bookGenre" 
-              value={formData.bookGenre} 
-              onChange={handleChange} 
-              style={{ width: '100%', padding: '12px', borderRadius: '5px', border: '1px solid #bbb', fontSize: '16px', color: '#333' }}
-            >
-              <option value="">Select Genre</option>
-              <option value="Fiction">Fiction</option>
-              <option value="Non-Fiction">Non-Fiction</option>
-              <option value="Biography">Biography</option>
-              <option value="Sci-Fi">Sci-Fi</option>
-              <option value="Fantasy">Fantasy</option>
-              <option value="Mystery">Mystery</option>
-            </select>
-            {formErrors.bookGenre && <p style={{ color: 'red', fontSize: '12px', marginTop: '5px' }}>{formErrors.bookGenre}</p>}
-          </div>
+    return (
+        <div style={{ maxWidth: '400px', margin: '20px auto', padding: '20px', border: '1px solid #ccc', borderRadius: '5px' }}>
+            <h2 style={{ textAlign: 'center' }}>Edit Book</h2>
+            <form onSubmit={handleSubmit}>
+                <div style={{ marginBottom: '10px' }}>
+                    <label>Book Title:</label>
+                    <input type="text" name="bookTitle" value={book.bookTitle} onChange={handleChange} style={{ width: '100%', padding: '5px' }} />
+                    {errors.bookTitle && <span style={{ color: 'red' }}>{errors.bookTitle}</span>}
+                </div>
 
-          <div style={{ marginBottom: '15px' }}>
-            <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', color: '#333', marginBottom: '5px' }}>Condition</label>
-            <select 
-              name="condition" 
-              value={formData.condition} 
-              onChange={handleChange} 
-              style={{ width: '100%', padding: '12px', borderRadius: '5px', border: '1px solid #bbb', fontSize: '16px', color: '#333' }}
-            >
-              <option value="">Select Condition</option>
-              <option value="New">New</option>
-              <option value="Like New">Like New</option>
-              <option value="Used">Used</option>
-              <option value="Damaged">Damaged</option>
-            </select>
-            {formErrors.condition && <p style={{ color: 'red', fontSize: '12px', marginTop: '5px' }}>{formErrors.condition}</p>}
-          </div>
+                <div style={{ marginBottom: '10px' }}>
+                    <label>Book Genre:</label>
+                    <input type="text" name="bookGenre" value={book.bookGenre} onChange={handleChange} style={{ width: '100%', padding: '5px' }} />
+                    {errors.bookGenre && <span style={{ color: 'red' }}>{errors.bookGenre}</span>}
+                </div>
 
-          <div style={{ marginBottom: '15px' }}>
-            <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', color: '#333', marginBottom: '5px' }}>Available Date for Exchange</label>
-            <input 
-              type="date" 
-              name="availableDate" 
-              value={formData.availableDate} 
-              onChange={handleChange} 
-              style={{ width: '100%', padding: '12px', borderRadius: '5px', border: '1px solid #bbb', fontSize: '16px', color: '#333' }} 
-            />
-            {formErrors.availableDate && <p style={{ color: 'red', fontSize: '12px', marginTop: '5px' }}>{formErrors.availableDate}</p>}
-          </div>
+                <div style={{ marginBottom: '10px' }}>
+                    <label>Condition:</label>
+                    <input type="text" name="condition" value={book.condition} onChange={handleChange} style={{ width: '100%', padding: '5px' }} />
+                    {errors.condition && <span style={{ color: 'red' }}>{errors.condition}</span>}
+                </div>
 
-          <div style={{ marginBottom: '15px' }}>
-            <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', color: '#333', marginBottom: '5px' }}>Upload Book Image</label>
-            <input 
-              type="file" 
-              accept="image/*" 
-              onChange={handleImageChange} 
-              style={{ width: '100%', padding: '12px', borderRadius: '5px', border: '1px solid #bbb', fontSize: '16px', color: '#333' }} 
-              id="bookImageInput"
-            />
-            {formErrors.bookImage && <p style={{ color: 'red', fontSize: '12px', marginTop: '5px' }}>{formErrors.bookImage}</p>}
-          </div>
+                <div style={{ marginBottom: '10px' }}>
+                    <label>Available Date:</label>
+                    <input type="date" name="availableDate" value={book.availableDate} onChange={handleChange} style={{ width: '100%', padding: '5px' }} />
+                    {errors.availableDate && <span style={{ color: 'red' }}>{errors.availableDate}</span>}
+                </div>
 
-          <div style={{ marginBottom: '15px' }}>
-            <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', color: '#333', marginBottom: '5px' }}>Additional Comments</label>
-            <textarea 
-              name="comments" 
-              value={formData.comments} 
-              onChange={handleChange} 
-              style={{ width: '100%', padding: '12px', borderRadius: '5px', border: '1px solid #bbb', fontSize: '16px', height: '100px' }} 
-              placeholder="Any additional details about your book"
-            />
-          </div>
+                <div style={{ marginBottom: '10px' }}>
+                    <label>Comments:</label>
+                    <textarea name="comments" value={book.comments} onChange={handleChange} style={{ width: '100%', padding: '5px' }} />
+                </div>
 
-          <div style={{ textAlign: 'center' }}>
-            <button 
-              type="submit" 
-              style={isSubmitting ? { backgroundColor: '#3f51b5', color: '#fff', padding: '14px 30px', border: 'none', borderRadius: '5px', fontSize: '16px', cursor: 'not-allowed', opacity: 0.6 } : { backgroundColor: '#3f51b5', color: '#fff', padding: '14px 30px', border: 'none', borderRadius: '5px', fontSize: '16px', cursor: 'pointer' }} 
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? 'Submitting...' : 'Submit'}
-            </button>
-          </div>
-        </form>
-      </div>
-      <Footer />
-    </div>
-  );
+                <button type="submit" style={{ width: '100%', padding: '10px', background: '#007bff', color: 'white', border: 'none', cursor: 'pointer' }}>Update Book</button>
+            </form>
+        </div>
+    );
 };
 
-export default ExchangeBookEdit;
+export default ExchangeEditBook;
