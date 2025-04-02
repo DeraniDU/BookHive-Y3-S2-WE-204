@@ -125,7 +125,7 @@ const SignUp = () => {
       await createUserWithEmailAndPassword(auth, email, password);
       Swal.fire({ icon: "success", title: "Success!", text: "Your account has been created!" });
       localStorage.setItem("isLogged", true);
-      navigate("/");
+      navigate("/signin"); // Changed from "/" to "/signin"
     } catch (error) {
       Swal.fire({ icon: "error", title: "Oops...", text: error.message });
     }
@@ -137,7 +137,7 @@ const SignUp = () => {
       await signInWithPopup(auth, provider);
       Swal.fire({ icon: "success", title: "Signed In", text: "You have successfully signed in with Google!" });
       localStorage.setItem("isLogged", true);
-      navigate("/");
+      navigate("/home"); // Changed from "/" to "/home"
     } catch (error) {
       Swal.fire({ icon: "error", title: "Oops...", text: error.message });
     }
@@ -149,7 +149,7 @@ const SignUp = () => {
       await signInWithPopup(auth, provider);
       Swal.fire({ icon: "success", title: "Signed In", text: "You have successfully signed in with Facebook!" });
       localStorage.setItem("isLogged", true);
-      navigate("/");
+      navigate("/home"); // Changed from "/" to "/home"
     } catch (error) {
       Swal.fire({ icon: "error", title: "Oops...", text: error.message });
     }
@@ -341,10 +341,10 @@ const SignUp = () => {
                   //         edge="end"
                   //         sx={{ 
                   //           marginRight: '8px',
-                  //           color: 'grey.800',
+                  //           color: 'grey.700',
                   //           '&:hover': {
-                  //             color: 'common.black',
-                  //             backgroundColor: 'rgba(66, 66, 66, 0.1)'
+                  //             color: 'secondary.main',
+                  //             backgroundColor: 'rgba(255, 112, 67, 0.1)'
                   //           }
                   //         }}
                   //       >
@@ -352,7 +352,7 @@ const SignUp = () => {
                   //       </IconButton>
                   //     </InputAdornment>
                   //   ),
-                  //}}
+                  // }}
                   sx={inputStyle}
                 />
 
@@ -377,10 +377,10 @@ const SignUp = () => {
                   //         edge="end"
                   //         sx={{ 
                   //           marginRight: '8px',
-                  //           color: 'secondary',
+                  //           color: 'grey.700',
                   //           '&:hover': {
-                  //             color: 'secondary',
-                  //             backgroundColor: 'rgba(255, 112, 67, 0.2)'
+                  //             color: 'secondary.main',
+                  //             backgroundColor: 'rgba(255, 112, 67, 0.1)'
                   //           }
                   //         }}
                   //       >
@@ -418,9 +418,9 @@ const SignUp = () => {
                       onClick={handleGoogleSignIn}
                       sx={{ 
                         height: '50px',
-                        '& .MuiSvgIcon-root': {
-                          color: 'white'
-                        }
+                        backgroundColor: 'secondary.main',
+                        '&:hover': { backgroundColor: 'secondary.dark' },
+                        '& .MuiSvgIcon-root': { color: 'white' }
                       }}
                     >
                       Google
@@ -435,9 +435,9 @@ const SignUp = () => {
                       onClick={handleFacebookSignIn}
                       sx={{ 
                         height: '50px',
-                        '& .MuiSvgIcon-root': {
-                          color: 'white'
-                        }
+                        backgroundColor: 'secondary.main',
+                        '&:hover': { backgroundColor: 'secondary.dark' },
+                        '& .MuiSvgIcon-root': { color: 'white' }
                       }}
                     >
                       Facebook
