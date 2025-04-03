@@ -249,13 +249,32 @@ const SignIn = () => {
                 variant="body1" 
                 sx={{ 
                   mt: 3,
-                  opacity: 0.85,
+                  opacity: 0.6,
                   lineHeight: 1.7,
                   maxWidth: '90%'
                 }}
               >
-                Join our community of book lovers! Sign in to access exclusive 
-                features, view your saved books, and connect with other readers.
+                Welcome back to BookHive! Sign in to access your personalized book recommendations, save your favorite reads, 
+                and stay connected with a community of passionate readers. Whether you’re picking up where you left off or exploring new genres, your reading journey is just a click away.
+
+                 Sign in today and dive back into the world of books with BookHive!
+              </Typography>
+
+              <Typography 
+                variant="body1" 
+                sx={{ 
+                  mt: 1,
+                  opacity: 0.6,
+                  lineHeight: 1.7,
+                  maxWidth: '90%',
+                  color: 'secondary.main'
+                }}
+              >
+                Sign in and start your literary adventure with BookHive.
+
+                 
+
+
               </Typography>
             </Box>
           </Box>
