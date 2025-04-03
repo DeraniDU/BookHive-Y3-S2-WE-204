@@ -256,14 +256,34 @@ const SignUp = () => {
               <Typography 
                 variant="body1" 
                 sx={{ 
-                  mt: 3,
-                  opacity: 0.85,
+                  mt: 1,
+                  opacity: 0.6,
                   lineHeight: 1.7,
                   maxWidth: '90%'
                 }}
               >
-                Join our community of book lovers! Create an account to access exclusive 
-                features, save your favorite books, and connect with other readers.
+                 Create an account to unlock a world of reading experiences. Enjoy exclusive features like personalized recommendations, curated book lists, and the ability to save your favorite reads. Connect with fellow readers, share reviews, and explore new literary adventures—all in one place!
+
+                 
+
+
+              </Typography>
+
+              <Typography 
+                variant="body1" 
+                sx={{ 
+                  mt: 1,
+                  opacity: 0.6,
+                  lineHeight: 1.7,
+                  maxWidth: '90%',
+                  color: 'secondary.main'
+                }}
+              >
+                Sign in and start your literary adventure with BookHive.
+
+                 
+
+
               </Typography>
             </Box>
           </Box>
