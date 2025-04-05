@@ -7,7 +7,7 @@ import BidHome from "./pages/Deranindu/BidHome";
 import BiddingSuccess from "./pages/Deranindu/BiddingSuccess";
 import ViewPlaceBid from "./pages/Deranindu/view-placebid";
 import Exbid from "./pages/Deranindu/Exbid";
-
+import BookRecommender from  "./pages/recommender/recommender"
 
 function App() {
   return (
@@ -21,6 +21,7 @@ function App() {
         <Route path="/bidding-success" element={<BiddingSuccess />} />
         <Route path="/view-placebid" element={<ViewPlaceBid />} />
         <Route path="/exbid" element={<Exbid />} /> {/* Route to view bids */}
+        <Route path="/recommender" element={<BookRecommender />} />
       </Routes>
     </Router>
   );
