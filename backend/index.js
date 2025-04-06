@@ -1,48 +1,46 @@
+// MUST BE THE FIRST LINE!
+import 'dotenv/config';
+
 import express from "express";
-import { PORT,mongoDBURL } from "./config.js";
+import config from "./config.js";  // Changed from destructured import
 import mongoose from "mongoose";
+import { v2 as cloudinary } from 'cloudinary';
 import booksRoute from "./routes/bookRoutes.js";
 import bookRequestRoutes from "./routes/bookRequestRoutes.js";
 import exchangeRoutes from "./routes/exchangeRoutes.js";
-
 import cors from 'cors';
+
 const app = express();
 
-//middeleware for passing request body
+// Configure Cloudinary
+cloudinary.config(config.cloudinary);
+
+// Middleware
 app.use(express.json());
-
 app.use(cors());
-
-// Serve static files (uploaded images)
 app.use("/uploads", express.static("uploads"));
 
-//app.use(
-   // cors({
-     //   origin:"http://localhost:3000",
-     //   methods:['GET','POST','PUT','DELETE'],
-     //   allowedHeaders:['content-Type'],
-    //})
-//)
-
+// Routes
 app.get('/', (req, res) => {
     console.log("Received a request on '/' endpoint");
     return res.status(200).send('Welcome to the MERN Stack Tutorial');
 });
 
-app.use('/books',booksRoute);
+app.use('/books', booksRoute);
 app.use('/request', bookRequestRoutes);
 app.use("/exchange", exchangeRoutes);
 
 
-mongoose
-    .connect(mongoDBURL)
-    .then(()  =>{
-        console.log('app connected to database');
-        app.listen(PORT, () => {
-            console.log(`App is listening on port: ${PORT}`);
+// Database connection
+mongoose.connect(config.mongoDBURL)
+    .then(() => {
+        console.log('✅ App connected to database');
+        app.listen(config.PORT, () => {
+            console.log(`🚀 Server running on port ${config.PORT}`);
+            console.log('☁️ Cloudinary configured:', config.cloudinary.cloud_name ? true : false);
         });
     })
     .catch((error) => {
-        console.log(error);
-
+        console.error('❌ Database connection failed:', error);
+        process.exit(1); // Exit if DB connection fails
     });

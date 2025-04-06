@@ -1,21 +1,69 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
-const ExchangeBookSchema = new mongoose.Schema(
-  {
-    title: { type: String, required: true },
-    author: { type: String, required: true },
-    genre: { type: String },
-    description: { type: String },
-    condition: { type: String, required: true, enum: ["New", "Like New", "Good", "Fair", "Worn"] },
-    ownerName: { type: String, required: true },
-    contactInfo: { type: String, required: true },
-    available: { type: Boolean, default: true },
-    location: { type: String },
-    bookImage: { type: String }, 
+const bookSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+    trim: true,
   },
-  { timestamps: true }
-);
+  author: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  genre: {
+    type: String,
+    required: true,
+    enum: ["Fiction", "Non-Fiction", "Biography", "Sci-Fi", "Fantasy", "Mystery"],
+  },
+  description: {
+    type: String,
+    trim: true,
+  },
+  condition: {
+    type: String,
+    required: true,
+    enum: ["New", "Like New", "Good", "Fair", "Worn", "Used", "Damaged"],
+  },
+  ownerName: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  contactInfo: {
+    type: String,
+    required: true,
+    trim: true,
+    validate: {
+      validator: function(v) {
+        // Simple email validation
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+      },
+      message: props => `${props.value} is not a valid email address!`
+    }
+  },
+  available: {
+    type: Boolean,
+    default: true,
+  },
+  location: {
+    type: String,
+    trim: true,
+  },
+  bookImage: {
+    public_id: String,
+    url: String
+  }
+}, {
+  timestamps: true,
+  toJSON: {
+    transform: function(doc, ret) {
+      delete ret.__v;
+      return ret;
+    }
+  }
+});
 
-// Create and export model correctly
-const ExchangeModel = mongoose.model("ExchangeBook", ExchangeBookSchema);
-export default ExchangeModel;
+const Book = mongoose.model('Book', bookSchema);
+
+export default Book;

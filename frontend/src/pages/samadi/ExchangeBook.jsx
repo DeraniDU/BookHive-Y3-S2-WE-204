@@ -1,374 +1,621 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaPlus } from "react-icons/fa";
+import axios from "axios";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
-import atomicHabitsImage from '../../images/exchange/atomichabits.jpeg';
-import image48 from "../../images/exchange/1948.jpeg"
-import cleancode from "../../images/exchange/cleancode.jpeg"
-import richdad from "../../images/exchange/richdad.jpeg"
-import startup from "../../images/exchange/startup.jpeg"
-import Becoming from "../../images/exchange/becoming.jpeg"
-import rye from "../../images/exchange/rye.jpeg"
-import sapiens from "../../images/exchange/sapiens.jpeg"
-import habit from "../../images/exchange/habit.jpeg"
-import sun from "../../images/exchange/sun.jpeg"
-import art from "../../images/exchange/art.jpeg"
-import bird from "../../images/exchange/bird.jpeg"
-import week from "../../images/exchange/week.jpeg"
-import PP from "../../images/exchange/PP.jpeg"
-import brave from "../../images/exchange/brave.jpeg"
-import theguest from "../../images/exchange/theguest.jpeg"
-import hobbit from "../../images/exchange/hobbit.jpeg"
-import seven from "../../images/exchange/seven.jpeg"
-import edu from "../../images/exchange/edu.jpeg"
-import power from "../../images/exchange/power.jpeg"
-import four from "../../images/exchange/four.jpeg"
-import silent from "../../images/exchange/silent.jpeg"
 
-const booksData = [
-  { id: 1, title: "Atomic Habits", author: "James Clear", genre: "Self-help", status: "Available", image: atomicHabitsImage },
-  { id: 2, title: "The Alchemist", author: "Paulo Coelho", genre: "Fiction", status: "Unavailable", image: image48 },
-  { id: 3, title: "Clean Code", author: "Robert C. Martin", genre: "Programming", status: "Available", image: cleancode },
-  { id: 4, title: "Rich Dad Poor Dad", author: "Robert Kiyosaki", genre: "Finance", status: "Available", image: richdad },
-  { id: 5, title: "The Lean Startup", author: "Eric Ries", genre: "Business", status: "Available", image: startup },
-  { id: 6, title: "Becoming", author: "Michelle Obama", genre: "Biography", status: "Unavailable", image: Becoming },
-  { id: 7, title: "The Catcher in the Rye", author: "J.D. Salinger", genre: "Fiction", status: "Available", image: rye },
-  { id: 8, title: "Sapiens", author: "Yuval Noah Harari", genre: "History", status: "Available", image: sapiens },
-  { id: 9, title: "The Power of Habit", author: "Charles Duhigg", genre: "Self-help", status: "Unavailable", image: habit },
-  { id: 10, title: "The Art of War", author: "Sun Tzu", genre: "Strategy", status: "Available", image: sun },
-  { id: 11, title: "The Subtle Art of Not Giving a F*ck", author: "Mark Manson", genre: "Self-help", status: "Available", image: art },
-  { id: 12, title: "To Kill a Mockingbird", author: "Harper Lee", genre: "Fiction", status: "Available", image: bird },
-  { id: 13, title: 'The 4-Hour Workweek', author: 'Tim Ferriss', genre: 'Business', status: 'Available', image: week },
-  { id: 14, title: 'Principles', author: 'Ray Dalio', genre: 'Business', status: 'Available', image: PP },
-  { id: 15, title: 'The Art of War', author: 'Sun Tzu', genre: 'Strategy', status: 'Available', image: sun },
-  { id: 16, title: 'The Catcher in the Rye', author: 'J.D. Salinger', genre: 'Fiction', status: 'Available', image: rye },
-  { id: 17, title: 'To Kill a Mockingbird', author: 'Harper Lee', genre: 'Fiction', status: 'Available', image: bird },
-  { id: 18, title: '1984', author: 'George Orwell', genre: 'Fiction', status: 'Borrowed', image: image48 },
-  { id: 19, title: 'Brave New World', author: 'Aldous Huxley', genre: 'Fiction', status: 'Available', image: brave },
-  { id: 20, title: 'The Great Gatsby', author: 'F. Scott Fitzgerald', genre: 'Fiction', status: 'Available', image: theguest },
-  { id: 21, title: "The Power of Habit", author: "Charles Duhigg", genre: "Self-help", status: "Available", image: habit },
-  { id: 22, title: "Sapiens", author: "Yuval Noah Harari", genre: "History", status: "Unavailable", image: sapiens },
-  { id: 23, title: "The Art of War", author: "Sun Tzu", genre: "Philosophy", status: "Available", image: sun },
-  { id: 24, title: "The Hobbit", author: "J.R.R. Tolkien", genre: "Fantasy", status: "Available", image: hobbit },
-  { id: 25, title: "The 7 Habits of Highly Effective People", author: "Stephen R. Covey", genre: "Self-help", status: "Unavailable", image: seven },
-  { id: 26, title: "Educated", author: "Tara Westover", genre: "Biography", status: "Available", image: edu },
-  { id: 27, title: "The 48 Laws of Power", author: "Robert Greene", genre: "Self-help", status: "Available", image: power },
-  { id: 28, title: "The Four Agreements", author: "Don Miguel Ruiz", genre: "Self-help", status: "Unavailable", image: four },
-  { id: 29, title: "The Subtle Art of Not Giving a F*ck", author: "Mark Manson", genre: "Self-help", status: "Available", image: art },
-  { id: 30, title: "The Silent Patient", author: "Alex Michaelides", genre: "Thriller", status: "Unavailable", image: silent }
-];
-
-const ExchangeBook = () => {
+const ExchangeHome = () => {
+  const [books, setBooks] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [loadedImages, setLoadedImages] = useState({});
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterGenre, setFilterGenre] = useState("");
+  const [sortOption, setSortOption] = useState("default");
   const navigate = useNavigate();
-  // State for search, filtered books, and selected genre
-  const [searchQuery, setSearchQuery] = useState("");
-  const [filteredBooks, setFilteredBooks] = useState(booksData);
-  const [selectedGenre, setSelectedGenre] = useState("All");
-  const [sortOrder, setSortOrder] = useState("asc");
 
-  // Handle search input change
-  const handleSearchChange = (e) => {
-    const query = e.target.value.toLowerCase();
-    setSearchQuery(query);
-    filterBooks(query, selectedGenre, sortOrder);
+  // Fetch books from API
+  useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        
+        const response = await axios.get(process.env.REACT_APP_API_URL || "http://localhost:3000/exchange", {
+          timeout: 8000, // 8-second timeout
+          headers: {
+            'Accept': 'application/json',
+          }
+        });
+        
+        const responseData = response.data.data || response.data;
+        
+        if (!Array.isArray(responseData)) {
+          throw new Error("Invalid data format received from server");
+        }
+        
+        setBooks(responseData.filter(book => 
+          book.available === true || 
+          book.available === "true" ||
+          book.status === "available"
+        ));
+        
+      } catch (error) {
+        console.error("Error fetching books:", error);
+        if (error.code === "ECONNABORTED") {
+          setError("Request timeout. Please check your connection and try again.");
+        } else if (error.response) {
+          // Server responded with non-2xx status
+          setError(`Server error: ${error.response.status}. Please try again later.`);
+        } else if (error.request) {
+          // Request made but no response received
+          setError("No response from server. Please check your connection and try again.");
+        } else {
+          setError(error.message || "Failed to load books");
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchBooks();
+  }, []);
+
+  // Extract available genres for filtering
+  const availableGenres = useMemo(() => {
+    const genres = [...new Set(books.map(book => book.genre).filter(Boolean))];
+    return genres.sort();
+  }, [books]);
+
+  // Filter and sort books
+  const filteredBooks = useMemo(() => {
+    let result = [...books];
+    
+    // Apply search filter
+    if (searchTerm) {
+      const normalizedSearch = searchTerm.toLowerCase();
+      result = result.filter(book => 
+        (book.title && book.title.toLowerCase().includes(normalizedSearch)) || 
+        (book.author && book.author.toLowerCase().includes(normalizedSearch)) ||
+        (book.description && book.description.toLowerCase().includes(normalizedSearch))
+      );
+    }
+    
+    // Apply genre filter
+    if (filterGenre) {
+      result = result.filter(book => book.genre === filterGenre);
+    }
+    
+    // Apply sorting
+    switch (sortOption) {
+      case "title":
+        result.sort((a, b) => (a.title || "").localeCompare(b.title || ""));
+        break;
+      case "author":
+        result.sort((a, b) => (a.author || "").localeCompare(b.author || ""));
+        break;
+      case "condition":
+        const conditionOrder = { "New": 1, "Like New": 2, "Good": 3, "Fair": 4, "Poor": 5 };
+        result.sort((a, b) => (conditionOrder[a.condition] || 99) - (conditionOrder[b.condition] || 99));
+        break;
+      default:
+        // Default sorting (newest first, assuming _id is time-based like MongoDB)
+        result.sort((a, b) => b._id?.localeCompare(a._id));
+    }
+    
+    return result;
+  }, [books, searchTerm, filterGenre, sortOption]);
+
+  const handleAddBook = () => navigate("/exchange/add");
+  const handleRequestExchange = (id) => navigate(`/request/add?bookId=${id}`);
+
+  // Improved image URL handling
+  const getOptimizedImageUrl = (url) => {
+    if (!url) return null;
+    
+    // If it's a Cloudinary URL, optimize it
+    if (url.includes('res.cloudinary.com')) {
+      return url.replace('/upload/', '/upload/w_400,h_300,c_fill,q_auto,f_auto/');
+    }
+    
+    // If it's a Google Books thumbnail, enhance it
+    if (url.includes('books.google.com')) {
+      return url.replace('zoom=1', 'zoom=0').replace('&edge=curl', '');
+    }
+    
+    // For other URLs, return as is
+    return url;
   };
 
-  const handleAddBook = () => {
-    navigate("/useradd"); // Navigate to AddBook page
+  // Get condition style
+  const getConditionStyle = (condition) => {
+    switch (condition) {
+      case 'New':
+        return { backgroundColor: "#d4edda", color: "#155724" };
+      case 'Like New':
+        return { backgroundColor: "#d1ecf1", color: "#0c5460" };
+      case 'Good':
+        return { backgroundColor: "#d1e7dd", color: "#0f5132" };
+      case 'Fair':
+        return { backgroundColor: "#fff3cd", color: "#856404" };
+      default:
+        return { backgroundColor: "#f8d7da", color: "#721c24" };
+    }
   };
 
+  // Loading state
+  if (isLoading) {
+    return (
+      <div style={{
+        minHeight: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center"
+      }}>
+        <div style={{
+          width: "3rem", 
+          height: "3rem", 
+          borderRadius: "50%",
+          border: "4px solid #f3f3f3", 
+          borderTop: "4px solid #3498db", 
+          animation: "spin 1s linear infinite"
+        }}></div>
+      </div>
+    );
+  }
 
-  // Filter books based on search query, genre, and sort order
-  const filterBooks = (query, genre, sort) => {
-    const filtered = booksData.filter((book) => {
-      const matchesSearch = book.title.toLowerCase().includes(query) || book.author.toLowerCase().includes(query);
-      const matchesGenre = genre === "All" || book.genre === genre;
-      return matchesSearch && matchesGenre;
-    });
-
-    // Sort books
-    filtered.sort((a, b) => {
-      const compare = sort === "asc" ? a.title.localeCompare(b.title) : b.title.localeCompare(a.title);
-      return compare;
-    });
-
-    setFilteredBooks(filtered);
-  };
-
-  // Handle genre button click
-  const handleGenreClick = (genre) => {
-    setSelectedGenre(genre);
-    filterBooks(searchQuery, genre, sortOrder);
-  };
-
-  // Handle sorting change
-  const handleSortChange = (order) => {
-    setSortOrder(order);
-    filterBooks(searchQuery, selectedGenre, order);
-  };
-
-  // Modal for book details (to view more information about the book)
-  const [selectedBook, setSelectedBook] = useState(null);
-
-  const handleBookClick = (book) => {
-    setSelectedBook(book);
-  };
-
-  const closeModal = () => {
-    setSelectedBook(null);
-  };
+  // Error state
+  if (error) {
+    return (
+      <div style={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "1rem"
+      }}>
+        <div style={{
+          backgroundColor: "#fef2f2",
+          border: "1px solid #fee2e2",
+          borderRadius: "0.5rem",
+          padding: "1.5rem",
+          maxWidth: "32rem",
+          width: "100%",
+          textAlign: "center"
+        }}>
+          <h3 style={{
+            fontSize: "1.25rem",
+            fontWeight: "600",
+            color: "#b91c1c",
+            marginBottom: "0.75rem"
+          }}>Error Loading Books</h3>
+          <p style={{
+            marginBottom: "1rem",
+            color: "#ef4444"
+          }}>{error}</p>
+          <button 
+            onClick={() => window.location.reload()}
+            style={{
+              padding: "0.5rem 1rem",
+              backgroundColor: "#dc2626",
+              color: "white",
+              border: "none",
+              borderRadius: "0.25rem",
+              cursor: "pointer",
+              transition: "background-color 0.2s"
+            }}
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div style={{ padding: '24px', backgroundColor: '#f3f4f6', minHeight: '100vh' }}>
+    <div style={{
+      minHeight: "100vh",
+      display: "flex",
+      flexDirection: "column"
+    }}>
       <Header />
-      {/* Add Book Button */}
-      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "16px" }}>
-        <button
-          onClick={handleAddBook}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-            padding: "12px 16px",
-            borderRadius: "8px",
-            backgroundColor: "#4F46E5",
-            color: "#fff",
-            border: "none",
-            cursor: "pointer",
-            fontSize: "16px",
-            fontWeight: "600",
-          }}
-        >
-          <FaPlus /> Add Book
-        </button>
-      </div>
-
-      <h1 style={{ textAlign: 'center', fontSize: '36px', fontWeight: '800', color: '#1D4ED8', marginBottom: '24px' }}>
-        📚 Book Exchange Platform
-      </h1>
-
-      {/* Search Bar */}
-      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '24px' }}>
-        <input
-          type="text"
-          placeholder="Search books..."
-          style={{
-            width: '100%',
-            maxWidth: '600px',
-            padding: '12px',
-            border: '1px solid #D1D5DB',
-            borderRadius: '8px',
-            boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
-            outline: 'none',
-            fontSize: '16px'
-          }}
-          value={searchQuery}
-          onChange={handleSearchChange}
-        />
-      </div>
-
-      {/* Sorting & Filter Bar */}
-      <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', marginBottom: '24px' }}>
-        <select
-          onChange={(e) => handleSortChange(e.target.value)}
-          style={{ padding: '12px', borderRadius: '8px', border: '1px solid #D1D5DB', fontSize: '16px' }}
-        >
-          <option value="asc">Sort by Title (A-Z)</option>
-          <option value="desc">Sort by Title (Z-A)</option>
-        </select>
-
-        <button
-          onClick={() => handleGenreClick("All")}
-          style={{
-            padding: '12px',
-            borderRadius: '8px',
-            backgroundColor: '#F3F4F6',
-            border: '1px solid #D1D5DB',
-            cursor: 'pointer',
-            fontSize: '16px'
-          }}
-        >
-          All
-        </button>
-        <button
-          onClick={() => handleGenreClick("Fiction")}
-          style={{
-            padding: '12px',
-            borderRadius: '8px',
-            backgroundColor: '#F3F4F6',
-            border: '1px solid #D1D5DB',
-            cursor: 'pointer',
-            fontSize: '16px'
-          }}
-        >
-          Fiction
-        </button>
-        <button
-          onClick={() => handleGenreClick("Self-help")}
-          style={{
-            padding: '12px',
-            borderRadius: '8px',
-            backgroundColor: '#F3F4F6',
-            border: '1px solid #D1D5DB',
-            cursor: 'pointer',
-            fontSize: '16px'
-          }}
-        >
-          Self-help
-        </button>
-        <button
-          onClick={() => handleGenreClick("Finance")}
-          style={{
-            padding: '12px',
-            borderRadius: '8px',
-            backgroundColor: '#F3F4F6',
-            border: '1px solid #D1D5DB',
-            cursor: 'pointer',
-            fontSize: '16px'
-          }}
-        >
-          Finance
-        </button>
-        <button
-          onClick={() => handleGenreClick("Programming")}
-          style={{
-            padding: '12px',
-            borderRadius: '8px',
-            backgroundColor: '#F3F4F6',
-            border: '1px solid #D1D5DB',
-            cursor: 'pointer',
-            fontSize: '16px'
-          }}
-        >
-          Programming
-        </button>
-        <button
-          onClick={() => handleGenreClick("Business")}
-          style={{
-            padding: '12px',
-            borderRadius: '8px',
-            backgroundColor: '#F3F4F6',
-            border: '1px solid #D1D5DB',
-            cursor: 'pointer',
-            fontSize: '16px'
-          }}
-        >
-          Business
-        </button>
-        <button
-          onClick={() => handleGenreClick("Biography")}
-          style={{
-            padding: '12px',
-            borderRadius: '8px',
-            backgroundColor: '#F3F4F6',
-            border: '1px solid #D1D5DB',
-            cursor: 'pointer',
-            fontSize: '16px'
-          }}
-        >
-          Biography
-        </button>
-        <button
-          onClick={() => handleGenreClick("History")}
-          style={{
-            padding: '12px',
-            borderRadius: '8px',
-            backgroundColor: '#F3F4F6',
-            border: '1px solid #D1D5DB',
-            cursor: 'pointer',
-            fontSize: '16px'
-          }}
-        >
-          History
-        </button>
-        <button
-          onClick={() => handleGenreClick("Strategy")}
-          style={{
-            padding: '12px',
-            borderRadius: '8px',
-            backgroundColor: '#F3F4F6',
-            border: '1px solid #D1D5DB',
-            cursor: 'pointer',
-            fontSize: '16px'
-          }}
-        >
-          Strategy
-        </button>
-      </div>
-
-      {/* Book Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '24px' }}>
-        {filteredBooks.map((book) => (
-          <div
-            key={book.id}
+      
+      <main style={{
+        flex: "1",
+        padding: "1rem 1.5rem",
+        maxWidth: "1280px",
+        margin: "0 auto",
+        width: "100%"
+      }}>
+        {/* Page Header */}
+        <div style={{
+          display: "flex",
+          flexDirection: window.innerWidth < 640 ? "column" : "row",
+          justifyContent: "space-between",
+          alignItems: window.innerWidth < 640 ? "flex-start" : "center",
+          marginBottom: "1.5rem",
+          gap: "1rem"
+        }}>
+          <h2 style={{
+            fontSize: "1.5rem",
+            fontWeight: "bold",
+            color: "#1f2937",
+            margin: 0
+          }}>Available Books for Exchange</h2>
+          
+          <button 
+            onClick={handleAddBook}
             style={{
-              backgroundColor: '#fff',
-              padding: '16px',
-              borderRadius: '12px',
-              boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-              cursor: 'pointer',
-              transform: 'scale(1)',
-              transition: 'all 0.3s ease',
+              padding: "0.5rem 1rem",
+              backgroundColor: "#16a34a",
+              color: "white",
+              border: "none",
+              borderRadius: "0.25rem",
+              cursor: "pointer",
+              transition: "background-color 0.2s"
             }}
-            onClick={() => handleBookClick(book)}
           >
-            <img src={book.image} alt={book.title} style={{ width: '100%', height: '200px', objectFit: 'cover', borderRadius: '8px', marginBottom: '16px' }} />
-            <h2 style={{ fontSize: '18px', fontWeight: '600', color: '#2D3748', marginBottom: '8px' }}>{book.title}</h2>
-            <p style={{ color: '#4A5568', marginBottom: '8px' }}>By {book.author}</p>
-            <p style={{ fontSize: '14px', color: '#A0AEC0', marginBottom: '16px' }}>{book.genre}</p>
-            <button
-              onClick={(e) => {
-                e.stopPropagation(); // Prevent the card click from firing
-                if (book.status === "Available") {
-                  // Navigate to BookRequest page. You can pass book details if needed.
-                  navigate("/bookrequest", { state: { book } });
-                }
-              }}
-              style={{
-                width: '100%',
-                padding: '12px',
-                borderRadius: '8px',
-                color: '#fff',
-                backgroundColor: book.status === "Available" ? '#48BB78' : '#A0AEC0',
-                cursor: book.status === "Available" ? 'pointer' : 'not-allowed',
-              }}
-            >
-              {book.status === "Available" ? "Request Exchange" : "Unavailable"}
-            </button>
-          </div>
-        ))}
-      </div>
-
-      {/* Modal for Book Details */}
-      {selectedBook && (
-        <div style={{ position: 'fixed', top: '0', left: '0', width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <div style={{ backgroundColor: '#fff', padding: '24px', borderRadius: '12px', width: '80%', maxWidth: '800px' }}>
-            <h2 style={{ fontSize: '24px', fontWeight: '700', marginBottom: '16px' }}>{selectedBook.title}</h2>
-            <img src={selectedBook.image} alt={selectedBook.title} style={{ width: '100%', maxHeight: '400px', objectFit: 'cover', borderRadius: '8px', marginBottom: '16px' }} />
-            <p style={{ fontSize: '18px', color: '#4A5568', marginBottom: '16px' }}><strong>Author:</strong> {selectedBook.author}</p>
-            <p style={{ fontSize: '16px', color: '#718096', marginBottom: '16px' }}><strong>Genre:</strong> {selectedBook.genre}</p>
-            <p style={{ fontSize: '16px', color: '#4A5568', marginBottom: '24px' }}><strong>Status:</strong> {selectedBook.status}</p>
-            <button
-              onClick={closeModal}
-              style={{
-                padding: '12px 24px',
-                borderRadius: '8px',
-                backgroundColor: '#E53E3E',
-                color: '#fff',
-                border: 'none',
-                cursor: 'pointer',
-                fontSize: '16px',
-              }}
-            >
-              Close
-            </button>
+            + Add Your Book
+          </button>
+        </div>
+        
+        {/* Search and Filters */}
+        <div style={{
+          backgroundColor: "#f9fafb",
+          padding: "1rem",
+          borderRadius: "0.5rem",
+          marginBottom: "1.5rem"
+        }}>
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: window.innerWidth < 768 ? "1fr" : "2fr 1fr 1fr",
+            gap: "1rem"
+          }}>
+            <div>
+              <label htmlFor="search" style={{
+                display: "block",
+                fontSize: "0.875rem",
+                fontWeight: "500",
+                color: "#4b5563",
+                marginBottom: "0.25rem"
+              }}>Search Books</label>
+              <input
+                type="text"
+                id="search"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Search by title, author, or description..."
+                style={{
+                  width: "100%",
+                  padding: "0.5rem",
+                  border: "1px solid #d1d5db",
+                  borderRadius: "0.25rem",
+                  fontSize: "0.875rem"
+                }}
+              />
+            </div>
+            
+            <div>
+              <label htmlFor="genre" style={{
+                display: "block",
+                fontSize: "0.875rem",
+                fontWeight: "500",
+                color: "#4b5563",
+                marginBottom: "0.25rem"
+              }}>Filter by Genre</label>
+              <select
+                id="genre"
+                value={filterGenre}
+                onChange={(e) => setFilterGenre(e.target.value)}
+                style={{
+                  width: "100%",
+                  padding: "0.5rem",
+                  border: "1px solid #d1d5db",
+                  borderRadius: "0.25rem",
+                  fontSize: "0.875rem",
+                  backgroundColor: "white"
+                }}
+              >
+                <option value="">All Genres</option>
+                {availableGenres.map(genre => (
+                  <option key={genre} value={genre}>{genre}</option>
+                ))}
+              </select>
+            </div>
+            
+            <div>
+              <label htmlFor="sort" style={{
+                display: "block",
+                fontSize: "0.875rem",
+                fontWeight: "500",
+                color: "#4b5563",
+                marginBottom: "0.25rem"
+              }}>Sort By</label>
+              <select
+                id="sort"
+                value={sortOption}
+                onChange={(e) => setSortOption(e.target.value)}
+                style={{
+                  width: "100%",
+                  padding: "0.5rem",
+                  border: "1px solid #d1d5db",
+                  borderRadius: "0.25rem",
+                  fontSize: "0.875rem",
+                  backgroundColor: "white"
+                }}
+              >
+                <option value="default">Newest First</option>
+                <option value="title">Title</option>
+                <option value="author">Author</option>
+                <option value="condition">Condition</option>
+              </select>
+            </div>
           </div>
         </div>
-      )}
+        
+        {/* Results summary */}
+        <div style={{
+          marginBottom: "1rem",
+          color: "#6b7280",
+          fontSize: "0.875rem"
+        }}>
+          Showing {filteredBooks.length} {filteredBooks.length === 1 ? 'book' : 'books'}
+          {searchTerm && ` matching "${searchTerm}"`}
+          {filterGenre && ` in ${filterGenre}`}
+        </div>
+
+        {/* Empty state */}
+        {filteredBooks.length === 0 ? (
+          <div style={{
+            backgroundColor: "#f9fafb",
+            border: "2px dashed #e5e7eb",
+            borderRadius: "0.5rem",
+            padding: "2rem",
+            textAlign: "center"
+          }}>
+            <h3 style={{
+              fontSize: "1.25rem",
+              fontWeight: "500",
+              color: "#6b7280",
+              marginBottom: "0.5rem"
+            }}>
+              {books.length === 0 ? "No Books Available" : "No Matching Books Found"}
+            </h3>
+            <p style={{
+              color: "#9ca3af",
+              marginBottom: "1.5rem"
+            }}>
+              {books.length === 0 
+                ? "There are currently no books available for exchange."
+                : "Try changing your search criteria or filters."}
+            </p>
+            {books.length === 0 ? (
+              <button 
+                onClick={handleAddBook}
+                style={{
+                  padding: "0.5rem 1.5rem",
+                  backgroundColor: "#2563eb",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "0.25rem",
+                  cursor: "pointer",
+                  transition: "background-color 0.2s"
+                }}
+              >
+                Add First Book
+              </button>
+            ) : (
+              <button 
+                onClick={() => {
+                  setSearchTerm("");
+                  setFilterGenre("");
+                  setSortOption("default");
+                }}
+                style={{
+                  padding: "0.5rem 1.5rem",
+                  backgroundColor: "#4b5563",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "0.25rem",
+                  cursor: "pointer",
+                  transition: "background-color 0.2s"
+                }}
+              >
+                Clear All Filters
+              </button>
+            )}
+          </div>
+        ) : (
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: `repeat(auto-fill, minmax(${window.innerWidth < 640 ? "100%" : "280px"}, 1fr))`,
+            gap: "1.5rem"
+          }}>
+            {filteredBooks.map((book) => {
+              const optimizedImageUrl = getOptimizedImageUrl(book.bookImage?.url);
+              const fallbackImageUrl = `https://via.placeholder.com/400x300?text=${encodeURIComponent(book.title || 'Book Cover')}`;
+              const conditionStyles = book.condition ? getConditionStyle(book.condition) : {};
+              
+              return (
+                <div 
+                  key={book._id}
+                  style={{
+                    backgroundColor: "white",
+                    borderRadius: "0.5rem",
+                    overflow: "hidden",
+                    boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06)",
+                    transition: "box-shadow 0.3s ease"
+                  }}
+                >
+                  {/* Book Image */}
+                  <div style={{
+                    height: "256px",
+                    overflow: "hidden",
+                    position: "relative",
+                    backgroundColor: "#f3f4f6"
+                  }}>
+                    {optimizedImageUrl ? (
+                      <>
+                        <img
+                          src={optimizedImageUrl}
+                          alt={`Cover of ${book.title}`}
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                            transition: "opacity 0.3s ease",
+                            opacity: loadedImages[book._id] ? 1 : 0
+                          }}
+                          onLoad={() => setLoadedImages(prev => ({ ...prev, [book._id]: true }))}
+                          onError={(e) => {
+                            e.target.src = fallbackImageUrl;
+                            setLoadedImages(prev => ({ ...prev, [book._id]: true }));
+                          }}
+                        />
+                        {!loadedImages[book._id] && (
+                          <div style={{
+                            position: "absolute",
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            backgroundColor: "#f3f4f6"
+                          }}>
+                            <div style={{
+                              width: "2rem", 
+                              height: "2rem", 
+                              borderRadius: "50%",
+                              border: "4px solid #f3f3f3", 
+                              borderTop: "4px solid #3498db", 
+                              animation: "spin 1s linear infinite"
+                            }}></div>
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      <img
+                        src={fallbackImageUrl}
+                        alt={`Cover of ${book.title}`}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover"
+                        }}
+                      />
+                    )}
+                  </div>
+
+                  {/* Book Details */}
+                  <div style={{ padding: "1rem" }}>
+                    <h3 style={{
+                      fontWeight: "bold",
+                      color: "#1f2937",
+                      fontSize: "1.125rem",
+                      marginBottom: "0.25rem",
+                      lineHeight: "1.25",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      display: "-webkit-box",
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: "vertical"
+                    }}>
+                      {book.title || "Untitled Book"}
+                    </h3>
+                    
+                    <div style={{ marginBottom: "0.5rem", fontSize: "0.875rem" }}>
+                      <p style={{ color: "#4b5563", margin: "0.125rem 0" }}>
+                        <span style={{ fontWeight: "500" }}>Author:</span> {book.author || "Unknown"}
+                      </p>
+                      {book.genre && (
+                        <p style={{ color: "#4b5563", margin: "0.125rem 0" }}>
+                          <span style={{ fontWeight: "500" }}>Genre:</span> {book.genre}
+                        </p>
+                      )}
+                    </div>
+
+                    <p style={{
+                      color: "#6b7280",
+                      fontSize: "0.875rem",
+                      marginBottom: "0.75rem",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      display: "-webkit-box",
+                      WebkitLineClamp: 3,
+                      WebkitBoxOrient: "vertical",
+                      lineHeight: "1.5"
+                    }}>
+                      {book.description || "No description available for this book."}
+                    </p>
+
+                    <div style={{
+                      display: "flex",
+                      flexWrap: "wrap",
+                      gap: "0.5rem",
+                      marginBottom: "1rem"
+                    }}>
+                      {book.condition && (
+                        <span style={{
+                          padding: "0.25rem 0.5rem",
+                          borderRadius: "0.25rem",
+                          fontSize: "0.75rem",
+                          fontWeight: "500",
+                          ...conditionStyles
+                        }}>
+                          {book.condition} condition
+                        </span>
+                      )}
+                      
+                      {book.location && (
+                        <span style={{
+                          backgroundColor: "#f3f4f6",
+                          color: "#4b5563",
+                          padding: "0.25rem 0.5rem",
+                          borderRadius: "0.25rem",
+                          fontSize: "0.75rem",
+                          fontWeight: "500"
+                        }}>
+                          {book.location}
+                        </span>
+                      )}
+                    </div>
+
+                    <button
+                      onClick={() => handleRequestExchange(book._id)}
+                      style={{
+                        width: "100%",
+                        padding: "0.5rem 0",
+                        backgroundColor: "#2563eb",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "0.25rem",
+                        fontWeight: "500",
+                        cursor: "pointer",
+                        transition: "background-color 0.2s"
+                      }}
+                    >
+                      Request Exchange
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </main>
+
       <Footer />
+
+      <style>{`
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      `}</style>
     </div>
   );
 };
 
-export default ExchangeBook;
+export default ExchangeHome;

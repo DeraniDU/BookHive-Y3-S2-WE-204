@@ -8,9 +8,13 @@ import AddRequest from './pages/samadi/AddRequest';
 import ViewRequest from "./pages/samadi/ViewRequest";
 import ExchangeAddBook from "./pages/samadi/ExchangeAddBook";
 import ExchangeDeleteBook from "./pages/samadi/ExchangeDeleteBook";
-import ExchangeEditBook  from "./pages/samadi/ExchangeEditBook"
-import ExchangeHome from "./pages/samadi/ExchangeHome"
-import UserAddBook from "./pages/samadi/UserAddBook"
+import ExchangeEditBook from "./pages/samadi/ExchangeEditBook";
+import ExchangeHome from "./pages/samadi/ExchangeHome";
+import UserAddBook from "./pages/samadi/UserAddBook";
+import UserEditBook from "./pages/samadi/UserEditBook";
+import UserDeleteBook from "./pages/samadi/UserDeleteBook";
+import MyBooks from "./pages/samadi/MyBooks";
+
 
 import BookBidForm from "./pages/Deranindu/BookBidForm";
 import BidHome from "./pages/Deranindu/BidHome";
@@ -18,41 +22,40 @@ import BiddingSuccess from "./pages/Deranindu/BiddingSuccess";
 import ViewPlaceBid from "./pages/Deranindu/view-placebid";
 import Exbid from "./pages/Deranindu/Exbid";
 
-
-
-
 function App() {
   return (
     <Router>
       <Routes>
+        {/* Public routes */}
         <Route path="/" element={<Home />} />
+        <Route path="/signin" element={<SignIn />} />
+        <Route path="/signup" element={<SignUp />} />
 
-        <Route path ="/books/usercreate" element = {<UserAddBook/>}/>
-        <Route path="/books/home" element={<ExchangeBook />} />
+        {/* Protected routes */}
 
 
+        <Route path="/exchange/add" element={<UserAddBook />} />
+        <Route path="/exchange/edit/:id" element={<UserEditBook />} />
+        <Route path="/exchange/delete/:id" element={<UserDeleteBook />} />
+        <Route path="/exchange/home" element={<ExchangeBook />} />
         <Route path="/request/add" element={<AddRequest />} />
-        <Route path="/request/viewrequest" element={< ViewRequest/>} />
+        <Route path="/request/viewrequest" element={<ViewRequest />} />
+        <Route path="/books/bookstable" element={<ExchangeHome />} />
+        <Route path="/books/create" element={<ExchangeAddBook />} />
+        <Route path="/books/delete/:id" element={<ExchangeDeleteBook />} />
+        <Route path="/books/edit/:id" element={<ExchangeEditBook />} />
+        <Route path ="/exchange/mybooks" element={<MyBooks/>} />
 
-        <Route path ="/books/bookstable" element = {<ExchangeHome/>}/>
-        <Route path="/books/create" element={< ExchangeAddBook/>} />
-        <Route path ="/books/delete/:id" element ={<ExchangeDeleteBook/>}/>
-        <Route path ="/books/edit/:id" element ={<ExchangeEditBook/>}/>
-        
 
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/signup" element={<SignUp />} />
-
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/signup" element={<SignUp />} />
+        {/* Other public routes */}
         <Route path="/bidding" element={<BookBidForm />} />
         <Route path="/bidhome" element={<BidHome />} />
         <Route path="/bidding-success" element={<BiddingSuccess />} />
         <Route path="/view-placebid" element={<ViewPlaceBid />} />
-        <Route path="/exbid" element={<Exbid />} /> {/* Route to view bids */}
+        <Route path="/exbid" element={<Exbid />} />
       </Routes>
     </Router>
+
   );
 }
-
 export default App;

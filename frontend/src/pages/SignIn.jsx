@@ -45,7 +45,7 @@ const SignIn = () => {
       await signInWithPopup(auth, provider);
       Swal.fire({ icon: "success", title: "Signed In", text: "You have successfully signed in with Facebook!" });
       localStorage.setItem("isLogged", true);
-      navigate("/home");
+      navigate("/");
     } catch (error) {
       Swal.fire({ icon: "error", title: "Oops...", text: error.message });
     }

@@ -59,7 +59,7 @@ const AddRequest = () => {
 
   const closeModal = () => {
     setShowSuccessModal(false);
-    navigate("/exchangebook"); 
+    navigate("/exchange/home"); 
   };
 
   // Theme colors - should match header/footer components
