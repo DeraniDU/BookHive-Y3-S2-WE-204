@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import "./BookBidForm.css";
@@ -33,12 +33,12 @@ import {
   Avatar,
   StepContent,
   Rating,
-  Slider,
   LinearProgress,
   Zoom,
   Fade,
   Backdrop,
-  CircularProgress
+  CircularProgress,
+  useMediaQuery
 } from '@mui/material';
 import { 
   CloudUpload as CloudUploadIcon,
@@ -56,9 +56,54 @@ import {
   CalendarToday as CalendarTodayIcon,
   Description as DescriptionIcon
 } from '@mui/icons-material';
-import { ThemeProvider, createTheme, alpha } from '@mui/material/styles';
+import { ThemeProvider, createTheme, alpha, styled } from '@mui/material/styles';
 
-// Enhanced theme with expanded color palette and animations
+// Styled components
+const StyledPaper = styled(Paper)(({ theme }) => ({
+  padding: theme.spacing(4),
+  borderRadius: theme.shape.borderRadius * 2,
+  boxShadow: theme.shadows[4],
+  transition: 'all 0.3s ease',
+  '&:hover': {
+    boxShadow: theme.shadows[8]
+  }
+}));
+
+const StyledButton = styled(Button)(({ theme }) => ({
+  borderRadius: theme.shape.borderRadius * 2,
+  padding: theme.spacing(1.5, 3),
+  fontWeight: 600,
+  letterSpacing: 0.5,
+  transition: 'all 0.2s ease',
+}));
+
+const StyledTextField = styled(TextField)(({ theme }) => ({
+  '& .MuiOutlinedInput-root': {
+    borderRadius: theme.shape.borderRadius * 2,
+    '&:hover fieldset': {
+      borderColor: theme.palette.primary.light,
+    },
+    '&.Mui-focused fieldset': {
+      borderWidth: 2,
+      borderColor: theme.palette.primary.main,
+    },
+  },
+}));
+
+const UploadArea = styled(Paper)(({ theme, error }) => ({
+  padding: theme.spacing(4),
+  border: '2px dashed',
+  borderColor: error ? theme.palette.error.main : theme.palette.primary.light,
+  backgroundColor: alpha(error ? theme.palette.error.light : theme.palette.primary.light, 0.04),
+  borderRadius: theme.shape.borderRadius * 2,
+  cursor: 'pointer',
+  transition: 'all 0.3s ease',
+  '&:hover': {
+    backgroundColor: alpha(error ? theme.palette.error.light : theme.palette.primary.light, 0.08),
+  }
+}));
+
+// Enhanced theme
 const theme = createTheme({
   palette: {
     primary: {
@@ -75,6 +120,11 @@ const theme = createTheme({
     },
     success: {
       main: '#4caf50',
+      dark: '#388e3c',
+    },
+    error: {
+      main: '#f44336',
+      dark: '#d32f2f',
     },
     background: {
       default: '#f5f7fa',
@@ -86,7 +136,7 @@ const theme = createTheme({
     }
   },
   typography: {
-    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+    fontFamily: '"Inter", "Helvetica", "Arial", sans-serif',
     h4: {
       fontWeight: 700,
       letterSpacing: '-0.01em',
@@ -96,7 +146,7 @@ const theme = createTheme({
     },
     button: {
       textTransform: 'none',
-      fontWeight: 500,
+      fontWeight: 600,
     },
     subtitle1: {
       fontWeight: 500,
@@ -116,22 +166,14 @@ const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          borderRadius: 8,
+          borderRadius: 12,
           padding: '10px 20px',
         },
         contained: {
           boxShadow: '0 4px 14px 0 rgba(25, 118, 210, 0.39)',
-        },
-      },
-    },
-    MuiTextField: {
-      styleOverrides: {
-        root: {
-          '& .MuiOutlinedInput-root': {
-            '&:hover fieldset': {
-              borderColor: '#1976d2',
-            },
-          },
+          '&:hover': {
+            boxShadow: '0 6px 20px 0 rgba(25, 118, 210, 0.39)',
+          }
         },
       },
     },
@@ -152,6 +194,7 @@ const theme = createTheme({
 
 const BookBidForm = () => {
   const navigate = useNavigate();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   
   // State for active step in stepper
   const [activeStep, setActiveStep] = useState(0);
@@ -188,6 +231,60 @@ const BookBidForm = () => {
   // Field validation errors
   const [errors, setErrors] = useState({});
 
+  // Track touched fields
+  const [touched, setTouched] = useState({
+    name: false,
+    category: false,
+    author: false,
+    price: false,
+    year: false,
+    condition: false,
+    description: false,
+    photos: false
+  });
+
+  // Validate form fields
+  const validateField = (name, value) => {
+    const currentYear = new Date().getFullYear();
+    
+    switch (name) {
+      case 'name':
+        return value.trim() === '' ? 'Book title is required' : '';
+      case 'author':
+        return value.trim() === '' ? 'Author name is required' : '';
+      case 'category':
+        return value === '' ? 'Category is required' : '';
+      case 'price':
+        if (value === '') return 'Price is required';
+        if (isNaN(value) || value <= 0) return 'Price must be greater than 0';
+        return '';
+      case 'year':
+        if (value === '') return 'Publication year is required';
+        if (isNaN(value) || value < 1900 || value > currentYear) 
+          return `Year must be between 1900 and ${currentYear}`;
+        return '';
+      case 'condition':
+        return value === '' ? 'Book condition is required' : '';
+      case 'description':
+        return value.trim() === '' ? 'Description is required' : '';
+      case 'photos':
+        return value.length === 0 ? 'At least one photo is required' : '';
+      default:
+        return '';
+    }
+  };
+
+  // Validate all fields
+  const validateAll = () => {
+    const newErrors = {};
+    Object.keys(bookData).forEach(key => {
+      const error = validateField(key, bookData[key]);
+      if (error) newErrors[key] = error;
+    });
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   // Form completion progress
   const calculateProgress = () => {
     const requiredFields = ['name', 'category', 'author', 'price', 'year', 'condition', 'description'];
@@ -195,39 +292,43 @@ const BookBidForm = () => {
     return (filledFields / requiredFields.length) * 100;
   };
 
-  // Handle input changes
+  // Handle input changes with validation
   const handleChange = (e) => {
     const { name, value } = e.target;
     
-    // Clear error when field is edited
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: "" }));
-    }
+    setBookData(prev => ({ ...prev, [name]: value }));
+    setTouched(prev => ({ ...prev, [name]: true }));
     
-    setBookData({ ...bookData, [name]: value });
+    // Validate only if field has been touched
+    if (touched[name]) {
+      setErrors(prev => ({ ...prev, [name]: validateField(name, value) }));
+    }
+  };
+
+  // Handle blur events (mark field as touched)
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    setTouched(prev => ({ ...prev, [name]: true }));
+    setErrors(prev => ({ ...prev, [name]: validateField(name, value) }));
   };
 
   // Handle condition rating change
   const handleRatingChange = (event, newValue) => {
     setConditionRating(newValue);
     const conditionValue = newValue === 5 ? "New" : newValue >= 3 ? "Used" : "Damaged";
-    setBookData({ ...bookData, condition: conditionValue });
-    
-    if (errors.condition) {
-      setErrors(prev => ({ ...prev, condition: "" }));
-    }
+    setBookData(prev => ({ ...prev, condition: conditionValue }));
+    setTouched(prev => ({ ...prev, condition: true }));
+    setErrors(prev => ({ ...prev, condition: validateField('condition', conditionValue) }));
   };
 
   // Handle file input for photos (up to 6 images)
   const handleFileChange = (e) => {
     const files = e.target.files;
     
-    if (errors.photos) {
-      setErrors(prev => ({ ...prev, photos: "" }));
-    }
-    
     if (files.length <= 6) {
-      setBookData({ ...bookData, photos: [...files] });
+      setBookData(prev => ({ ...prev, photos: [...files] }));
+      setTouched(prev => ({ ...prev, photos: true }));
+      setErrors(prev => ({ ...prev, photos: validateField('photos', files) }));
       
       // Generate preview URLs for selected images
       const newPreviewUrls = [];
@@ -258,74 +359,62 @@ const BookBidForm = () => {
       }
     });
     
-    setBookData({
-      ...bookData,
-      photos: dataTransfer.files
-    });
+    const newPhotos = dataTransfer.files;
+    setBookData(prev => ({ ...prev, photos: newPhotos }));
+    setErrors(prev => ({ ...prev, photos: validateField('photos', newPhotos) }));
   };
 
   // Handle next step in stepper
   const handleNext = () => {
-    let newErrors = {};
-    let isValid = true;
+    // Mark all fields in current step as touched
+    const newTouched = { ...touched };
+    let fieldsToValidate = [];
     
     if (activeStep === 0) {
-      // Validate first step fields
-      if (!bookData.name) {
-        newErrors.name = "Book title is required";
-        isValid = false;
-      }
-      if (!bookData.author) {
-        newErrors.author = "Author name is required";
-        isValid = false;
-      }
-      if (!bookData.category) {
-        newErrors.category = "Category is required";
-        isValid = false;
-      }
+      fieldsToValidate = ['name', 'author', 'category'];
     } else if (activeStep === 1) {
-      // Validate second step fields
-      if (!bookData.price) {
-        newErrors.price = "Price is required";
-        isValid = false;
-      } else if (bookData.price <= 0) {
-        newErrors.price = "Price must be greater than 0";
-        isValid = false;
-      }
-      
-      const currentYear = new Date().getFullYear();
-      if (!bookData.year) {
-        newErrors.year = "Publication year is required";
-        isValid = false;
-      } else if (bookData.year < 1900 || bookData.year > currentYear) {
-        newErrors.year = `Year must be between 1900 and ${currentYear}`;
-        isValid = false;
-      }
-      
-      if (!bookData.condition) {
-        newErrors.condition = "Book condition is required";
-        isValid = false;
-      }
-      
-      if (!bookData.description) {
-        newErrors.description = "Description is required";
-        isValid = false;
-      }
+      fieldsToValidate = ['price', 'year', 'condition', 'description'];
     }
+    
+    fieldsToValidate.forEach(field => {
+      newTouched[field] = true;
+    });
+    setTouched(newTouched);
+    
+    // Validate relevant fields
+    const newErrors = { ...errors };
+    let isValid = true;
+    
+    fieldsToValidate.forEach(field => {
+      const error = validateField(field, bookData[field]);
+      if (error) {
+        newErrors[field] = error;
+        isValid = false;
+      } else {
+        delete newErrors[field];
+      }
+    });
     
     setErrors(newErrors);
     
     if (isValid) {
       setActiveStep(prevStep => prevStep + 1);
-      // Scroll to top of form on step change
       window.scrollTo(0, 0);
+    } else {
+      // Scroll to first error
+      const firstErrorField = fieldsToValidate.find(field => newErrors[field]);
+      if (firstErrorField) {
+        document.getElementById(firstErrorField)?.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'center' 
+        });
+      }
     }
   };
 
   // Handle back step in stepper
   const handleBack = () => {
     setActiveStep(prevStep => prevStep - 1);
-    // Scroll to top of form on step change
     window.scrollTo(0, 0);
   };
 
@@ -333,22 +422,33 @@ const BookBidForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    let newErrors = {};
-    let isValid = true;
+    // Mark all fields as touched
+    setTouched({
+      name: true,
+      category: true,
+      author: true,
+      price: true,
+      year: true,
+      condition: true,
+      description: true,
+      photos: true
+    });
     
-    // Check if photos are uploaded
-    if (bookData.photos.length === 0) {
-      newErrors.photos = "At least one photo is required";
-      isValid = false;
-    }
-    
-    setErrors(newErrors);
+    // Validate all fields
+    const isValid = validateAll();
     
     if (!isValid) {
+      // Scroll to first error
+      const firstErrorField = Object.keys(errors).find(field => errors[field]);
+      if (firstErrorField) {
+        document.getElementById(firstErrorField)?.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'center' 
+        });
+      }
       return;
     }
 
-    // Show loading indicator
     setIsSubmitting(true);
     
     try {
@@ -364,12 +464,19 @@ const BookBidForm = () => {
       Swal.fire({
         icon: 'success',
         title: 'Book Listed Successfully!',
-        text: 'Your book has been listed for bidding.',
+        html: `
+          <div style="text-align: center;">
+            <CheckCircleIcon style="font-size: 60px; color: #4caf50; margin-bottom: 20px;" />
+            <p>Your book <strong>${bookData.name}</strong> has been listed for bidding.</p>
+          </div>
+        `,
         showConfirmButton: true,
         confirmButtonText: 'Go to Home',
+        customClass: {
+          popup: 'swal-custom-popup'
+        }
       }).then((result) => {
         if (result.isConfirmed) {
-          // Navigate to the next page
           navigate("/bidhome");
         }
       });
@@ -393,12 +500,12 @@ const BookBidForm = () => {
         return (
           <Fade in={activeStep === 0}>
             <Box>
-              <Typography variant="subtitle1" gutterBottom color="primary">
+              <Typography variant="subtitle1" gutterBottom color="primary" sx={{ mb: 3 }}>
                 Enter the basic details about your book
               </Typography>
               <Grid container spacing={3}>
                 <Grid item xs={12}>
-                  <TextField
+                  <StyledTextField
                     fullWidth
                     required
                     id="name"
@@ -407,13 +514,14 @@ const BookBidForm = () => {
                     placeholder="Enter the title of the book"
                     value={bookData.name}
                     onChange={handleChange}
+                    onBlur={handleBlur}
                     variant="outlined"
-                    error={!!errors.name}
-                    helperText={errors.name}
+                    error={touched.name && !!errors.name}
+                    helperText={touched.name && errors.name}
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
-                          <BookIcon color="primary" />
+                          <BookIcon color={touched.name && errors.name ? "error" : "primary"} />
                         </InputAdornment>
                       ),
                     }}
@@ -421,7 +529,7 @@ const BookBidForm = () => {
                 </Grid>
                 
                 <Grid item xs={12} md={6}>
-                  <TextField
+                  <StyledTextField
                     fullWidth
                     required
                     id="author"
@@ -430,13 +538,14 @@ const BookBidForm = () => {
                     placeholder="Author's name"
                     value={bookData.author}
                     onChange={handleChange}
+                    onBlur={handleBlur}
                     variant="outlined"
-                    error={!!errors.author}
-                    helperText={errors.author}
+                    error={touched.author && !!errors.author}
+                    helperText={touched.author && errors.author}
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
-                          <PersonIcon color="primary" />
+                          <PersonIcon color={touched.author && errors.author ? "error" : "primary"} />
                         </InputAdornment>
                       ),
                     }}
@@ -444,7 +553,7 @@ const BookBidForm = () => {
                 </Grid>
                 
                 <Grid item xs={12} md={6}>
-                  <FormControl fullWidth required error={!!errors.category}>
+                  <FormControl fullWidth required error={touched.category && !!errors.category}>
                     <InputLabel id="category-label">Category</InputLabel>
                     <Select
                       labelId="category-label"
@@ -453,23 +562,28 @@ const BookBidForm = () => {
                       value={bookData.category}
                       label="Category"
                       onChange={handleChange}
-                      startAdornment={
-                        <InputAdornment position="start">
-                          <CategoryIcon color="primary" />
-                        </InputAdornment>
-                      }
+                      onBlur={handleBlur}
+                      sx={{
+                        borderRadius: theme.shape.borderRadius * 2,
+                      }}
                     >
-                      <MenuItem value="">Select Category</MenuItem>
+                      <MenuItem value="" disabled>
+                        <em>Select Category</em>
+                      </MenuItem>
                       {[
                         "Fiction", "Non-Fiction", "Science", "History", 
                         "Fantasy", "Mystery", "Romance", "Biography", 
                         "Self-Help", "Horror", "Poetry", "Children's",
                         "Travel", "Cooking", "Art", "Philosophy"
                       ].map((category) => (
-                        <MenuItem key={category} value={category}>{category}</MenuItem>
+                        <MenuItem key={category} value={category}>
+                          {category}
+                        </MenuItem>
                       ))}
                     </Select>
-                    {errors.category && <FormHelperText>{errors.category}</FormHelperText>}
+                    {touched.category && errors.category && (
+                      <FormHelperText>{errors.category}</FormHelperText>
+                    )}
                   </FormControl>
                 </Grid>
               </Grid>
@@ -480,12 +594,12 @@ const BookBidForm = () => {
         return (
           <Fade in={activeStep === 1}>
             <Box>
-              <Typography variant="subtitle1" gutterBottom color="primary">
+              <Typography variant="subtitle1" gutterBottom color="primary" sx={{ mb: 3 }}>
                 Tell us more about your book's details
               </Typography>
               <Grid container spacing={3}>
                 <Grid item xs={12} md={4}>
-                  <TextField
+                  <StyledTextField
                     fullWidth
                     required
                     id="price"
@@ -495,13 +609,14 @@ const BookBidForm = () => {
                     placeholder="Original price of the book"
                     value={bookData.price}
                     onChange={handleChange}
+                    onBlur={handleBlur}
                     variant="outlined"
-                    error={!!errors.price}
-                    helperText={errors.price}
+                    error={touched.price && !!errors.price}
+                    helperText={touched.price && errors.price}
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
-                          <PriceChangeIcon color="primary" />
+                          <PriceChangeIcon color={touched.price && errors.price ? "error" : "primary"} />
                         </InputAdornment>
                       ),
                       inputProps: { min: 1 }
@@ -510,7 +625,7 @@ const BookBidForm = () => {
                 </Grid>
                 
                 <Grid item xs={12} md={4}>
-                  <TextField
+                  <StyledTextField
                     fullWidth
                     required
                     id="year"
@@ -520,13 +635,14 @@ const BookBidForm = () => {
                     placeholder="Year the book was published"
                     value={bookData.year}
                     onChange={handleChange}
+                    onBlur={handleBlur}
                     variant="outlined"
-                    error={!!errors.year}
-                    helperText={errors.year}
+                    error={touched.year && !!errors.year}
+                    helperText={touched.year && errors.year}
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
-                          <CalendarTodayIcon color="primary" />
+                          <CalendarTodayIcon color={touched.year && errors.year ? "error" : "primary"} />
                         </InputAdornment>
                       ),
                       inputProps: { min: 1900, max: currentYear }
@@ -558,17 +674,21 @@ const BookBidForm = () => {
                             }
                             size="small"
                           />
-                        ) : null}
+                        ) : (
+                          <Typography variant="caption" color="text.secondary">
+                            Select rating
+                          </Typography>
+                        )}
                       </Box>
                     </Box>
-                    {errors.condition && (
+                    {touched.condition && errors.condition && (
                       <FormHelperText error>{errors.condition}</FormHelperText>
                     )}
                   </Box>
                 </Grid>
                 
                 <Grid item xs={12}>
-                  <TextField
+                  <StyledTextField
                     fullWidth
                     required
                     id="description"
@@ -577,15 +697,16 @@ const BookBidForm = () => {
                     placeholder="Add details about the book, edition, special features, etc."
                     value={bookData.description}
                     onChange={handleChange}
+                    onBlur={handleBlur}
                     variant="outlined"
                     multiline
                     rows={4}
-                    error={!!errors.description}
-                    helperText={errors.description}
+                    error={touched.description && !!errors.description}
+                    helperText={touched.description && errors.description}
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start" sx={{ alignSelf: 'flex-start', mt: 1 }}>
-                          <DescriptionIcon color="primary" />
+                          <DescriptionIcon color={touched.description && errors.description ? "error" : "primary"} />
                         </InputAdornment>
                       ),
                     }}
@@ -599,19 +720,25 @@ const BookBidForm = () => {
         return (
           <Fade in={activeStep === 2}>
             <Box>
-              <Typography variant="subtitle1" gutterBottom color="primary">
+              <Typography variant="subtitle1" gutterBottom color="primary" sx={{ mb: 3 }}>
                 Upload images of your book
               </Typography>
-              <Paper 
+              
+              <UploadArea 
                 elevation={0} 
-                sx={{ 
-                  p: 3, 
-                  border: '2px dashed', 
-                  borderColor: 'primary.light', 
-                  bgcolor: alpha(theme.palette.primary.main, 0.04),
-                  borderRadius: 2
-                }}
+                error={touched.photos && !!errors.photos}
+                onClick={() => document.getElementById('photos-input').click()}
               >
+                <input
+                  type="file"
+                  id="photos-input"
+                  name="photos"
+                  accept="image/*"
+                  multiple
+                  onChange={handleFileChange}
+                  required
+                  style={{ display: 'none' }}
+                />
                 <Box sx={{ textAlign: 'center' }}>
                   <Avatar 
                     sx={{ 
@@ -619,42 +746,58 @@ const BookBidForm = () => {
                       height: 64, 
                       mx: 'auto', 
                       mb: 2,
-                      bgcolor: alpha(theme.palette.primary.main, 0.12)
+                      bgcolor: alpha(
+                        touched.photos && errors.photos ? 
+                        theme.palette.error.main : 
+                        theme.palette.primary.main, 
+                        0.12
+                      )
                     }}
                   >
-                    <PhotoCameraIcon color="primary" fontSize="large" />
+                    <PhotoCameraIcon 
+                      color={
+                        touched.photos && errors.photos ? 
+                        "error" : 
+                        "primary"
+                      } 
+                      fontSize="large" 
+                    />
                   </Avatar>
                   
                   <Typography variant="h6" gutterBottom fontWeight="medium">
-                    Upload Book Images
+                    {previewUrls.length > 0 ? 'Add More Images' : 'Upload Book Images'}
                   </Typography>
                   
                   <Typography variant="body2" color="text.secondary" gutterBottom>
-                    Upload clear images of your book (max 6 images)
+                    {previewUrls.length > 0 
+                      ? `You've added ${previewUrls.length} image(s)` 
+                      : 'Click to browse or drag and drop images (max 6)'}
                   </Typography>
                   
                   <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
-                    <Button
+                    <StyledButton
                       variant="contained"
-                      component="label"
+                      component="span"
                       startIcon={<CloudUploadIcon />}
-                      sx={{ px: 3, py: 1.5, mt: 1 }}
+                      sx={{ 
+                        px: 3, 
+                        py: 1.5, 
+                        mt: 1,
+                        bgcolor: touched.photos && errors.photos ? 
+                          'error.main' : 
+                          'primary.main',
+                        '&:hover': {
+                          bgcolor: touched.photos && errors.photos ? 
+                            'error.dark' : 
+                            'primary.dark'
+                        }
+                      }}
                     >
-                      Choose Images
-                      <input
-                        type="file"
-                        id="photos"
-                        name="photos"
-                        accept="image/*"
-                        multiple
-                        onChange={handleFileChange}
-                        required
-                        style={{ display: 'none' }}
-                      />
-                    </Button>
+                      {previewUrls.length > 0 ? 'Add More Images' : 'Choose Images'}
+                    </StyledButton>
                   </Box>
                   
-                  {errors.photos && (
+                  {touched.photos && errors.photos && (
                     <Alert severity="error" sx={{ mb: 2 }}>
                       {errors.photos}
                     </Alert>
@@ -674,7 +817,10 @@ const BookBidForm = () => {
                       </Typography>
                     )}
                     
-                    <Tooltip title="Upload clear images of your book including front cover, back cover, and any important pages">
+                    <Tooltip 
+                      title="Upload clear images of your book including front cover, back cover, and any important pages" 
+                      arrow
+                    >
                       <IconButton size="small">
                         <InfoIcon fontSize="small" color="primary" />
                       </IconButton>
@@ -689,7 +835,7 @@ const BookBidForm = () => {
                     </Typography>
                     <Grid container spacing={2}>
                       {previewUrls.map((file, index) => (
-                        <Grid item xs={6} sm={4} md={2} key={index}>
+                        <Grid item xs={6} sm={4} md={3} key={index}>
                           <Zoom in={true} style={{ transitionDelay: `${index * 100}ms` }}>
                             <Card sx={{ position: 'relative', overflow: 'hidden' }}>
                               <CardMedia
@@ -715,7 +861,10 @@ const BookBidForm = () => {
                                       bgcolor: 'rgba(255,0,0,0.1)'
                                     }
                                   }}
-                                  onClick={() => removeImage(index)}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    removeImage(index);
+                                  }}
                                   color="error"
                                 >
                                   <DeleteIcon fontSize="small" />
@@ -741,10 +890,10 @@ const BookBidForm = () => {
                     </Grid>
                   </Box>
                 )}
-              </Paper>
+              </UploadArea>
               
               <Box sx={{ mt: 4, display: 'flex', justifyContent: 'center' }}>
-                <Button 
+                <StyledButton 
                   type="submit" 
                   variant="contained" 
                   size="large"
@@ -761,7 +910,7 @@ const BookBidForm = () => {
                   startIcon={isSubmitting ? null : <SaveIcon />}
                 >
                   {isSubmitting ? 'Submitting...' : 'List Book for Bidding'}
-                </Button>
+                </StyledButton>
               </Box>
             </Box>
           </Fade>
@@ -775,7 +924,7 @@ const BookBidForm = () => {
     <ThemeProvider theme={theme}>
       <Header />
       <Container maxWidth="md" sx={{ mt: 4, mb: 6 }}>
-        <Paper elevation={3} sx={{ p: { xs: 3, sm: 4 }, borderRadius: 2 }}>
+        <StyledPaper elevation={3}>
           <Box textAlign="center" mb={4}>
             <Avatar 
               sx={{ 
@@ -796,7 +945,7 @@ const BookBidForm = () => {
             </Typography>
             
             {/* Progress indicator */}
-            <Box sx={{ mt: 2, px: 4 }}>
+            <Box sx={{ mt: 3, px: 4 }}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
                 <Typography variant="caption" color="text.secondary">
                   Form completion
@@ -808,107 +957,129 @@ const BookBidForm = () => {
               <LinearProgress 
                 variant="determinate" 
                 value={calculateProgress()} 
-                sx={{ height: 6, borderRadius: 3 }}
+                sx={{ 
+                  height: 6, 
+                  borderRadius: 3,
+                  '& .MuiLinearProgress-bar': {
+                    borderRadius: 3,
+                    transition: 'width 0.5s ease'
+                  }
+                }}
               />
             </Box>
           </Box>
           
           {/* Desktop Stepper */}
-          <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-            <Stepper activeStep={activeStep} alternativeLabel sx={{ mb: 4 }}>
-              {steps.map((label, index) => (
-                <Step key={label} completed={activeStep > index}>
-                  <StepLabel>
-                    <Typography variant="body2" fontWeight={activeStep === index ? 600 : 400}>
-                      {label}
-                    </Typography>
-                  </StepLabel>
-                </Step>
-              ))}
-            </Stepper>
-            
-            <Divider sx={{ mb: 4 }} />
-            
-            <Box component="form" noValidate sx={{ px: 1 }}>
-              {activeStep === 0 && getVerticalStepContent(0)}
-              {activeStep === 1 && getVerticalStepContent(1)}
-              {activeStep === 2 && getVerticalStepContent(2)}
+          {!isMobile && (
+            <Box>
+              <Stepper activeStep={activeStep} alternativeLabel sx={{ mb: 4 }}>
+                {steps.map((label, index) => (
+                  <Step key={label} completed={activeStep > index}>
+                    <StepLabel>
+                      <Typography variant="body2" fontWeight={activeStep === index ? 600 : 400}>
+                        {label}
+                      </Typography>
+                    </StepLabel>
+                  </Step>
+                ))}
+              </Stepper>
               
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 4 }}>
-                <Button
-                  variant="outlined"
-                  disabled={activeStep === 0}
-                  onClick={handleBack}
-                  startIcon={<ArrowBackIcon />}
-                  sx={{ mr: 1 }}
-                >
-                  Back
-                </Button>
-                <Box>
-                  {activeStep < steps.length - 1 && (
-                    <Button
-                      variant="contained"
-                      onClick={handleNext}
-                      endIcon={<ArrowForwardIcon />}
-                    >
-                      Continue to {steps[activeStep + 1]}
-                    </Button>
-                  )}
+              <Divider sx={{ mb: 4 }} />
+              
+              <Box component="form" noValidate sx={{ px: 1 }}>
+                {getVerticalStepContent(activeStep)}
+                
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 4 }}>
+                  <StyledButton
+                    variant="outlined"
+                    disabled={activeStep === 0}
+                    onClick={handleBack}
+                    startIcon={<ArrowBackIcon />}
+                    sx={{ mr: 1 }}
+                  >
+                    Back
+                  </StyledButton>
+                  <Box>
+                    {activeStep < steps.length - 1 && (
+                      <StyledButton
+                        variant="contained"
+                        onClick={handleNext}
+                        endIcon={<ArrowForwardIcon />}
+                      >
+                        Continue to {steps[activeStep + 1]}
+                      </StyledButton>
+                    )}
+                  </Box>
                 </Box>
               </Box>
             </Box>
-          </Box>
+          )}
           
           {/* Mobile Stepper with Step Content */}
-          <Box sx={{ display: { xs: 'block', sm: 'none' } }}>
-            <Stepper activeStep={activeStep} orientation="vertical">
-              {steps.map((label, index) => (
-                <Step key={label}>
-                  <StepLabel>
-                    <Typography variant="body2" fontWeight={activeStep === index ? 600 : 400}>
-                      {label}
-                    </Typography>
-                  </StepLabel>
-                  <StepContent>
-                    {getVerticalStepContent(index)}
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
-                      <Button
-                        variant="outlined"
-                        disabled={index === 0}
-                        onClick={handleBack}
-                        startIcon={<ArrowBackIcon />}
-                        size="small"
-                      >
-                        Back
-                      </Button>
-                      {index < steps.length - 1 ? (
-                        <Button
-                          variant="contained"
-                          onClick={handleNext}
-                          endIcon={<ArrowForwardIcon />}
+          {isMobile && (
+            <Box>
+              <Stepper activeStep={activeStep} orientation="vertical">
+                {steps.map((label, index) => (
+                  <Step key={label}>
+                    <StepLabel>
+                      <Typography variant="body2" fontWeight={activeStep === index ? 600 : 400}>
+                        {label}
+                      </Typography>
+                    </StepLabel>
+                    <StepContent>
+                      {getVerticalStepContent(index)}
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
+                        <StyledButton
+                          variant="outlined"
+                          disabled={index === 0}
+                          onClick={handleBack}
+                          startIcon={<ArrowBackIcon />}
                           size="small"
                         >
-                          Next
-                        </Button>
-                      ) : null}
-                    </Box>
-                  </StepContent>
-                </Step>
-              ))}
-            </Stepper>
-          </Box>
-        </Paper>
+                          Back
+                        </StyledButton>
+                        {index < steps.length - 1 ? (
+                          <StyledButton
+                            variant="contained"
+                            onClick={handleNext}
+                            endIcon={<ArrowForwardIcon />}
+                            size="small"
+                          >
+                            Next
+                          </StyledButton>
+                        ) : null}
+                      </Box>
+                    </StepContent>
+                  </Step>
+                ))}
+              </Stepper>
+            </Box>
+          )}
+        </StyledPaper>
       </Container>
       
       {/* Loading backdrop */}
       <Backdrop
-        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        sx={{ 
+          color: '#fff', 
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+          backdropFilter: 'blur(4px)'
+        }}
         open={isSubmitting}
       >
-        <Box sx={{ textAlign: 'center' }}>
-          <CircularProgress color="inherit" />
-          <Typography variant="h6" sx={{ mt: 2, color: 'white' }}>
+        <Box sx={{ 
+          textAlign: 'center',
+          p: 4,
+          borderRadius: 2,
+          bgcolor: 'background.paper',
+          color: 'text.primary'
+        }}>
+          <CircularProgress color="primary" size={60} thickness={4} />
+          <Typography variant="h6" sx={{ mt: 3 }}>
             Submitting your book...
+          </Typography>
+          <Typography variant="body2" sx={{ mt: 1 }}>
+            Please wait while we process your listing
           </Typography>
         </Box>
       </Backdrop>
