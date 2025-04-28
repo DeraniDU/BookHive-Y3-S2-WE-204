@@ -34,13 +34,13 @@ app.use("/exchange", exchangeRoutes);
 // Database connection
 mongoose.connect(config.mongoDBURL)
     .then(() => {
-        console.log('✅ App connected to database');
+        console.log(' App connected to database');
         app.listen(config.PORT, () => {
-            console.log(`🚀 Server running on port ${config.PORT}`);
-            console.log('☁️ Cloudinary configured:', config.cloudinary.cloud_name ? true : false);
+            console.log(` Server running on port ${config.PORT}`);
+            console.log(' Cloudinary configured:', config.cloudinary.cloud_name ? true : false);
         });
     })
     .catch((error) => {
-        console.error('❌ Database connection failed:', error);
+        console.error('Database connection failed:', error);
         process.exit(1); // Exit if DB connection fails
     });
