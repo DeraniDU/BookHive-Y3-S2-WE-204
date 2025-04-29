@@ -1,22 +1,17 @@
 import React, { useState } from 'react';
-import { useEffect } from 'react';
-import { getAuth } from 'firebase/auth';
-
 import { Link } from 'react-router-dom';
-import bookBackground from '../../photo/book1.jpg';
+import bookBackground from '../../photo/book5.jpeg';
 import Swal from 'sweetalert2'
 import { Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
 import { PDFDownloadLink } from '@react-pdf/renderer';
+import Footer from '../../components/Footer';
 
-// Import sample book covers
-import book1 from '../../photo/book1.jpg';
-import book2 from '../../photo/book1.jpg';
-import book3 from '../../photo/book1.jpg';
-import book4 from '../../photo/book1.jpg';
-import book5 from '../../photo/book1.jpg';
-
-
-
+// Import sample book co
+import book1 from '../../photo/book5.jpeg';
+import book2 from '../../photo/book5.jpeg';
+import book3 from '../../photo/book5.jpeg';
+import book4 from '../../photo/book5.jpeg';
+import book5 from '../../photo/book5.jpeg';
 
 
 const styles = StyleSheet.create({
@@ -94,42 +89,68 @@ const styles = StyleSheet.create({
   // PDF Document Component
   const ApprovedBooksReport = ({ books }) => (
     <Document>
-    <Page size="A4" style={styles.page}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Approved Books Report</Text>
-        <Text style={styles.subtitle}>Generated on {new Date().toLocaleDateString()}</Text>
-      </View>
-      <View style={styles.table}>
-        <View style={styles.tableRow}>
-          <View style={styles.tableColHeader}><Text style={styles.headerText}>Book Cover</Text></View>
-          <View style={styles.tableColHeader}><Text style={styles.headerText}>Title & Author</Text></View>
-          <View style={styles.tableColHeader}><Text style={styles.headerText}>Borrower Info</Text></View>
-          <View style={styles.tableColHeader}><Text style={styles.headerText}>Days Left</Text></View>
+      <Page size="A4" style={styles.page}>
+        <View style={styles.header}>
+          <Text style={styles.title}>Approved Books Report</Text>
+          <Text style={styles.subtitle}>Generated on {new Date().toLocaleDateString()}</Text>
         </View>
-        {books.map((book, index) => (
-          <View style={styles.tableRow} key={index}>
-            <View style={styles.tableCol}><Image src={book.cover} style={styles.bookCover} /></View>
-            <View style={styles.tableCol}>
-              <Text style={styles.bodyText}>{book.title}</Text>
-              <Text style={[styles.bodyText, { color: '#666' }]}>By {book.author}</Text>
+        
+        <View style={styles.table}>
+          {/* Table Header */}
+          <View style={styles.tableRow}>
+            <View style={styles.tableColHeader}>
+              <Text style={styles.headerText}>Book Cover</Text>
             </View>
-            <View style={styles.tableCol}>
-              <View style={styles.borrowerInfo}>
-                <Image src={book.borrower.avatar} style={styles.borrowerAvatar} />
-                <Text style={styles.bodyText}>{book.borrower.name}</Text>
-              </View>
-              <Text style={[styles.bodyText, { fontSize: 8 }]}>{book.borrower.address}</Text>
+            <View style={styles.tableColHeader}>
+              <Text style={styles.headerText}>Title & Author</Text>
             </View>
-            <View style={styles.tableCol}>
-              <Text style={{ color: book.daysLeft <= 2 ? 'red' : book.daysLeft <= 5 ? 'orange' : 'green', fontWeight: 'bold' }}>
-                {book.daysLeft} day{book.daysLeft !== 1 ? 's' : ''}
-              </Text>
+            <View style={styles.tableColHeader}>
+              <Text style={styles.headerText}>Borrower Info</Text>
+            </View>
+            <View style={styles.tableColHeader}>
+              <Text style={styles.headerText}>Days Left</Text>
             </View>
           </View>
-        ))}
-      </View>
-    </Page>
-  </Document>
+          
+          {/* Table Rows */}
+          {books.map((book, index) => (
+            <View style={styles.tableRow} key={index}>
+              <View style={styles.tableCol}>
+                <Image 
+                  src={book.cover} 
+                  style={styles.bookCover} 
+                />
+              </View>
+              <View style={styles.tableCol}>
+                <Text style={styles.bodyText}>{book.title}</Text>
+                <Text style={[styles.bodyText, { color: '#666' }]}>By {book.author}</Text>
+              </View>
+              <View style={styles.tableCol}>
+                <View style={styles.borrowerInfo}>
+                  <Image 
+                    src={book.borrower.avatar} 
+                    style={styles.borrowerAvatar} 
+                  />
+                  <Text style={styles.bodyText}>{book.borrower.name}</Text>
+                </View>
+                <Text style={[styles.bodyText, { fontSize: 8 }]}>{book.borrower.address}</Text>
+              </View>
+              <View style={styles.tableCol}>
+                <Text style={[
+                  styles.bodyText, 
+                  { 
+                    color: book.daysLeft <= 2 ? 'red' : book.daysLeft <= 5 ? 'orange' : 'green',
+                    fontWeight: 'bold'
+                  }
+                ]}>
+                  {book.daysLeft} day{book.daysLeft !== 1 ? 's' : ''}
+                </Text>
+              </View>
+            </View>
+          ))}
+        </View>
+      </Page>
+    </Document>
   );
   
 
@@ -145,22 +166,67 @@ function BookLendingPage() {
     review: '',
     bookPhoto: null
   });
-  const [waitingBooks, setWaitingBooks] = useState([]);
-  const auth = getAuth();
 
-  useEffect(() => {
-    const fetchBooks = async () => {
-      try {
-        const res = await fetch("http://localhost:5000/api/books");
-        const data = await res.json();
-        setWaitingBooks(data);
-      } catch (error) {
-        console.error("Error fetching books:", error);
-      }
-    };
-    fetchBooks();
-  }, []);
+  // Dummy data for approved books
+  const approvedBooks = [
+    {
+      id: 1,
+      title: "The Silent Patient",
+      author: "Alex Michaelides",
+      cover: book1,
+      borrower: {
+        name: "Sarah Johnson",
+        avatar: "https://randomuser.me/api/portraits/women/44.jpg",
+        address: "123 Library St, Colombo"
+      },
+      daysLeft: 3,
+      description: "A psychological thriller about a woman who shoots her husband and then stops speaking."
+    },
+    {
+      id: 2,
+      title: "Atomic Habits",
+      author: "James Clear",
+      cover: book2,
+      borrower: {
+        name: "David Wilson",
+        avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+        address: "456 Book Ave, Kandy"
+      },
+      daysLeft: 5,
+      description: "An easy way to build good habits and break bad ones."
+    }
+  ];
 
+  // Dummy data for waiting books
+  const waitingBooks = [
+    {
+      id: 3,
+      title: "Educated",
+      author: "Tara Westover",
+      cover: book3,
+      category: "Memoir",
+      description: "A memoir about a woman who grew up in a survivalist family in Idaho and went on to earn a PhD from Cambridge University.",
+      updated: "2023-05-15"
+    },
+    {
+      id: 4,
+      title: "Project Hail Mary",
+      author: "Andy Weir",
+      cover: book4,
+      category: "Science Fiction",
+      description: "A lone astronaut must save the earth from disaster in this science fiction adventure.",
+      updated: "2023-05-10"
+    },
+    {
+      id: 5,
+      title: "The Midnight Library",
+      author: "Matt Haig",
+      cover: book5,
+      category: "Fiction",
+      description: "A library between life and death that lets you try out different lives you might have lived.",
+      updated: "2023-05-05"
+    }
+  ];
 
   const toggleChat = (book) => {
     setCurrentChatBook(book);
@@ -184,85 +250,87 @@ function BookLendingPage() {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-  
-    const user = auth.currentUser;
-    if (!user) {
-      Swal.fire('Error', 'You must be logged in to add a book.', 'error');
-      return;
-    }
-  
-    // Validate form fields
-    if (!formData.bookName.trim()) {
-      Swal.fire({ icon: 'error', title: 'Oops...', text: 'Please enter the book name!' });
-      return;
-    }
-    if (!formData.author.trim()) {
-      Swal.fire({ icon: 'error', title: 'Oops...', text: 'Please enter the author name!' });
-      return;
-    }
-    if (!formData.bookType) {
-      Swal.fire({ icon: 'error', title: 'Oops...', text: 'Please select a book type!' });
-      return;
-    }
-    if (!formData.availableArea.trim()) {
-      Swal.fire({ icon: 'error', title: 'Oops...', text: 'Please enter the available area!' });
-      return;
-    }
-    if (!formData.review.trim()) {
-      Swal.fire({ icon: 'error', title: 'Oops...', text: 'Please write a brief review!' });
-      return;
-    }
-  
+    
+   // Validate form fields
+   if (!formData.bookName.trim()) {
     Swal.fire({
-      title: 'Are you sure?',
-      text: "You want to add this book for lending?",
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, add it!'
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        const payload = {
-          title: formData.bookName,
-          author: formData.author,
-          bookType: formData.bookType,
-          availableArea: formData.availableArea,
-          review: formData.review,
-          userId: user.uid
-        };
-  
-        try {
-          const response = await fetch("http://localhost:5000/api/books", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify(payload)
-          });
-  
-          const data = await response.json();
-          Swal.fire('Added!', 'Your book has been added for lending.', 'success');
-  
-          setFormData({
-            bookName: '',
-            author: '',
-            bookType: '',
-            availableArea: '',
-            review: '',
-            bookPhoto: null
-          });
-          setIsFormOpen(false);
-          setWaitingBooks(prev => [data, ...prev]);
-  
-        } catch (err) {
-          Swal.fire('Error', 'Failed to save book.', 'error');
-          console.error(err);
-        }
-      }
+      icon: 'error',
+      title: 'Oops...',
+      text: 'Please enter the book name!',
     });
-  };
-  
+    return;
+  }
+
+  if (!formData.author.trim()) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: 'Please enter the author name!',
+    });
+    return;
+  }
+
+  if (!formData.bookType) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: 'Please select a book type!',
+    });
+    return;
+  }
+
+  if (!formData.availableArea.trim()) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: 'Please enter the available area!',
+    });
+    return;
+  }
+
+  if (!formData.review.trim()) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: 'Please write a brief review!',
+    });
+    return;
+  }
+
+  // If validation passes
+  Swal.fire({
+    title: 'Are you sure?',
+    text: "You want to add this book for lending?",
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, add it!'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // Here you would typically send the data to your backend
+      console.log('Form submitted:', formData);
+      
+      Swal.fire(
+        'Added!',
+        'Your book has been added for lending.',
+        'success'
+      );
+      
+      // Reset form and close
+      setFormData({
+        bookName: '',
+        author: '',
+        bookType: '',
+        availableArea: '',
+        review: '',
+        bookPhoto: null
+      });
+      setIsFormOpen(false);
+    }
+  });
+};
+
 
 
   return (
@@ -603,6 +671,7 @@ function BookLendingPage() {
           </div>
         </div>
       </div>
+    
     </div>
   );
 }
