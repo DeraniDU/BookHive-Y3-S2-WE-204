@@ -11,10 +11,18 @@ const bookRequestSchema = new mongoose.Schema(
       enum: ['pending', 'approved', 'rejected'],
       default: 'pending',
     },
+    requestedBy: {  // NEW: Track who made the request
+      type: String,  // Firebase UID
+      required: true
+    },
+    ownerId: {      // NEW: Track who owns the book being requested
+      type: String,  // Firebase UID
+      required: true
+    }
   },
   { timestamps: true } 
 );
 
 const BookRequest = mongoose.model('BookRequest', bookRequestSchema);
 
-export default BookRequest; // Exporting the model
+export default BookRequest;
