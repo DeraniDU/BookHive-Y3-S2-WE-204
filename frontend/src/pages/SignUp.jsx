@@ -10,6 +10,7 @@ import {
 } from "firebase/auth";
 import { auth } from "../firebase";
 import "./SignUp.css";
+import { setAuthToken } from "../services/authService"; // New import
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -17,6 +18,22 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  const handleAuthSuccess = async (user) => {
+    try {
+      const token = await user.getIdToken();
+      setAuthToken(token);
+      localStorage.setItem("isLogged", "true");
+      Swal.fire({ 
+        icon: "success", 
+        title: "Welcome!", 
+        text: "You're now signed in."
+      });
+      navigate("/");
+    } catch (error) {
+      Swal.fire({ icon: "error", title: "Token Error", text: error.message });
+    }
+  };
 
   const handleSignUp = async () => {
     if (!name || !email || !password || !confirmPassword) {
@@ -31,36 +48,16 @@ const SignUp = () => {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       await updateProfile(userCredential.user, { displayName: name });
-      Swal.fire({ 
-        icon: "success", 
-        title: "Account Created", 
-        text: "You have successfully signed up! Please sign in to continue."
-      });
-      navigate("/signin"); // Redirect to Sign In page
+      await handleAuthSuccess(userCredential.user);
     } catch (error) {
       Swal.fire({ icon: "error", title: "Oops...", text: error.message });
     }
   };
 
-  const handleGoogleSignUp = async () => {
-    const provider = new GoogleAuthProvider();
+  const handleSocialSignUp = async (provider) => {
     try {
-      await signInWithPopup(auth, provider);
-      Swal.fire({ icon: "success", title: "Signed Up", text: "You have successfully signed up with Google!" });
-      localStorage.setItem("isLogged", true);
-      navigate("/home");
-    } catch (error) {
-      Swal.fire({ icon: "error", title: "Oops...", text: error.message });
-    }
-  };
-
-  const handleFacebookSignUp = async () => {
-    const provider = new FacebookAuthProvider();
-    try {
-      await signInWithPopup(auth, provider);
-      Swal.fire({ icon: "success", title: "Signed Up", text: "You have successfully signed up with Facebook!" });
-      localStorage.setItem("isLogged", true);
-      navigate("/home");
+      const result = await signInWithPopup(auth, provider);
+      await handleAuthSuccess(result.user);
     } catch (error) {
       Swal.fire({ icon: "error", title: "Oops...", text: error.message });
     }
@@ -134,11 +131,7 @@ const SignUp = () => {
               </div>
             </div>
 
-            <button 
-              type="button" 
-              className="signup-button"
-              onClick={handleSignUp}
-            >
+            <button type="button" className="signup-button" onClick={handleSignUp}>
               Sign Up
             </button>
 
@@ -146,14 +139,14 @@ const SignUp = () => {
               <button 
                 type="button" 
                 className="social-button google"
-                onClick={handleGoogleSignUp}
+                onClick={() => handleSocialSignUp(new GoogleAuthProvider())}
               >
                 <i className="google icon"></i> Sign up with Google
               </button>
               <button 
                 type="button" 
                 className="social-button facebook"
-                onClick={handleFacebookSignUp}
+                onClick={() => handleSocialSignUp(new FacebookAuthProvider())}
               >
                 <i className="facebook icon"></i> Sign up with Facebook
               </button>

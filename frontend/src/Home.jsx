@@ -2,12 +2,13 @@ import React, { useEffect, useState } from "react";
 import { auth } from "./firebase";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import swal from "sweetalert"; // Import SweetAlert
+import swal from "sweetalert"; 
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import BookSearch from "./components/BookSearch";
 import "./Home.css";
-//home 
+import { clearAuthToken } from "./services/authService";
+
 const Home = () => {
   const [user, setUser] = useState(null);
   const [featuredBooks, setFeaturedBooks] = useState([]);
@@ -18,7 +19,7 @@ const Home = () => {
     // Check authentication state
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (!currentUser) {
-        navigate("/signin"); // Redirect to SignIn if no user is logged in
+        navigate("/signin");
       } else {
         setUser(currentUser);
       }
@@ -32,10 +33,9 @@ const Home = () => {
         );
         const data = await response.json();
 
-        // Filter books with images and pick 6
         let booksWithImages = data.docs
-          .filter((book) => book.cover_i) // Only books with cover images
-          .slice(0, 6); // Get 6 books
+          .filter((book) => book.cover_i)
+          .slice(0, 6);
 
         setFeaturedBooks(booksWithImages);
       } catch (error) {
@@ -49,12 +49,18 @@ const Home = () => {
     return () => unsubscribe();
   }, [navigate]);
 
-  // Handle Logout
+  // Updated logout handler
   const handleLogout = async () => {
     try {
-      await signOut(auth); // Ensure sign-out completes
-      swal("Logged Out!", "You have been logged out successfully.", "success").then(() => {
-        navigate("/signin"); // Redirect after SweetAlert confirmation
+      await signOut(auth);
+      clearAuthToken();
+      
+      // Verification check
+      const tokenAfterLogout = localStorage.getItem("firebaseToken");
+      console.log("Token after logout:", tokenAfterLogout); // Should be null
+      
+      swal("Success", "Logged out successfully", "success").then(() => {
+        navigate("/signin");
       });
     } catch (error) {
       swal("Error", error.message, "error");
@@ -63,7 +69,7 @@ const Home = () => {
 
   return (
     <div className="home-container">
-      <Header />
+      <Header onLogout={handleLogout} />
 
       <section id="hero" className="hero">
         <h2 className="hero-title">Welcome to BookHive</h2>
@@ -75,7 +81,6 @@ const Home = () => {
         </a>
       </section>
 
-      {/* Featured Books Section */}
       <section id="featured-books" className="featured-books">
         <h2 className="featured-books-title">Featured Books</h2>
         {loading ? (
@@ -99,7 +104,6 @@ const Home = () => {
         )}
       </section>
 
-      {/* Book Search Section */}
       <section id="book-search">
         <BookSearch />
       </section>
