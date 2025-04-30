@@ -1,97 +1,259 @@
+/* BiddingSuccess.css */
 .bidding-success-container {
-    max-width: 700px;
-    margin: 40px auto;
-    padding: 30px;
-    background: #f9f9f9;
-    border-radius: 15px;
-    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    font-family: 'Arial', sans-serif;
-}
-
-.bidding-success-container h2 {
-    color: #1C3D5A;
-    font-size: 32px;
-    font-weight: bold;
-    margin-bottom: 25px;
-    text-transform: uppercase;
-}
-
-.bid-details {
-    text-align: left;
-    margin-bottom: 25px;
-    padding: 15px;
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.bid-detail {
-    margin: 15px 0;
-}
-
-.bid-detail label {
-    font-size: 16px;
-    font-weight: 600;
-    color: #333;
-}
-
-.bid-detail p {
-    margin: 5px 0;
-    padding: 12px;
-    background: #f4f4f4;
-    border-radius: 8px;
-    font-size: 14px;
-    color: #444;
-    border: 1px solid #ddd;
-}
-
-input[type="date"] {
-    width: 100%;
-    padding: 12px;
-    margin-top: 8px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-    background: #fff;
-}
-
-.buttons {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 1rem;
+  }
+  
+  .success-header {
     display: flex;
-    justify-content: space-evenly;
-    margin-top: 30px;
-}
-
-button {
-    padding: 10px 18px; /* Decreased padding for smaller buttons */
-    border: none;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .success-header h2 {
+    margin: 0;
+    color: #333;
+  }
+  
+  .bid-status {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.875rem;
+  }
+  
+  .bid-status.active {
+    background-color: #2ecc71;
+    color: white;
+  }
+  
+  .bid-status.not-started {
+    background-color: #3498db;
+    color: white;
+  }
+  
+  .bid-status.expired {
+    background-color: #e74c3c;
+    color: white;
+  }
+  
+  .countdown-container {
+    background-color: #fff;
     border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  
+  .countdown-container h3 {
+    margin-top: 0;
+    color: #333;
+  }
+  
+  .countdown {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
+  
+  .countdown-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .countdown-value {
+    font-size: 2rem;
+    font-weight: 700;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    min-width: 60px;
+    text-align: center;
+  }
+  
+  .countdown-label {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: #555;
+  }
+  
+  .details-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  @media (max-width: 768px) {
+    .details-container {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  .book-details-section,
+  .bid-details-section {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+  }
+  
+  .book-details-section h3,
+  .bid-details-section h3 {
+    margin-top: 0;
+    color: #333;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  
+  .detail-item {
+    display: flex;
+    margin-bottom: 0.75rem;
+  }
+  
+  .detail-label {
+    font-weight: 600;
+    min-width: 100px;
+    color: #555;
+  }
+  
+  .detail-value {
+    color: #333;
+  }
+  
+  .highest-bid {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px dashed #ddd;
+  }
+  
+  .highest-bid h4 {
+    margin-top: 0;
+    color: #333;
+    margin-bottom: 0.75rem;
+  }
+  
+  .place-bid-section {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .place-bid-section h3 {
+    margin-top: 0;
+    color: #333;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  
+  .bid-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 1rem;
+    align-items: end;
+  }
+  
+  @media (max-width: 768px) {
+    .bid-form {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  .form-group {
+    margin-bottom: 0;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #555;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+  
+  .form-group input.error {
+    border-color: #e74c3c;
+  }
+  
+  .error-message {
+    color: #e74c3c;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+  }
+  
+  .action-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  
+  @media (max-width: 576px) {
+    .action-buttons {
+      flex-direction: column;
+    }
+  }
+  
+  .btn-primary,
+  .btn-secondary,
+  .btn-danger {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
     cursor: pointer;
-    font-size: 16px;
     transition: background-color 0.3s;
-}
-
-button.update {
-    background: #A6BCFF;
-    color: #1C3D5A;
-    width: 48%;
-}
-
-button.delete {
-    background: #FF0404;
-    color: #fff;
-    width: 48%;
-}
-
-button.view {
-    background: #1C3D5A;
-    color: #fff;
-    width: 48%;
-}
-
-button:hover {
-    opacity: 0.8;
-}
-
-button:active {
-    transform: scale(0.98);
-}
+    flex: 1;
+    text-align: center;
+  }
+  
+  .btn-primary {
+    background-color: #3498db;
+    color: white;
+  }
+  
+  .btn-primary:hover {
+    background-color: #2980b9;
+  }
+  
+  .btn-secondary {
+    background-color: #95a5a6;
+    color: white;
+  }
+  
+  .btn-secondary:hover {
+    background-color: #7f8c8d;
+  }
+  
+  .btn-danger {
+    background-color: #e74c3c;
+    color: white;
+  }
+  
+  .btn-danger:hover {
+    background-color: #c0392b;
+  }
+  
+  .loading-spinner,
+  .error-message {
+    text-align: center;
+    padding: 2rem;
+  }
+  
+  .error-message {
+    color: #e74c3c;
+  }
