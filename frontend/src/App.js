@@ -26,13 +26,12 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* Public routes */}
+       
         <Route path="/" element={<Home />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
 
-        {/* Protected routes */}
-
+       
 
         <Route path="/exchange/add" element={<UserAddBook />} />
         <Route path="/exchange/edit/:id" element={<UserEditBook />} />
@@ -47,7 +46,7 @@ function App() {
         <Route path ="/exchange/mybooks" element={<MyBooks/>} />
 
 
-        {/* Other public routes */}
+       
         <Route path="/bidding" element={<BookBidForm />} />
         <Route path="/bidhome" element={<BidHome />} />
         <Route path="/bidding-success" element={<BiddingSuccess />} />
