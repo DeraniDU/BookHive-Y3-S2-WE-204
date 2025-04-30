@@ -1,81 +1,71 @@
-.book-form-container {
-  padding: 20px;
-  max-width: 600px;
-  margin: 0 auto;
-  background-color: #f9f9f9;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+/* BookBidForm.css */
+/* This CSS file complements the Material UI styling with some additional custom styles */
+
+body {
+  background-color: #f5f7fa;
 }
 
-.book-form-container h2 {
-  text-align: center;
-  font-size: 24px;
-  margin-bottom: 20px;
+/* Form container hover effect */
+.MuiPaper-root {
+  transition: all 0.3s ease-in-out;
 }
 
-form {
-  display: flex;
-  flex-direction: column;
+.MuiPaper-root:hover {
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
 }
 
-form input,
-form select,
-form textarea {
-  margin: 10px 0;
-  padding: 10px;
-  font-size: 16px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+/* Custom image preview hover effect */
+.MuiCardMedia-root {
+  transition: all 0.2s ease;
 }
 
-form textarea {
-  height: 100px;
+.MuiCardMedia-root:hover {
+  transform: scale(1.03);
 }
 
-form button {
-  padding: 10px;
-  font-size: 16px;
-  background-color: #1C3D5A;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top: 10px;
+/* Custom button hover effect */
+.MuiButton-contained:hover {
+  box-shadow: 0px 4px 12px rgba(25, 118, 210, 0.3);
 }
 
-form button:hover {
-  background-color: #A6BCFF;
+/* Custom button focus effect */
+.MuiButton-contained:focus {
+  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.25);
 }
 
-input[type="file"] {
-  padding: 5px;
-  background-color: #fff;
+/* Stepper customization */
+.MuiStepLabel-root.Mui-active {
+  font-weight: 600;
 }
 
-input[type="file"]:hover {
-  background-color: #f0f0f0;
+.MuiStepIcon-root.Mui-completed {
+  color: #4caf50 !important;
 }
 
-select, input[type="text"], input[type="number"], textarea {
-  width: 100%;
-  box-sizing: border-box;
+/* Custom scrollbar for image preview container */
+.MuiBox-root::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
 }
 
-select:focus,
-input[type="text"]:focus,
-input[type="number"]:focus,
-textarea:focus {
-  border-color: #1C3D5A;
-  outline: none;
+.MuiBox-root::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
 }
 
-.book-form-container label {
-  font-weight: bold;
-  margin-bottom: 5px;
-  display: block;
-  font-size: 16px;
+.MuiBox-root::-webkit-scrollbar-thumb {
+  background: #bdbdbd;
+  border-radius: 3px;
 }
 
-input[type="file"] {
-  font-size: 14px;
+.MuiBox-root::-webkit-scrollbar-thumb:hover {
+  background: #9e9e9e;
+}
+
+/* Add some breathing room on mobile */
+@media (max-width: 600px) {
+  .MuiContainer-root {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
 }
