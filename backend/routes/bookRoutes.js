@@ -1,6 +1,6 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import ExchangeModel from "../models/exchangeModel.js";
+import ExchangeModel from "../models/ExchangeModel.js";
 import { body, validationResult } from 'express-validator';
 import multer from 'multer';
 import { v2 as cloudinary } from 'cloudinary';

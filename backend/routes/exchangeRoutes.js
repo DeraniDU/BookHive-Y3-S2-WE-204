@@ -1,7 +1,7 @@
 import express from "express";
 import multer from "multer";
 import { v2 as cloudinary } from "cloudinary";
-import ExchangeModel from "../models/exchangeModel.js";
+import ExchangeModel from "../models/ExchangeModel.js";
 import { body, validationResult } from "express-validator";
 import mongoose from "mongoose";
 import authenticate from "../middlewares/authMiddleware.js"; // NEW: Import auth middleware
