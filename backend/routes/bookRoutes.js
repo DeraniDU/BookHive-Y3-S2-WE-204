@@ -4,6 +4,7 @@ import ExchangeModel from "../models/exchangeModel.js";
 import { body, validationResult } from 'express-validator';
 import multer from 'multer';
 import { v2 as cloudinary } from 'cloudinary';
+import authenticate from '../middlewares/authMiddleware.js'; // Import auth middleware
 
 const router = express.Router();
 
@@ -14,43 +15,61 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-// Multer configuration for image upload
+// Enhanced Multer configuration with file type filtering
 const storage = multer.memoryStorage();
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 5 * 1024 * 1024 } // 5MB
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype.startsWith('image/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('Only image files are allowed!'), false);
+    }
+  }
 });
 
-// Validation middleware
+// Enhanced validation middleware
 const validateBook = [
-  body('title').notEmpty().withMessage('Title is required'),
-  body('author').notEmpty().withMessage('Author is required'),
+  body('title').trim().notEmpty().withMessage('Title is required'),
+  body('author').trim().notEmpty().withMessage('Author is required'),
   body('genre').isIn(["Fiction", "Non-Fiction", "Biography", "Sci-Fi", "Fantasy", "Mystery"])
     .withMessage('Invalid genre'),
   body('condition').isIn(["New", "Like New", "Good", "Fair", "Worn", "Used", "Damaged"])
     .withMessage('Invalid condition'),
-  body('ownerName').notEmpty().withMessage('Owner name is required'),
-  body('contactInfo').notEmpty().withMessage('Contact info is required'),
+  body('ownerName').trim().notEmpty().withMessage('Owner name is required'),
+  body('contactInfo').isEmail().withMessage('Valid email is required'),
   body('available').optional().isBoolean(),
-  body('location').optional()
+  body('location').optional().trim()
 ];
 
-// Helper function for Cloudinary upload
+// Improved Cloudinary upload helper with error handling
 const uploadToCloudinary = async (fileBuffer) => {
   return new Promise((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(
-      { folder: 'book_exchange' },
+      { 
+        folder: 'book_exchange',
+        quality: 'auto:good'
+      },
       (error, result) => {
-        if (error) reject(error);
-        else resolve(result);
+        if (error) {
+          console.error('Cloudinary upload error:', error);
+          reject(new Error('Failed to upload image'));
+        } else {
+          resolve(result);
+        }
       }
     );
+    uploadStream.on('error', (error) => {
+      console.error('Upload stream error:', error);
+      reject(new Error('Image upload failed'));
+    });
     uploadStream.end(fileBuffer);
   });
 };
 
-// Create a new book (with optional image)
-router.post('/', upload.single('image'), validateBook, async (req, res) => {
+// Create a new book (now protected)
+router.post('/', authenticate, upload.single('image'), validateBook, async (req, res) => {
   try {
     // Validate request
     const errors = validationResult(req);
@@ -85,12 +104,12 @@ router.post('/', upload.single('image'), validateBook, async (req, res) => {
       } catch (error) {
         return res.status(500).json({ 
           success: false,
-          error: 'Image upload failed' 
+          error: error.message 
         });
       }
     }
 
-    // Create new book
+    // Create new book with owner ID from Firebase auth
     const newBook = await ExchangeModel.create({
       title,
       author,
@@ -101,7 +120,8 @@ router.post('/', upload.single('image'), validateBook, async (req, res) => {
       contactInfo,
       available,
       location,
-      bookImage
+      bookImage,
+      ownerId: req.user.uid // Add owner ID from authentication
     });
 
     res.status(201).json({
@@ -111,14 +131,15 @@ router.post('/', upload.single('image'), validateBook, async (req, res) => {
     });
 
   } catch (error) {
+    console.error('Error creating book:', error);
     res.status(500).json({ 
       success: false,
-      error: error.message 
+      error: 'Failed to create book' 
     });
   }
 });
 
-// Get all books with filtering and pagination
+// Get all books with filtering and pagination (public)
 router.get('/', async (req, res) => {
   try {
     const { 
@@ -167,14 +188,15 @@ router.get('/', async (req, res) => {
     });
 
   } catch (error) {
+    console.error('Error fetching books:', error);
     res.status(500).json({ 
       success: false,
-      error: error.message 
+      error: 'Failed to fetch books' 
     });
   }
 });
 
-// Get a book by ID
+// Get a book by ID (public)
 router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -201,15 +223,16 @@ router.get('/:id', async (req, res) => {
     });
 
   } catch (error) {
+    console.error('Error fetching book:', error);
     res.status(500).json({ 
       success: false,
-      error: error.message 
+      error: 'Failed to fetch book' 
     });
   }
 });
 
-// Update a book (with optional image update)
-router.put('/:id', upload.single('image'), async (req, res) => {
+// Update a book (protected to owner only)
+router.put('/:id', authenticate, upload.single('image'), async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -220,11 +243,16 @@ router.put('/:id', upload.single('image'), async (req, res) => {
       });
     }
 
-    const book = await ExchangeModel.findById(id);
+    // Only allow owner to update
+    const book = await ExchangeModel.findOne({
+      _id: id,
+      ownerId: req.user.uid
+    });
+
     if (!book) {
       return res.status(404).json({ 
         success: false,
-        message: 'Book not found' 
+        message: 'Book not found or unauthorized' 
       });
     }
 
@@ -273,15 +301,16 @@ router.put('/:id', upload.single('image'), async (req, res) => {
     });
 
   } catch (error) {
+    console.error('Error updating book:', error);
     res.status(500).json({ 
       success: false,
-      error: error.message 
+      error: 'Failed to update book' 
     });
   }
 });
 
-// Delete a book
-router.delete('/:id', async (req, res) => {
+// Delete a book (protected to owner only)
+router.delete('/:id', authenticate, async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -292,11 +321,16 @@ router.delete('/:id', async (req, res) => {
       });
     }
 
-    const book = await ExchangeModel.findById(id);
+    // Only allow owner to delete
+    const book = await ExchangeModel.findOne({
+      _id: id,
+      ownerId: req.user.uid
+    });
+
     if (!book) {
       return res.status(404).json({ 
         success: false,
-        message: 'Book not found' 
+        message: 'Book not found or unauthorized' 
       });
     }
 
@@ -313,9 +347,10 @@ router.delete('/:id', async (req, res) => {
     });
 
   } catch (error) {
+    console.error('Error deleting book:', error);
     res.status(500).json({ 
       success: false,
-      error: error.message 
+      error: 'Failed to delete book' 
     });
   }
 });
