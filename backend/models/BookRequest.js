@@ -1,28 +1,74 @@
 import mongoose from 'mongoose';
 
-const bookRequestSchema = new mongoose.Schema(
-  {
-    bookOffered: { type: String, required: true },
-    bookWanted: { type: String, required: true },
-    condition: { type: String, required: true },
-    notes: { type: String },
-    status: {
-      type: String,
-      enum: ['pending', 'approved', 'rejected'],
-      default: 'pending',
-    },
-    requestedBy: {  // NEW: Track who made the request
-      type: String,  // Firebase UID
-      required: true
-    },
-    ownerId: {      // NEW: Track who owns the book being requested
-      type: String,  // Firebase UID
-      required: true
+const exchangebooksSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  author: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  genre: {
+    type: String,
+    required: true,
+    enum: ["Fiction", "Non-Fiction", "Biography", "Sci-Fi", "Fantasy", "Mystery"],
+  },
+  description: {
+    type: String,
+    trim: true,
+  },
+  condition: {
+    type: String,
+    required: true,
+    enum: ["New", "Like New", "Good", "Fair", "Worn", "Used", "Damaged"],
+  },
+  ownerName: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  contactInfo: {
+    type: String,
+    required: true,
+    trim: true,
+    validate: {
+      validator: function(v) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+      },
+      message: props => `${props.value} is not a valid email address!`
     }
   },
-  { timestamps: true } 
-);
+  available: {
+    type: Boolean,
+    default: true,
+  },
+  location: {
+    type: String,
+    trim: true,
+  },
+  bookImage: {
+    public_id: String,
+    url: String
+  },
+  ownerId: {
+    type: String,
+    required: true
+  }
+}, {
+  timestamps: true,
+  toJSON: {
+    transform: function(doc, ret) {
+      delete ret.__v;
+      return ret;
+    }
+  }
+});
 
-const BookRequest = mongoose.model('BookRequest', bookRequestSchema);
+// Changed model name to 'ExchangeBook' (singular)
+// Mongoose will automatically pluralize this to 'exchangebooks' collection
+const ExchangeBook = mongoose.model('ExchangeBook', exchangebooksSchema);
 
-export default BookRequest;
+export default ExchangeBook;  // Exporting as ExchangeBook
