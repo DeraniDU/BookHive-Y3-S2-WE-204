@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const exchangeSchema = new mongoose.Schema({
+const bookSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
@@ -36,6 +36,7 @@ const exchangeSchema = new mongoose.Schema({
     trim: true,
     validate: {
       validator: function(v) {
+        // Simple email validation
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
       },
       message: props => `${props.value} is not a valid email address!`
@@ -52,10 +53,6 @@ const exchangeSchema = new mongoose.Schema({
   bookImage: {
     public_id: String,
     url: String
-  },
-  ownerId: {  // NEW: Track the Firebase UID of the owner
-    type: String,
-    required: true
   }
 }, {
   timestamps: true,
@@ -67,6 +64,6 @@ const exchangeSchema = new mongoose.Schema({
   }
 });
 
-const Exchange = mongoose.model('Exchange', exchangeSchema);
+const Book = mongoose.model('Book', bookSchema);
 
-export default Exchange;  // Fixed: Changed from 'Book' to 'Exchange'
+export default Book;
