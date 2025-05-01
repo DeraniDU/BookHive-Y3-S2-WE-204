@@ -7,8 +7,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import BookSearch from "./components/BookSearch";
 import "./Home.css";
-import { clearAuthToken } from "./services/authService";
-
+//home 
 const Home = () => {
   const [user, setUser] = useState(null);
   const [featuredBooks, setFeaturedBooks] = useState([]);
@@ -19,7 +18,7 @@ const Home = () => {
     // Check authentication state
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (!currentUser) {
-        navigate("/signin");
+        navigate("/signin"); // Redirect to SignIn if no user is logged in
       } else {
         setUser(currentUser);
       }
@@ -33,9 +32,10 @@ const Home = () => {
         );
         const data = await response.json();
 
+        // Filter books with images and pick 6
         let booksWithImages = data.docs
-          .filter((book) => book.cover_i)
-          .slice(0, 6);
+          .filter((book) => book.cover_i) // Only books with cover images
+          .slice(0, 6); // Get 6 books
 
         setFeaturedBooks(booksWithImages);
       } catch (error) {
@@ -49,18 +49,12 @@ const Home = () => {
     return () => unsubscribe();
   }, [navigate]);
 
-  // Updated logout handler
+  // Handle Logout
   const handleLogout = async () => {
     try {
-      await signOut(auth);
-      clearAuthToken();
-      
-      // Verification check
-      const tokenAfterLogout = localStorage.getItem("firebaseToken");
-      console.log("Token after logout:", tokenAfterLogout); // Should be null
-      
-      swal("Success", "Logged out successfully", "success").then(() => {
-        navigate("/signin");
+      await signOut(auth); // Ensure sign-out completes
+      swal("Logged Out!", "You have been logged out successfully.", "success").then(() => {
+        navigate("/signin"); // Redirect after SweetAlert confirmation
       });
     } catch (error) {
       swal("Error", error.message, "error");
@@ -69,7 +63,7 @@ const Home = () => {
 
   return (
     <div className="home-container">
-      <Header onLogout={handleLogout} />
+      <Header />
 
       <section id="hero" className="hero">
         <h2 className="hero-title">Welcome to BookHive</h2>
@@ -81,6 +75,7 @@ const Home = () => {
         </a>
       </section>
 
+      {/* Featured Books Section */}
       <section id="featured-books" className="featured-books">
         <h2 className="featured-books-title">Featured Books</h2>
         {loading ? (
@@ -104,6 +99,7 @@ const Home = () => {
         )}
       </section>
 
+      {/* Book Search Section */}
       <section id="book-search">
         <BookSearch />
       </section>

@@ -4,25 +4,12 @@ import Swal from "sweetalert2";
 import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
 import { auth } from "../firebase";
 import { FaEnvelope, FaLock, FaGoogle, FaFacebook } from "react-icons/fa";
-import "./SignUp.css";
-import { setAuthToken } from "../services/authService"; // New import
+import "./SignUp.css"; // Using SignUp CSS
 
 const SignIn = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const handleAuthSuccess = async (user) => {
-    try {
-      const token = await user.getIdToken();
-      setAuthToken(token); // Store token
-      localStorage.setItem("isLogged", "true"); // Can keep for UI state
-      Swal.fire({ icon: "success", title: "Success!", text: "You are now logged in!" });
-      navigate("/");
-    } catch (error) {
-      Swal.fire({ icon: "error", title: "Token Error", text: error.message });
-    }
-  };
 
   const handleSignIn = async () => {
     if (!email || !password) {
@@ -31,17 +18,34 @@ const SignIn = () => {
     }
 
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      await handleAuthSuccess(userCredential.user);
+      await signInWithEmailAndPassword(auth, email, password);
+      Swal.fire({ icon: "success", title: "Success!", text: "You are now logged in!" });
+      localStorage.setItem("isLogged", true);
+      navigate("/"); // Redirect to Home page
     } catch (error) {
       Swal.fire({ icon: "error", title: "Oops...", text: error.message });
     }
   };
 
-  const handleSocialSignIn = async (provider) => {
+  const handleGoogleSignIn = async () => {
+    const provider = new GoogleAuthProvider();
     try {
-      const result = await signInWithPopup(auth, provider);
-      await handleAuthSuccess(result.user);
+      await signInWithPopup(auth, provider);
+      Swal.fire({ icon: "success", title: "Signed In", text: "You have successfully signed in with Google!" });
+      localStorage.setItem("isLogged", true);
+      navigate("/");
+    } catch (error) {
+      Swal.fire({ icon: "error", title: "Oops...", text: error.message });
+    }
+  };
+
+  const handleFacebookSignIn = async () => {
+    const provider = new FacebookAuthProvider();
+    try {
+      await signInWithPopup(auth, provider);
+      Swal.fire({ icon: "success", title: "Signed In", text: "You have successfully signed in with Facebook!" });
+      localStorage.setItem("isLogged", true);
+      navigate("/");
     } catch (error) {
       Swal.fire({ icon: "error", title: "Oops...", text: error.message });
     }
@@ -85,7 +89,11 @@ const SignIn = () => {
               </div>
             </div>
 
-            <button type="button" className="signup-button" onClick={handleSignIn}>
+            <button 
+              type="button" 
+              className="signup-button"
+              onClick={handleSignIn}
+            >
               Sign In
             </button>
 
@@ -93,14 +101,14 @@ const SignIn = () => {
               <button 
                 type="button" 
                 className="social-button google"
-                onClick={() => handleSocialSignIn(new GoogleAuthProvider())}
+                onClick={handleGoogleSignIn}
               >
                 <FaGoogle /> Sign in with Google
               </button>
               <button 
                 type="button" 
                 className="social-button facebook"
-                onClick={() => handleSocialSignIn(new FacebookAuthProvider())}
+                onClick={handleFacebookSignIn}
               >
                 <FaFacebook /> Sign in with Facebook
               </button>
