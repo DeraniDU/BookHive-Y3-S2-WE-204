@@ -1,13 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import bookBackground from "../../photo/book1.jpg";
-import book1 from "../../photo/book3.jpeg";
-import book2 from "../../photo/book3.jpeg";
-import book3 from "../../photo/book3.jpeg";
-import book4 from "../../photo/book3.jpeg";
-import book5 from "../../photo/book3.jpeg";
-import Navbar from "../../components/Header";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 function BorrowBookPage() {
+  const [books, setBooks] = useState([]);
   const [showBorrowModal, setShowBorrowModal] = useState(false);
   const [selectedBook, setSelectedBook] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -16,57 +13,27 @@ function BorrowBookPage() {
 
   const categories = [
     "all",
-    "fiction",
+    "mystery",
+    "romance",
+    "fantasy",
+    "sci-fi",
     "non-fiction",
-    "biography",
-    "science",
-    "history",
-    "children",
   ];
+  
 
-  // Sample book data with cover images from your photo folder
-  const books = [
-    {
-      id: 1,
-      title: "The Journey of Nimal and Kamal",
-      author: "Author Name",
-      category: "fiction",
-      cover: book1,
-      description: "This book is based on a true story of Nimal and Kamal",
-    },
-    {
-      id: 2,
-      title: "Science Fundamentals",
-      author: "Dr. Researcher",
-      category: "science",
-      cover: book2,
-      description: "Comprehensive guide to basic scientific principles",
-    },
-    {
-      id: 3,
-      title: "Historical Events",
-      author: "Professor History",
-      category: "history",
-      cover: book3,
-      description: "Key moments that shaped our world",
-    },
-    {
-      id: 4,
-      title: "My Life Story",
-      author: "Famous Person",
-      category: "biography",
-      cover: book4,
-      description: "Autobiography of a remarkable life journey",
-    },
-    {
-      id: 5,
-      title: "Children's Adventure",
-      author: "Story Teller",
-      category: "children",
-      cover: book5,
-      description: "Magical tales for young readers",
-    },
-  ];
+  // Fetch books
+  useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/api/Lendbook");
+        setBooks(response.data.books); // Expect books: [{ id, title, author, cover, description, lenderId, category, ... }]
+      } catch (error) {
+        console.error("Failed to fetch books:", error);
+      }
+    };
+
+    fetchBooks();
+  }, []);
 
   const handleBorrowClick = (book) => {
     setSelectedBook(book);
@@ -78,10 +45,68 @@ function BorrowBookPage() {
     setSelectedBook(null);
   };
 
-  const handleProceed = () => {
-    alert(`Borrowing process initiated for: ${selectedBook.title}`);
-    setShowBorrowModal(false);
-    setSelectedBook(null);
+  const handleProceed = async () => {
+    const userId = localStorage.getItem("firebaseUserId");
+    const email = localStorage.getItem("email");
+
+    if (!userId) {
+      Swal.fire({
+        icon: "error",
+        title: "Not Logged In",
+        text: "Please sign in to borrow a book!",
+        showConfirmButton: true,
+        confirmButtonText: "Sign In",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.href = "/signin";
+        }
+      });
+      return;
+    }
+
+    if (!selectedBook.userId) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "This book is missing lender information!",
+      });
+      return;
+    }
+
+    try {
+      const response = await axios.post("http://localhost:3000/api/borrow", {
+        borrowerId: userId, // User A's userId
+        borrowerEmail: email, // User A's email
+        bookId: selectedBook.id,
+        lenderId: selectedBook.userId, // User B's userId
+        title: selectedBook.title,
+        author: selectedBook.author,
+        cover: selectedBook.imageUrl,
+        description: selectedBook.description,
+        daysLeft: 14, // Default borrowing period
+      });
+
+      Swal.fire({
+        icon: "success",
+        title: "Success!",
+        text: `Borrowing request for "${selectedBook.title}" has been sent!`,
+      });
+       // ✅ Remove the borrowed book from the state so it disappears from the UI
+       setBooks((prevBooks) =>
+        prevBooks.filter((book) => book._id !== selectedBook._id)
+      );
+      
+
+  setShowBorrowModal(false);
+  setSelectedBook(null);
+    } catch (error) {
+      console.error("Failed to borrow book:", error.response?.data || error.message);
+      Swal.fire({
+        icon: "error",
+        title: "Error!",
+        text: "Failed to process borrow request. Please try again.",
+      });
+    }
   };
 
   // Filter and sort books
@@ -92,7 +117,7 @@ function BorrowBookPage() {
         book.author.toLowerCase().includes(searchQuery.toLowerCase())
     )
     .filter(
-      (book) => selectedCategory === "all" || book.category === selectedCategory
+      (book) => selectedCategory === "all" || book.bookType === selectedCategory
     )
     .sort((a, b) => {
       if (sortOrder === "a-z") return a.title.localeCompare(b.title);
@@ -186,23 +211,9 @@ function BorrowBookPage() {
                 {/* Cart icon (top right) */}
                 <div className="flex justify-end p-3">
                   <div className="relative">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-6 w-6 text-gray-600"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                      />
-                    </svg>
-                    <span className="absolute -top-2 -right-2 bg-blue-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                      1
-                    </span>
+                   
+                      
+                    
                   </div>
                 </div>
 
@@ -210,7 +221,7 @@ function BorrowBookPage() {
                 <div className="flex justify-center px-4">
                   <div className="w-48 h-64 overflow-hidden rounded shadow-md">
                     <img
-                      src={book.cover}
+                      src={book.imageUrl}
                       alt={`${book.title} cover`}
                       className="w-full h-full object-cover"
                     />
@@ -222,17 +233,12 @@ function BorrowBookPage() {
                   <h2 className="text-xl font-bold text-gray-800 mb-2 line-clamp-2">
                     {book.title}
                   </h2>
-
-                  <p className="text-md text-gray-600 mb-2">
-                    By: {book.author}
-                  </p>
-
+                  <p className="text-md text-gray-600 mb-2">By: {book.author}</p>
                   <p className="text-sm text-gray-500 italic mb-3 capitalize">
-                    {book.category}
+                    {book.bookType}
                   </p>
-
                   <p className="text-sm text-gray-600 mb-4 line-clamp-2">
-                    {book.description}
+                    {book.review}
                   </p>
                 </div>
 

@@ -3,6 +3,7 @@ import { useNavigate, Link as RouterLink } from "react-router-dom";
 import Swal from "sweetalert2";
 import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
 import { auth } from "../firebase";
+import axios from "axios";
 
 import {
   Box,
@@ -108,13 +109,29 @@ const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);
   
   const handleSignIn = async () => {
+    const user = auth.currentUser;
+
+
     if (!email || !password) {
       Swal.fire({ icon: "error", title: "Oops...", text: "Please fill all fields!" });
       return;
     }
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // Store uid in localStorage
+      localStorage.setItem("firebaseUserId", user.uid);
+      localStorage.setItem("isLogged", "true");
+
+      // await axios.post("http://localhost:3000/api/user/save-profile", {
+      //   uid: user.uid,
+      //   displayName: user.displayName,
+      //   email: user.email,
+      //   photoURL: user.photoURL,
+      // });
+
       Swal.fire({ icon: "success", title: "Success!", text: "You are now logged in!" });
       localStorage.setItem("isLogged", true);
       navigate("/"); // Changed from "/" to "/home"
@@ -124,9 +141,20 @@ const SignIn = () => {
   };
 
   const handleGoogleSignIn = async () => {
+    
     const provider = new GoogleAuthProvider();
     try {
-      await signInWithPopup(auth, provider);
+      const userCredential = await signInWithPopup(auth, provider);
+      const user = userCredential.user;
+
+      // Store uid in localStorage
+      localStorage.setItem("firebaseUserId", user.uid);
+      localStorage.setItem("email", user.email); // Store email
+      console.log("Stored UID:", user.uid); // Debug
+      localStorage.setItem("isLogged", "true");
+
+      
+
       Swal.fire({ icon: "success", title: "Signed In", text: "You have successfully signed in with Google!" });
       localStorage.setItem("isLogged", true);
       navigate("/"); // Changed from "/" to "/home"
@@ -138,7 +166,13 @@ const SignIn = () => {
   const handleFacebookSignIn = async () => {
     const provider = new FacebookAuthProvider();
     try {
-      await signInWithPopup(auth, provider);
+      const userCredential = await signInWithPopup(auth, provider);
+      const user = userCredential.user;
+
+      // Store uid in localStorage
+      localStorage.setItem("firebaseUserId", user.uid);
+      localStorage.setItem("isLogged", "true");
+
       Swal.fire({ icon: "success", title: "Signed In", text: "You have successfully signed in with Facebook!" });
       localStorage.setItem("isLogged", true);
       navigate("/"); // Changed from "/" to "/home"
