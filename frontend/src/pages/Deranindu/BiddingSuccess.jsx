@@ -340,13 +340,19 @@ const BiddingSuccess = () => {
 
   // Deletes bid data from localStorage and redirects to home
   const handleDeleteBid = () => {
+    // First remove both the bid data and book data from localStorage
     localStorage.removeItem("bidData");
+    localStorage.removeItem("bookBid");
+
     Swal.fire({
       icon: 'success',
       title: 'Deleted!',
       text: 'Bid deleted successfully!',
-    }).then(() => {
-      navigate("/");
+    }).then((result) => {
+      // Only navigate after the alert is dismissed
+      if (result.isConfirmed || result.isDismissed) {
+        navigate("/");
+      }
     });
   };
 
