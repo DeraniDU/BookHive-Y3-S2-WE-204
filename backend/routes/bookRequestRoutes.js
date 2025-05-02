@@ -3,7 +3,7 @@ import BookRequest from '../models/BookRequest.js';
 
 const router = express.Router();
 
-// ✅ Create a new book exchange request
+//  Create a new book exchange request
 router.post('/', async (req, res) => {
   try {
     const { bookOffered, bookWanted, condition, notes } = req.body;
@@ -22,7 +22,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-// ✅ Get all book exchange requests
+//  Get all book exchange requests
 router.get('/', async (req, res) => {
   try {
     const requests = await BookRequest.find();
@@ -32,7 +32,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-// ✅ Get a single book exchange request by ID
+// Get a single book exchange request by ID
 router.get('/:id', async (req, res) => {
   try {
     const request = await BookRequest.findById(req.params.id);
@@ -45,7 +45,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// ✅ Update a book exchange request (Approve/Reject)
+// Update a book exchange request (Approve/Reject)
 router.put('/:id', async (req, res) => {
   try {
     const { status } = req.body;
@@ -66,7 +66,7 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// ✅ Delete a book exchange request
+// Delete a book exchange request
 router.delete('/:id', async (req, res) => {
   try {
     const deletedRequest = await BookRequest.findByIdAndDelete(req.params.id);

@@ -7,7 +7,14 @@ const BookSearch = () => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const API_KEY = "AIzaSyAb0O_MywOx0cvRbMHRPs9MvqQvvjSvL6A"; // Use the API key from .env file
+
+  const API_KEY = "AIzaSyAb0O_MywOx0cvRbMHRPs9MvqQvvjSvL6A"; // 🔴 WARNING: API Key is exposed
+
+  //const API_KEY = "AIzaSyXXXXX-YOUR-KEY-HERE"; // 🔴 WARNING: API Key is exposed
+
+
+  //const API_KEY = "AIzaSyAb0O_MywOx0cvRbMHRPs9MvqQvvjSvL6A"; // Use the API key from .env file
+
 
   const searchBooks = async () => {
     if (!query) return;
