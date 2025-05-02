@@ -45,33 +45,118 @@ export const createBid = async (req, res) => {
   }
 };
 
-// Update a bid
+// Update a bid - Improved implementation
 export const updateBid = async (req, res) => {
+  const { id } = req.params;
+  
   try {
-    const updatedBid = await Bid.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true, runValidators: true }
-    ).populate('bookListing');
-    
-    if (!updatedBid) {
+    // Validate if bid exists first
+    const existingBid = await Bid.findById(id);
+    if (!existingBid) {
       return res.status(404).json({ message: 'Bid not found' });
     }
     
+    // Handle case where no data is provided
+    if (Object.keys(req.body).length === 0) {
+      return res.status(400).json({ message: 'Update data is required' });
+    }
+    
+    // Make sure updates are allowed (e.g., don't update expired bids)
+    const now = new Date();
+    const endDate = new Date(existingBid.endDate);
+    
+    if (now > endDate) {
+      return res.status(400).json({ 
+        message: 'Cannot update expired bid',
+        status: 'Expired' 
+      });
+    }
+    
+    // Validate the location field if it's being updated
+    if (req.body.location !== undefined && req.body.location.trim() === '') {
+      return res.status(400).json({ message: 'Location cannot be empty' });
+    }
+    
+    // Create a sanitized update object with only allowed fields
+    const allowedUpdates = ['location', 'startDate', 'endDate'];
+    const updateData = {};
+    
+    for (const field of allowedUpdates) {
+      if (req.body[field] !== undefined) {
+        updateData[field] = req.body[field];
+      }
+    }
+    
+    // If updating dates, validate them
+    if (updateData.startDate || updateData.endDate) {
+      const startDate = new Date(updateData.startDate || existingBid.startDate);
+      const endDate = new Date(updateData.endDate || existingBid.endDate);
+      
+      // Ensure start date is before end date
+      if (startDate >= endDate) {
+        return res.status(400).json({ 
+          message: 'Start date must be before end date' 
+        });
+      }
+      
+      // For active bids, don't allow changing start date to future
+      if (now > new Date(existingBid.startDate) && 
+          updateData.startDate && 
+          startDate > now) {
+        return res.status(400).json({ 
+          message: 'Cannot change start date to future for an active bid' 
+        });
+      }
+    }
+    
+    // Update the bid with validated data
+    const updatedBid = await Bid.findByIdAndUpdate(
+      id,
+      { $set: updateData },
+      { new: true, runValidators: true }
+    ).populate('bookListing');
+    
+    // Return the updated bid
     res.status(200).json(updatedBid);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    // Handle MongoDB/Mongoose errors
+    if (error.name === 'CastError') {
+      return res.status(400).json({ message: 'Invalid bid ID format' });
+    }
+    
+    // Handle validation errors
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({ message: error.message });
+    }
+    
+    // Handle other errors
+    res.status(500).json({ message: error.message });
   }
 };
 
 // Delete a bid
 export const deleteBid = async (req, res) => {
   try {
-    const bid = await Bid.findByIdAndDelete(req.params.id);
+    // First check if bid exists and is not expired
+    const bid = await Bid.findById(req.params.id);
     
     if (!bid) {
       return res.status(404).json({ message: 'Bid not found' });
     }
+    
+    // Check if bid is expired
+    const now = new Date();
+    const endDate = new Date(bid.endDate);
+    
+    if (now > endDate) {
+      return res.status(400).json({ 
+        message: 'Cannot delete expired bid',
+        status: 'Expired' 
+      });
+    }
+    
+    // Delete the bid
+    await Bid.findByIdAndDelete(req.params.id);
     
     res.status(200).json({ message: 'Bid deleted successfully' });
   } catch (error) {
@@ -95,10 +180,23 @@ export const placeBid = async (req, res) => {
     }
     
     // Check if bid is active
-    if (bid.status !== 'Active') {
+    const now = new Date();
+    const startDate = new Date(bid.startDate);
+    const endDate = new Date(bid.endDate);
+    
+    let status;
+    if (now < startDate) {
+      status = 'Not Started';
+    } else if (now >= startDate && now < endDate) {
+      status = 'Active';
+    } else {
+      status = 'Expired';
+    }
+    
+    if (status !== 'Active') {
       return res.status(400).json({ 
-        message: `Bid is ${bid.status.toLowerCase()}, cannot place new bids`,
-        status: bid.status
+        message: `Bid is ${status.toLowerCase()}, cannot place new bids`,
+        status: status
       });
     }
     

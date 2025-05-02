@@ -1,266 +1,573 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
-import Swal from "sweetalert2"; // Import SweetAlert2
+import React, { useState, useEffect, useCallback } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import Swal from "sweetalert2";
 import "./BidHome.css";
-import Header from "../../components/Header"; // Corrected import path for Header
-import Footer from "../../components/Footer"; // Corrected import path for Footer
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
+import { 
+  getBookListingById, 
+  createBid, 
+  updateBookListing, 
+  deleteBookListing 
+} from "../../api";
 
 const BidHome = () => {
-  const navigate = useNavigate(); // Initialize navigate function
+  const navigate = useNavigate();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const bookId = queryParams.get('bookId');
 
-  // Load book data from localStorage
-  const storedBookData = JSON.parse(localStorage.getItem("bookBid"));
-  const [bookData, setBookData] = useState(storedBookData || {});
-
-  // New fields for bidding
-  const [bidData, setBidData] = useState({
-    startDate: new Date().toISOString().split("T")[0], // Today's date
-    endDate: "",
-    location: "",
-  });
-
-  // State to track if the book details are in edit mode
+  const [bookData, setBookData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
 
-  // Handle changes for bid fields
+  // Create the date values for start and end dates
+  const getTodayFormatted = () => {
+    const now = new Date();
+    return now.toISOString().split("T")[0];
+  };
+  
+  // Calculate tomorrow for minimum end date
+  const getTomorrowFormatted = () => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    return tomorrow.toISOString().split("T")[0];
+  };
+
+  const [bidData, setBidData] = useState({
+    // For startDate, use the current date and time to ensure it's not considered "in the past"
+    startDate: getTodayFormatted(),
+    endDate: getTomorrowFormatted(),
+    location: "",
+    userName: "",
+    userEmail: "",
+    userPhone: ""
+  });
+
+  const [bidErrors, setBidErrors] = useState({});
+  const [isSubmittingBid, setIsSubmittingBid] = useState(false);
+
+  const fetchBookData = useCallback(async () => {
+    if (!bookId) {
+      setError("No book ID provided");
+      setLoading(false);
+      return;
+    }
+    
+    try {
+      setLoading(true);
+      const response = await getBookListingById(bookId);
+      if (!response.data) throw new Error("Book not found");
+      setBookData(response.data);
+    } catch (err) {
+      console.error("Fetch error:", err);
+      setError(err.message);
+      
+      Swal.fire({
+        icon: "error",
+        title: "Error Loading Book",
+        text: err.message,
+      }).then(() => navigate('/'));
+    } finally {
+      setLoading(false);
+    }
+  }, [bookId, navigate]);
+
+  useEffect(() => {
+    fetchBookData();
+  }, [fetchBookData]);
+
   const handleBidChange = (e) => {
-    setBidData({ ...bidData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setBidData(prev => ({ ...prev, [name]: value }));
+    if (bidErrors[name]) setBidErrors(prev => ({ ...prev, [name]: "" }));
   };
 
-  // Handle changes for book details fields
   const handleBookChange = (e) => {
-    setBookData({ ...bookData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setBookData(prev => ({ ...prev, [name]: value }));
   };
 
-  // Update book details
-  const handleUpdate = () => {
-    setIsEditing(true);
+  const handleOwnerChange = (e) => {
+    const { name, value } = e.target;
+    setBookData(prev => ({ 
+      ...prev, 
+      owner: { 
+        ...prev.owner, 
+        [name]: value 
+      } 
+    }));
   };
 
-  // Save the updated book details with validation
-  const handleSaveUpdate = () => {
-    // Check if all fields are filled
-    if (
-      !bookData.name ||
-      !bookData.category ||
-      !bookData.author ||
-      !bookData.price ||
-      !bookData.year ||
-      !bookData.condition ||
-      !bookData.description
-    ) {
-      Swal.fire("Error", "All fields are mandatory. Please fill in all fields.", "error");
-      return;
+  const validateBidData = useCallback(() => {
+    const newErrors = {};
+    const today = getTodayFormatted();
+    
+    if (!bidData.startDate) {
+      newErrors.startDate = "Start date is required";
+    } else if (bidData.startDate < today) {
+      newErrors.startDate = "Start date cannot be in the past";
     }
-
-    // Check if the price is greater than 0
-    if (bookData.price <= 0) {
-      Swal.fire("Error", "Price must be greater than 0.", "error");
-      return;
+    
+    if (!bidData.endDate) {
+      newErrors.endDate = "End date is required";
+    } else if (bidData.endDate <= bidData.startDate) {
+      newErrors.endDate = "End date must be after start date";
     }
-
-    // If validation passed, save the data to localStorage and update the state
-    localStorage.setItem("bookBid", JSON.stringify(bookData));
-    setIsEditing(false);
-    Swal.fire("Success", "Book details updated successfully!", "success");
-  };
-
-  // Cancel the update
-  const handleCancelUpdate = () => {
-    setIsEditing(false);
-    Swal.fire("Cancelled", "Update cancelled.", "info");
-  };
-
-  // Delete the book entry
-  const handleDelete = () => {
-    localStorage.removeItem("bookBid");
-    setBookData({});
-    setBidData({ startDate: "", endDate: "", location: "" });
-    Swal.fire("Success", "Book details deleted successfully!", "success");
-  };
-
-  // Ensure end date cannot be in the past
-  const validateEndDate = () => {
-    const today = new Date().toISOString().split("T")[0];
-    return bidData.endDate && bidData.endDate >= today;
-  };
-
-  // Validate if all fields are filled out and not null
-  const validateAllFields = () => {
-    if (
-      !bookData.name ||
-      !bookData.category ||
-      !bookData.author ||
-      !bookData.price ||
-      !bookData.year ||
-      !bookData.condition ||
-      !bookData.description ||
-      !bidData.startDate ||
-      !bidData.endDate ||
-      !bidData.location
-    ) {
-      Swal.fire("Error", "All fields are mandatory. Please fill in all fields.", "error");
-      return false;
+    
+    if (!bidData.location.trim()) {
+      newErrors.location = "Location is required";
     }
-    if (!validateEndDate()) {
-      Swal.fire("Error", "Bid end date cannot be in the past!", "error");
-      return false;
+    
+    if (!bidData.userName.trim()) {
+      newErrors.userName = "Your name is required";
     }
-    return true;
-  };
-
-  // Place bid functionality
-  const handlePlaceBid = () => {
-    if (!validateAllFields()) {
-      return;
+    
+    if (!bidData.userEmail.trim()) {
+      newErrors.userEmail = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(bidData.userEmail)) {
+      newErrors.userEmail = "Please enter a valid email address";
     }
+    
+    if (!bidData.userPhone.trim()) {
+      newErrors.userPhone = "Phone number is required";
+    } else if (!/^\d{10}$/.test(bidData.userPhone.replace(/\D/g, ''))) {
+      newErrors.userPhone = "Please enter a valid 10-digit phone number";
+    }
+    
+    setBidErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  }, [bidData]);
 
-    // Save bid data in localStorage before navigating
-    localStorage.setItem("bidData", JSON.stringify(bidData));
-    Swal.fire("Success", "Bid placed successfully!", "success");
-    navigate("/bidding-success"); // Navigate to success page
+  const handlePlaceBid = async () => {
+    if (!validateBidData()) return;
+    
+    setIsSubmittingBid(true);
+    
+    try {
+      // Create a full datetime for start date with the current time
+      const startDateTime = new Date();
+      startDateTime.setHours(23, 59, 59); // Set to end of today
+      
+      // Create a full datetime for end date (end of that day)
+      const endDateParts = bidData.endDate.split('-');
+      const endDateTime = new Date(
+        parseInt(endDateParts[0]), 
+        parseInt(endDateParts[1]) - 1, // Month is 0-indexed in JavaScript
+        parseInt(endDateParts[2]),
+        23, 59, 59
+      );
+      
+      const response = await createBid({
+        bookListing: bookData._id,
+        startDate: startDateTime.toISOString(),
+        endDate: endDateTime.toISOString(),
+        location: bidData.location,
+        userName: bidData.userName,
+        userEmail: bidData.userEmail,
+        userPhone: bidData.userPhone
+      });
+      
+      Swal.fire({
+        icon: "success",
+        title: "Bid Placed!",
+        text: "Your bid has been successfully created",
+      }).then(() => {
+        navigate(`/bidding-success?bidId=${response.data._id}`);
+      });
+    } catch (err) {
+      console.error("Bid error:", err);
+      Swal.fire({
+        icon: "error",
+        title: "Bid Failed",
+        text: err.response?.data?.message || err.message,
+      });
+    } finally {
+      setIsSubmittingBid(false);
+    }
   };
 
-  // Cancel bid functionality
-  const handleCancel = () => {
-    setBidData({ startDate: "", endDate: "", location: "" });
-    Swal.fire("Cancelled", "Bid process cancelled.", "info");
+  const handleUpdateBook = async () => {
+    try {
+      const updatedBook = await updateBookListing(bookData._id, {
+        ...bookData,
+        price: Number(bookData.price),
+        year: Number(bookData.year)
+      });
+      
+      setBookData(updatedBook.data);
+      setIsEditing(false);
+      Swal.fire("Success", "Book updated successfully", "success");
+    } catch (err) {
+      console.error("Update error:", err);
+      Swal.fire("Error", err.response?.data?.message || "Update failed", "error");
+    }
   };
+
+  const handleDeleteBook = async () => {
+    const result = await Swal.fire({
+      title: "Confirm Delete",
+      text: "This cannot be undone",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      confirmButtonText: "Delete"
+    });
+    
+    if (result.isConfirmed) {
+      try {
+        await deleteBookListing(bookData._id);
+        Swal.fire("Deleted", "Book has been removed", "success");
+        navigate('/');
+      } catch (err) {
+        console.error("Delete error:", err);
+        Swal.fire("Error", "Failed to delete book", "error");
+      }
+    }
+  };
+
+  if (loading) {
+    return (
+      <>
+        <Header />
+        <div className="loading-container">
+          <div className="spinner"></div>
+          <p>Loading book details...</p>
+        </div>
+        <Footer />
+      </>
+    );
+  }
+
+  if (error || !bookData) {
+    return (
+      <>
+        <Header />
+        <div className="error-container">
+          <h3>Error Loading Book</h3>
+          <p>{error || "Book not found"}</p>
+          <button onClick={() => navigate('/')}>Return Home</button>
+        </div>
+        <Footer />
+      </>
+    );
+  }
 
   return (
     <>
-      {/* Header is now placed outside the main content */}
       <Header />
-
       <div className="bid-home-container">
-        <h2>Book Details</h2>
-        {bookData ? (
-          <div className="book-details">
-            <div className="book-detail">
-              <label>Book Name:</label>
-              {isEditing ? (
+        <div className="book-details-section">
+          <h2>{isEditing ? "Edit Book" : "Book Details"}</h2>
+          
+          {isEditing ? (
+            <div className="edit-form">
+              <div className="form-group">
+                <label>Name:</label>
                 <input
-                  type="text"
                   name="name"
-                  value={bookData.name}
+                  value={bookData.name || ""}
                   onChange={handleBookChange}
                 />
-              ) : (
-                <p>{bookData.name}</p>
-              )}
-            </div>
-            <div className="book-detail">
-              <label>Category:</label>
-              {isEditing ? (
+              </div>
+              
+              <div className="form-group">
+                <label>Author:</label>
                 <input
-                  type="text"
-                  name="category"
-                  value={bookData.category}
-                  onChange={handleBookChange}
-                />
-              ) : (
-                <p>{bookData.category}</p>
-              )}
-            </div>
-            <div className="book-detail">
-              <label>Author:</label>
-              {isEditing ? (
-                <input
-                  type="text"
                   name="author"
-                  value={bookData.author}
+                  value={bookData.author || ""}
                   onChange={handleBookChange}
                 />
-              ) : (
-                <p>{bookData.author}</p>
-              )}
-            </div>
-            <div className="book-detail">
-              <label>Published Price (Rs):</label>
-              {isEditing ? (
+              </div>
+              
+              <div className="form-group">
+                <label>Category:</label>
+                <select
+                  name="category"
+                  value={bookData.category || ""}
+                  onChange={handleBookChange}
+                >
+                  <option value="">Select Category</option>
+                  <option value="Fiction">Fiction</option>
+                  <option value="Non-Fiction">Non-Fiction</option>
+                  <option value="Science Fiction">Science Fiction</option>
+                  <option value="Fantasy">Fantasy</option>
+                  <option value="Mystery">Mystery</option>
+                  <option value="Romance">Romance</option>
+                  <option value="Thriller">Thriller</option>
+                  <option value="Horror">Horror</option>
+                  <option value="Biography">Biography</option>
+                  <option value="History">History</option>
+                  <option value="Self-Help">Self-Help</option>
+                  <option value="Business">Business</option>
+                  <option value="Children">Children</option>
+                  <option value="Travel">Travel</option>
+                  <option value="Cooking">Cooking</option>
+                  <option value="Art">Art</option>
+                  <option value="Science">Science</option>
+                  <option value="Technology">Technology</option>
+                  <option value="Education">Education</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              
+              <div className="form-group">
+                <label>Price (Rs):</label>
                 <input
                   type="number"
                   name="price"
-                  value={bookData.price}
+                  value={bookData.price || ""}
                   onChange={handleBookChange}
+                  min="0"
+                  step="0.01"
                 />
-              ) : (
-                <p>{bookData.price}</p>
-              )}
-            </div>
-            <div className="book-detail">
-              <label>Year of Publication:</label>
-              {isEditing ? (
+              </div>
+              
+              <div className="form-group">
+                <label>Year of Publication:</label>
                 <input
                   type="number"
                   name="year"
-                  value={bookData.year}
+                  value={bookData.year || ""}
                   onChange={handleBookChange}
+                  min="1900"
+                  max={new Date().getFullYear()}
                 />
-              ) : (
-                <p>{bookData.year}</p>
+              </div>
+              
+              <div className="form-group">
+                <label>Condition:</label>
+                <select
+                  name="condition"
+                  value={bookData.condition || ""}
+                  onChange={handleBookChange}
+                >
+                  <option value="">Select Condition</option>
+                  <option value="New">New</option>
+                  <option value="Like New">Like New</option>
+                  <option value="Very Good">Very Good</option>
+                  <option value="Good">Good</option>
+                  <option value="Fair">Fair</option>
+                  <option value="Poor">Poor</option>
+                  <option value="Used">Used</option>
+                  <option value="Damaged">Damaged</option>
+                </select>
+              </div>
+              
+              <div className="form-group">
+                <label>Description:</label>
+                <textarea
+                  name="description"
+                  value={bookData.description || ""}
+                  onChange={handleBookChange}
+                  rows="4"
+                ></textarea>
+              </div>
+              
+              {/* Owner Information Fields */}
+              <div className="owner-info-edit">
+                <h3>Owner Information</h3>
+                
+                <div className="form-group">
+                  <label>Owner Name:</label>
+                  <input
+                    name="name"
+                    value={(bookData.owner && bookData.owner.name) || ""}
+                    onChange={handleOwnerChange}
+                  />
+                </div>
+                
+                <div className="form-group">
+                  <label>Owner Email:</label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={(bookData.owner && bookData.owner.email) || ""}
+                    onChange={handleOwnerChange}
+                  />
+                </div>
+                
+                <div className="form-group">
+                  <label>Owner Location:</label>
+                  <input
+                    name="location"
+                    value={(bookData.owner && bookData.owner.location) || ""}
+                    onChange={handleOwnerChange}
+                  />
+                </div>
+              </div>
+              
+              <div className="form-actions">
+                <button onClick={handleUpdateBook}>Save</button>
+                <button onClick={() => setIsEditing(false)}>Cancel</button>
+              </div>
+            </div>
+          ) : (
+            <div className="book-display">
+              <div className="book-images">
+                {bookData.photos && bookData.photos.length > 0 ? (
+                  bookData.photos.map((photo, index) => (
+                    <img 
+                      key={index} 
+                      src={photo.url || photo} 
+                      alt={`${bookData.name} ${index + 1}`}
+                      className="book-image"
+                    />
+                  ))
+                ) : (
+                  <div className="no-images">No images available</div>
+                )}
+              </div>
+              
+              <div className="book-info">
+                <h3>{bookData.name}</h3>
+                <p><strong>Author:</strong> {bookData.author}</p>
+                <p><strong>Category:</strong> {bookData.category}</p>
+                <p><strong>Price:</strong> Rs {bookData.price}</p>
+                <p><strong>Year:</strong> {bookData.year}</p>
+                <p><strong>Condition:</strong> {bookData.condition}</p>
+                <p><strong>Description:</strong> {bookData.description}</p>
+                
+                {/* Owner Information Display */}
+                <div className="owner-info">
+                  <h4>Book Owner</h4>
+                  <p><strong>Name:</strong> {bookData.owner?.name || "N/A"}</p>
+                  <p><strong>Email:</strong> {bookData.owner?.email || "N/A"}</p>
+                  <p><strong>Location:</strong> {bookData.owner?.location || "N/A"}</p>
+                </div>
+                
+                <div className="book-actions">
+                  <button onClick={() => setIsEditing(true)}>Edit</button>
+                  <button 
+                    onClick={handleDeleteBook}
+                    className="delete-btn"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+        
+        <div className="bid-section">
+          <h2>Place Bid</h2>
+          <div className="bid-form">
+            <div className="form-group">
+              <label>Start Date:</label>
+              <input
+                type="date"
+                name="startDate"
+                value={bidData.startDate}
+                onChange={handleBidChange}
+                min={getTodayFormatted()}
+                max={getTodayFormatted()}
+              />
+              {bidErrors.startDate && (
+                <span className="error">{bidErrors.startDate}</span>
               )}
             </div>
-
-            <div className="buttons">
-              {isEditing ? (
-                <>
-                  <button onClick={handleSaveUpdate}>Save</button>
-                  <button onClick={handleCancelUpdate}>Cancel</button>
-                </>
-              ) : (
-                <>
-                  <button onClick={handleUpdate}>Update</button>
-                  <button onClick={handleDelete}>Delete</button>
-                </>
+            
+            <div className="form-group">
+              <label>End Date:</label>
+              <input
+                type="date"
+                name="endDate"
+                value={bidData.endDate}
+                onChange={handleBidChange}
+                min={getTomorrowFormatted()}
+              />
+              {bidErrors.endDate && (
+                <span className="error">{bidErrors.endDate}</span>
               )}
             </div>
-          </div>
-        ) : (
-          <p>No book details available. Please submit a book first.</p>
-        )}
-
-        <h2>Bid Details</h2>
-        <div className="bid-form">
-          <div className="bid-detail">
-            <label>Bid Start Date:</label>
-            <input
-              type="date"
-              name="startDate"
-              value={bidData.startDate}
-              onChange={handleBidChange}
-              required
-            />
-          </div>
-          <div className="bid-detail">
-            <label>Bid End Date:</label>
-            <input
-              type="date"
-              name="endDate"
-              value={bidData.endDate}
-              onChange={handleBidChange}
-              required
-            />
-          </div>
-          <div className="bid-detail">
-            <label>Bid Location:</label>
-            <input
-              type="text"
-              name="location"
-              value={bidData.location}
-              onChange={handleBidChange}
-              required
-            />
-          </div>
-
-          <div className="buttons">
-            <button onClick={handlePlaceBid}>Place Bid</button>
-            <button onClick={handleCancel}>Cancel</button>
+            
+            <div className="form-group">
+              <label>Location:</label>
+              <input
+                type="text"
+                name="location"
+                value={bidData.location}
+                onChange={handleBidChange}
+                placeholder="Enter meeting location"
+              />
+              {bidErrors.location && (
+                <span className="error">{bidErrors.location}</span>
+              )}
+            </div>
+            
+            <div className="bidder-details">
+              <h3>Your Contact Information</h3>
+              
+              <div className="form-group">
+                <label>Your Name:</label>
+                <input
+                  type="text"
+                  name="userName"
+                  value={bidData.userName}
+                  onChange={handleBidChange}
+                  placeholder="Enter your full name"
+                />
+                {bidErrors.userName && (
+                  <span className="error">{bidErrors.userName}</span>
+                )}
+              </div>
+              
+              <div className="form-group">
+                <label>Email Address:</label>
+                <input
+                  type="email"
+                  name="userEmail"
+                  value={bidData.userEmail}
+                  onChange={handleBidChange}
+                  placeholder="Enter your email address"
+                />
+                {bidErrors.userEmail && (
+                  <span className="error">{bidErrors.userEmail}</span>
+                )}
+              </div>
+              
+              <div className="form-group">
+                <label>Phone Number:</label>
+                <input
+                  type="tel"
+                  name="userPhone"
+                  value={bidData.userPhone}
+                  onChange={handleBidChange}
+                  placeholder="Enter your phone number"
+                />
+                {bidErrors.userPhone && (
+                  <span className="error">{bidErrors.userPhone}</span>
+                )}
+              </div>
+            </div>
+            
+            <div className="bid-actions">
+              <button 
+                onClick={handlePlaceBid}
+                disabled={isSubmittingBid}
+                className="place-bid-btn"
+              >
+                {isSubmittingBid ? "Processing..." : "Place Bid"}
+              </button>
+              <button 
+                onClick={() => setBidData({
+                  startDate: getTodayFormatted(),
+                  endDate: getTomorrowFormatted(),
+                  location: "",
+                  userName: "",
+                  userEmail: "",
+                  userPhone: ""
+                })}
+                className="reset-btn"
+              >
+                Reset
+              </button>
+            </div>
           </div>
         </div>
       </div>
-
-      {/* Footer is now placed outside the main content */}
       <Footer />
     </>
   );

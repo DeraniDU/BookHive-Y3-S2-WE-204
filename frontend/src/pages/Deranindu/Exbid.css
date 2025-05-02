@@ -1,52 +1,41 @@
 /* Exbid.css */
-
-/* Container for the card view */
 .exbid-container {
-    padding: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-  
-  h2 {
-    text-align: center;
-    font-size: 36px;
-    margin-bottom: 30px;
-  }
-  
-  /* Container to hold all cards */
-  .card-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-  }
-  
-  /* Style each card */
-  .bid-card {
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    padding: 20px;
-    width: 280px;
-    text-align: center;
-    transition: transform 0.2s ease-in-out;
-  }
-  
-  .bid-card:hover {
-    transform: scale(1.05);
-  }
-  
-  .bid-info {
-    margin-top: 15px;
-  }
-  
-  .bid-info p {
-    font-size: 16px;
-    margin: 5px 0;
-    color: #333;
-  }
-  
-  strong {
-    color: #1c3d5a; /* Accent color */
-  }
-  
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
+
+.exbid-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.exbid-header h2 {
+  margin: 0;
+  color: #333;
+}
+
+.filter-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.filter-container label {
+  font-weight: 600;
+  color: #555;
+}
+
+.filter-container select {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.bid-cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill)
+}
