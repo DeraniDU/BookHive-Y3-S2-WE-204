@@ -1,97 +1,520 @@
+/* BiddingSuccess.css */
+
 .bidding-success-container {
-    max-width: 700px;
-    margin: 40px auto;
-    padding: 30px;
-    background: #f9f9f9;
-    border-radius: 15px;
-    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    font-family: 'Roboto', sans-serif;
+  }
+  
+  /* Success Banner */
+  .success-banner {
+    background: linear-gradient(135deg, #4CAF50, #2E7D32);
+    color: white;
+    padding: 2rem;
+    border-radius: 8px;
     text-align: center;
-    font-family: 'Arial', sans-serif;
-}
-
-.bidding-success-container h2 {
-    color: #1C3D5A;
-    font-size: 32px;
-    font-weight: bold;
-    margin-bottom: 25px;
-    text-transform: uppercase;
-}
-
-.bid-details {
-    text-align: left;
-    margin-bottom: 25px;
-    padding: 15px;
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.bid-detail {
-    margin: 15px 0;
-}
-
-.bid-detail label {
-    font-size: 16px;
-    font-weight: 600;
-    color: #333;
-}
-
-.bid-detail p {
-    margin: 5px 0;
-    padding: 12px;
-    background: #f4f4f4;
-    border-radius: 8px;
-    font-size: 14px;
-    color: #444;
-    border: 1px solid #ddd;
-}
-
-input[type="date"] {
-    width: 100%;
-    padding: 12px;
-    margin-top: 8px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-    background: #fff;
-}
-
-.buttons {
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .success-icon {
+    background-color: white;
+    color: #4CAF50;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
     display: flex;
-    justify-content: space-evenly;
-    margin-top: 30px;
-}
-
-button {
-    padding: 10px 18px; /* Decreased padding for smaller buttons */
-    border: none;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    font-size: 2rem;
+    font-weight: bold;
+  }
+  
+  .success-banner h2 {
+    margin: 0.5rem 0;
+    font-size: 1.8rem;
+  }
+  
+  .success-banner p {
+    margin: 0.5rem 0;
+    font-size: 1.1rem;
+  }
+  
+  /* Header and Bid Status */
+  .bid-details-wrapper {
+    background-color: #f9f9f9;
     border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  .success-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .success-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #333;
+  }
+  
+  .bid-status {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .bid-status.not-started {
+    background-color: #E3F2FD;
+    color: #1976D2;
+  }
+  
+  .bid-status.active {
+    background-color: #E8F5E9;
+    color: #388E3C;
+  }
+  
+  .bid-status.expired {
+    background-color: #FFEBEE;
+    color: #D32F2F;
+  }
+  
+  /* Timeline */
+  .bid-timeline {
+    margin: 2rem 0;
+  }
+  
+  .timeline-container {
+    position: relative;
+    height: 6px;
+    margin: 2.5rem 0;
+    background-color: #E0E0E0; /* Track color */
+    border-radius: 3px;
+  }
+  
+  .timeline-track {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: #E0E0E0;
+    border-radius: 3px;
+    z-index: 1;
+  }
+  
+  .timeline-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: #4CAF50;
+    border-radius: 3px;
+    transition: width 0.5s ease;
+    z-index: 2;
+  }
+  
+  .timeline-marker {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 3;
+  }
+  
+  .timeline-marker.start {
+    left: 0;
+  }
+  
+  .timeline-marker.end {
+    right: 0;
+  }
+  
+  .marker-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: #fff;
+    border: 3px solid #4CAF50;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  .marker-info {
+    position: absolute;
+    top: 24px;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    text-align: center;
+  }
+  
+  .timeline-marker.start .marker-info {
+    left: 0;
+    transform: none;
+    text-align: left;
+  }
+  
+  .timeline-marker.end .marker-info {
+    right: 0;
+    left: auto;
+    transform: none;
+    text-align: right;
+  }
+  
+  .marker-label {
+    display: block;
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: #616161;
+    margin-bottom: 0.25rem;
+  }
+  
+  .marker-date {
+    display: block;
+    font-size: 0.8rem;
+    color: #757575;
+  }
+  
+  /* Countdown Section */
+  .countdown-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 2.5rem 0 1.5rem;
+  }
+  
+  .countdown-header {
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  
+  .countdown-header h3 {
+    margin: 0;
+    font-size: 1.3rem;
+    color: #333;
+    font-weight: 500;
+  }
+  
+  .countdown-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .countdown {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .countdown-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 0.5rem;
+  }
+  
+  .countdown-value {
+    background-color: #424242;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 600;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  .countdown-label {
+    font-size: 0.75rem;
+    color: #757575;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .countdown-separator {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #424242;
+    margin: 0 0.25rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Details Container */
+  .details-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  /* Book Details */
+  .book-details-section, .bid-details-section {
+    background-color: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+  
+  .book-details-section h3, .bid-details-section h3 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    font-size: 1.3rem;
+    color: #333;
+    border-bottom: 1px solid #EEEEEE;
+    padding-bottom: 0.75rem;
+  }
+  
+  .book-card {
+    display: flex;
+    gap: 1.5rem;
+  }
+  
+  .book-cover {
+    width: 120px;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .no-image-placeholder {
+    width: 120px;
+    height: 180px;
+    background-color: #F5F5F5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #9E9E9E;
+    font-size: 0.8rem;
+    text-align: center;
+    border-radius: 4px;
+  }
+  
+  .book-info {
+    flex: 1;
+  }
+  
+  .book-info h4 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    color: #333;
+  }
+  
+  /* Bid Details */
+  .bid-info-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .detail-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .detail-item {
+    margin-bottom: 0.75rem;
+    flex: 1;
+    min-width: 200px;
+  }
+  
+  .detail-label {
+    font-weight: 500;
+    color: #616161;
+    display: block;
+    margin-bottom: 0.25rem;
+    font-size: 0.9rem;
+  }
+  
+  .detail-value {
+    color: #212121;
+    font-size: 1rem;
+  }
+  
+  .price {
+    font-weight: 600;
+    color: #1976D2;
+  }
+  
+  .highest-bid {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #EEEEEE;
+  }
+  
+  .highest-bid h4 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    color: #333;
+  }
+  
+  .status-not-started {
+    color: #1976D2;
+  }
+  
+  .status-active {
+    color: #388E3C;
+  }
+  
+  .status-expired {
+    color: #D32F2F;
+  }
+  
+  /* Action Buttons */
+  .action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+  }
+  
+  .action-buttons button {
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    font-weight: 500;
+    font-size: 1rem;
     cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s;
-}
-
-button.update {
-    background: #A6BCFF;
-    color: #1C3D5A;
-    width: 48%;
-}
-
-button.delete {
-    background: #FF0404;
-    color: #fff;
-    width: 48%;
-}
-
-button.view {
-    background: #1C3D5A;
-    color: #fff;
-    width: 48%;
-}
-
-button:hover {
-    opacity: 0.8;
-}
-
-button:active {
-    transform: scale(0.98);
-}
+    border: none;
+    transition: all 0.2s ease;
+  }
+  
+  .btn-primary {
+    background-color: #1976D2;
+    color: white;
+  }
+  
+  .btn-primary:hover {
+    background-color: #1565C0;
+  }
+  
+  .btn-primary:disabled {
+    background-color: #BBDEFB;
+    cursor: not-allowed;
+  }
+  
+  .btn-danger {
+    background-color: #F44336;
+    color: white;
+  }
+  
+  .btn-danger:hover {
+    background-color: #D32F2F;
+  }
+  
+  .btn-danger:disabled {
+    background-color: #FFCDD2;
+    cursor: not-allowed;
+  }
+  
+  .btn-secondary {
+    background-color: #757575;
+    color: white;
+  }
+  
+  .btn-secondary:hover {
+    background-color: #616161;
+  }
+  
+  /* Loading and Error States */
+  .loading-container, .error-container {
+    text-align: center;
+    padding: 5rem 2rem;
+  }
+  
+  .spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-top: 4px solid #1976D2;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  .error-container button {
+    margin-top: 1rem;
+    padding: 0.75rem 1.5rem;
+    background-color: #1976D2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  /* Responsive Adjustments */
+  @media (max-width: 768px) {
+    .details-container {
+      grid-template-columns: 1fr;
+    }
+    
+    .book-card {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    
+    .book-info {
+      width: 100%;
+    }
+    
+    .action-buttons {
+      flex-direction: column;
+    }
+    
+    .action-buttons button {
+      width: 100%;
+    }
+    
+    .countdown-value {
+      width: 50px;
+      height: 50px;
+      font-size: 1.2rem;
+    }
+    
+    .countdown-label {
+      font-size: 0.7rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .countdown {
+      flex-wrap: wrap;
+    }
+    
+    .countdown-item {
+      margin: 0.5rem;
+    }
+    
+    .countdown-separator {
+      display: none;
+    }
+    
+    .bid-status {
+      padding: 0.25rem 0.75rem;
+      font-size: 0.8rem;
+    }
+  }

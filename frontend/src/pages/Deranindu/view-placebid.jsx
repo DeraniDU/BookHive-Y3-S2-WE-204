@@ -129,4 +129,4 @@ const ViewPlaceBid = () => {
   );
 };
 
-export default ViewPlaceBid;
+export default ViewPlaceBid;
