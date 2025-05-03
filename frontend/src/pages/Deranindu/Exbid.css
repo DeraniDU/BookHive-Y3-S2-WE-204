@@ -1,53 +1,375 @@
 /* Exbid.css */
-
-/* Container for the card view */
 .exbid-container {
-    padding: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-  
-  h2 {
-    text-align: center;
-    font-size: 36px;
-    margin-bottom: 30px;
-  }
-  
-  /* Container to hold all cards */
-  .card-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-  }
-  
-  /* Style each card */
-  .bid-card {
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    padding: 20px;
-    width: 280px;
-    text-align: center;
-    transition: transform 0.2s ease-in-out;
-  }
-  
-  .bid-card:hover {
-    transform: scale(1.05);
-  }
-  
-  .bid-info {
-    margin-top: 15px;
-  }
-  
-  .bid-info p {
-    font-size: 16px;
-    margin: 5px 0;
-    color: #333;
-  }
-  
-  strong {
-    color: #1c3d5a; /* Accent color */
-  }
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 20px;
+}
 
+.exbid-header {
+  margin-bottom: 2rem;
+}
+
+.exbid-header h2 {
+  font-size: 2rem;
+  color: #1C3D5A;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+/* Search and filter container */
+.search-filter-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  gap: 15px;
+}
+
+/* Search input styling */
+.search-container {
+  flex: 1;
+  min-width: 250px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 2px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.search-input:focus {
+  border-color: #1C3D5A;
+}
+
+/* Filter styling */
+.filter-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.filter-container label {
+  font-weight: 600;
+  color: #1C3D5A;
+}
+
+.filter-container select {
+  padding: 10px 15px;
+  border: 2px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s;
+  background-color: white;
+  cursor: pointer;
+}
+
+.filter-container select:focus {
+  border-color: #1C3D5A;
+}
+
+/* PDF Report controls */
+.report-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding: 15px;
+  background-color: #f4f4f4;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.selection-controls {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.selection-controls label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.selection-controls input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.selected-count {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.btn-generate-pdf {
+  padding: 10px 20px;
+  background-color: #1C3D5A;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+
+.btn-generate-pdf:hover {
+  background-color: #0f2a3a;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-generate-pdf:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Sort controls */
+.sort-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 1.5rem;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+}
+
+.sort-controls span {
+  font-weight: 600;
+  color: #1C3D5A;
+  margin-right: 5px;
+}
+
+.sort-button {
+  padding: 8px 12px;
+  background-color: #e9ecef;
+  color: #1C3D5A;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+}
+
+.sort-button:hover {
+  background-color: #dde2e6;
+}
+
+.sort-button.active {
+  background-color: #A6BCFF;
+  border-color: #88a9e7;
+  font-weight: 600;
+}
+
+/* Bid cards */
+.bid-cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 20px;
+}
+
+.bid-card {
+  position: relative;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.bid-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Bid selection checkbox */
+.bid-selection {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 2;
+}
+
+.bid-selection input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+/* Card Status Styling */
+.bid-card.active {
+  border-top: 4px solid #28a745;
+}
+
+.bid-card.not-started {
+  border-top: 4px solid #ffc107;
+}
+
+.bid-card.expired {
+  border-top: 4px solid #dc3545;
+}
+
+.bid-card-header {
+  padding: 15px 20px;
+  background-color: #f9f9f9;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bid-card-header h3 {
+  font-size: 1.2rem;
+  color: #1C3D5A;
+  margin: 0;
+  padding-left: 25px; /* Space for checkbox */
+}
+
+.bid-status {
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: 20px;
+}
+
+.bid-status.active {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.bid-status.not-started {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.bid-status.expired {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.bid-card-content {
+  padding: 20px;
+}
+
+.bid-card-content p {
+  margin: 10px 0;
+  font-size: 0.95rem;
+}
+
+.bid-card-content p strong {
+  color: #1C3D5A;
+  font-weight: 600;
+}
+
+.bid-card-actions {
+  padding: 15px 20px;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+/* Button styling */
+.btn-primary {
+  padding: 10px 15px;
+  background-color: #1C3D5A;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  flex: 1;
+  text-align: center;
+}
+
+.btn-primary:hover {
+  background-color: #0f2a3a;
+}
+
+.btn-secondary {
+  padding: 10px 15px;
+  background-color: #A6BCFF;
+  color: #1C3D5A;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  flex: 1;
+  text-align: center;
+}
+
+.btn-secondary:hover {
+  background-color: #88a9e7;
+}
+
+/* No bids message */
+.no-bids-message {
+  text-align: center;
+  padding: 50px 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  color: #666;
+  font-size: 1.1rem;
+}
+
+/* Loading spinner */
+.loading-spinner {
+  text-align: center;
+  padding: 50px 20px;
+  color: #1C3D5A;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+/* Error message */
+.error-message {
+  text-align: center;
+  padding: 30px 20px;
+  margin-bottom: 20px;
+  background-color: #f8d7da;
+  border-radius: 8px;
+  color: #721c24;
+  font-size: 1.1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .search-filter-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
   
+  .report-controls {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .selection-controls {
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+  .sort-controls {
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 10px 5px;
+  }
+  
+  .bid-cards-container {
+    grid-template-columns: 1fr;
+  }
+}
