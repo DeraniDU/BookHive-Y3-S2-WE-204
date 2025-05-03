@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import swal from "sweetalert";
 import { Container, Icon, Card, Button, Loader, Divider } from "semantic-ui-react";
 import Header from "../../components/Header";
-import Footer from "../../components/Footer"; // Make sure to style this page similarly to Home.css
+import Footer from "../../components/Footer"; 
 import {
   CardMeta,
   CardHeader,
@@ -20,7 +20,6 @@ const Recommender = () => {
   const [tone, setTone] = useState("All");
   const [recommendations, setRecommendations] = useState([]);
   const navigate = useNavigate();
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -43,10 +42,9 @@ const Recommender = () => {
   return (
     <div className="recommender-container">
       <Header />
-
       <section id="hero" className="hero" style={{
         background: "linear-gradient(135deg, rgba(28, 61, 90, 0.9), rgba(45, 55, 72, 0.9)), url('https://source.unsplash.com/random/1600x900/?library') center/cover no-repeat",
-        padding: "100px 0",
+        padding: "120px 0",
         textAlign: "center",
         color: "#fff",
         position: "relative",
@@ -59,7 +57,7 @@ const Recommender = () => {
             marginBottom: "20px",
             color: "#fff",
             textShadow: "0 2px 4px rgba(0,0,0,0.3)"
-          }}>Sementic <span style={{ color: "#A6BCFF" }}>Recommender</span></h1>
+          }}>Semantic <span style={{ color: "#A6BCFF" }}>Recommender</span></h1>
           
           <p style={{
             fontSize: "1.5rem",
@@ -120,57 +118,118 @@ const Recommender = () => {
         </Container>
       </section>
 
-      <form className="recommendation-form" onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Describe a book or idea (e.g., A tale of survival and courage)"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          required
-        />
-        <select value={category} onChange={(e) => setCategory(e.target.value)}>
-          {categories.map((cat) => (
-            <option key={cat}>{cat}</option>
-          ))}
-        </select>
-        <select value={tone} onChange={(e) => setTone(e.target.value)}>
-          {tones.map((tone) => (
-            <option key={tone}>{tone}</option>
-          ))}
-        </select>
-        <button type="submit">Get Recommendations</button>
-      </form>
+      {/* Search Form Section */}
+      <div id="book-search" style={{ padding: "50px 0", backgroundColor: "#f9f9f9" }}>
+        <Container>
+          <form className="recommendation-form" onSubmit={handleSubmit} style={{ textAlign: "center" }}>
+            <input
+              type="text"
+              placeholder="Describe a book or idea (e.g., A tale of survival and courage)"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              required
+              style={{
+                padding: "10px 20px",
+                borderRadius: "30px",
+                border: "2px solid #A6BCFF",
+                width: "100%",
+                maxWidth: "600px",
+                fontSize: "16px",
+                marginBottom: "20px",
+              }}
+            />
+            <div style={{ display: "flex", justifyContent: "center", gap: "15px", marginBottom: "20px" }}>
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                style={{
+                  padding: "10px 20px",
+                  borderRadius: "30px",
+                  border: "2px solid #A6BCFF",
+                  fontSize: "16px",
+                  cursor: "pointer",
+                  width: "200px"
+                }}
+              >
+                {categories.map((cat) => (
+                  <option key={cat}>{cat}</option>
+                ))}
+              </select>
+              <select
+                value={tone}
+                onChange={(e) => setTone(e.target.value)}
+                style={{
+                  padding: "10px 20px",
+                  borderRadius: "30px",
+                  border: "2px solid #A6BCFF",
+                  fontSize: "16px",
+                  cursor: "pointer",
+                  width: "200px"
+                }}
+              >
+                {tones.map((tone) => (
+                  <option key={tone}>{tone}</option>
+                ))}
+              </select>
+            </div>
+            <button type="submit" style={{
+              padding: "15px 30px",
+              borderRadius: "30px",
+              fontSize: "16px",
+              fontWeight: "bold",
+              background: "#A6BCFF",
+              border: "none",
+              color: "#1C3D5A",
+              cursor: "pointer",
+              transition: "background 0.3s",
+            }}>
+              Get Recommendations
+            </button>
+          </form>
+        </Container>
+      </div>
 
-      <section className="recommendations">
-        <h2 className="featured-books-title">Recommended Books</h2>
-        <div className="book-list">
-        {recommendations.map(([imageUrl, caption,description], index) => {
-  // Split "Title by Author: Description"
-  const [titleAuthor] = caption.split(":");
-  const [title, author] = titleAuthor.split(" by ");
+      {/* Recommendations Section */}
+      <section className="recommendations" style={{ padding: "50px 0" }}>
+        <Container>
+          <h2 className="featured-books-title" style={{
+            textAlign: "center",
+            fontSize: "2rem",
+            fontWeight: "bold",
+            marginBottom: "40px"
+          }}>Recommended Books</h2>
+          <div className="book-list" style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
+            gap: "20px"
+          }}>
+            {recommendations.map(([imageUrl, caption, description], index) => {
+              const [titleAuthor] = caption.split(":");
+              const [title, author] = titleAuthor.split(" by ");
 
-  return (
-    <Card>
-    <Image src={imageUrl} wrapped ui={false} />
-    <CardContent>
-      <CardHeader>{title}</CardHeader>
-      <CardMeta>
-        <span >{author}</span>
-      </CardMeta>
-      <CardDescription>
-      {description}
-      </CardDescription>
-    </CardContent>
-    <CardContent extra>
-      <a>
-        <Icon name='user' />
-        22 Friends
-      </a>
-    </CardContent>
-    </Card>
-  );
-})}
-        </div>
+              return (
+                <Card key={index} style={{ boxShadow: "0 4px 6px rgba(0,0,0,0.1)" }}>
+                  <Image src={imageUrl} wrapped ui={false} />
+                  <CardContent>
+                    <CardHeader>{title}</CardHeader>
+                    <CardMeta>
+                      <span>{author}</span>
+                    </CardMeta>
+                    <CardDescription>
+                      {description}
+                    </CardDescription>
+                  </CardContent>
+                  <CardContent extra>
+                    <a>
+                      <Icon name="user" />
+                      22 Friends
+                    </a>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </Container>
       </section>
 
       <Footer />

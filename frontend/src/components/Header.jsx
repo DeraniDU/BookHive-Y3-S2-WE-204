@@ -67,7 +67,7 @@ const Header = () => {
             { path: '/book-exchange', label: 'Book Exchange' },
             { path: '/book-lending', label: 'Book Lending' },
             { path: '/view-placebid', label: 'Book Bidding' },
-            { path: '/book-suggest', label: 'Book Suggest' }
+            { path: '/recommender', label: 'Book Suggest' }
           ].map((link) => (
             <Link 
               key={link.path}
