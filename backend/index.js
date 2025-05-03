@@ -2,7 +2,7 @@
 import 'dotenv/config';
 
 import express from "express";
-import config from "./config.js";  // Changed from destructured import
+// import config from "./config.js";  // Changed from destructured import
 import mongoose from "mongoose";
 import { v2 as cloudinary } from 'cloudinary';
 import booksRoute from "./routes/bookRoutes.js";
@@ -19,9 +19,9 @@ import config from './config/config.js';
 import bookListingRoutes from './routes/bookListingRoutes.js';
 import bidRoutes from './routes/bidRoutes.js';
 import userResponseRoutes from './routes/userResponseRoutes.js';
-import booksRoute from './routes/bookRoutes.js';
-import bookRequestRoutes from './routes/bookRequestRoutes.js';
-import exchangeRoutes from './routes/exchangeRoutes.js';
+// import booksRoute from './routes/bookRoutes.js';
+// import bookRequestRoutes from './routes/bookRequestRoutes.js';
+// import exchangeRoutes from './routes/exchangeRoutes.js';
 
 // Initialize Express app
 const app = express();
@@ -85,9 +85,9 @@ mongoose.connect(config.mongoDBURL)
     });
 
 // Start server
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-  console.log('Cloudinary configured:', config.cloudinary.cloud_name ? true : false);
-});
+// app.listen(PORT, () => {
+//   console.log(`Server running on port ${PORT}`);
+//   console.log('Cloudinary configured:', config.cloudinary.cloud_name ? true : false);
+// });
 
 console.log('Server setup complete');
